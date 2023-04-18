@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "974308224218",
+    "firebase_url": "https://bytbok-99a01-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "bytbok-99a01",
+    "storage_bucket": "bytbok-99a01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:974308224218:android:ea7cf3f1bf85e3bfb8c9e3",
+        "android_client_info": {
+          "package_name": "com.example.bytbok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "974308224218-tebnqc5p28o7bnfm8csdscj8kmk9khan.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgeHwQb2dIt3ES0zjCkwgmJgUOH-E21og"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "974308224218-tebnqc5p28o7bnfm8csdscj8kmk9khan.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

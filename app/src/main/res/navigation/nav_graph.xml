@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/annonsFragment">
+
+    <fragment
+        android:id="@+id/gilladeObjektFragment"
+        android:name="com.example.bytbok.GilladeObjektFragment"
+        android:label="fragment_gillade_objekt"
+        tools:layout="@layout/fragment_gillade_objekt" >
+        <action
+            android:id="@+id/action_gilladeObjektFragment_to_fardigAnnonsFragment"
+            app:destination="@id/fardigAnnonsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/skapaAnnonsFragment"
+        android:name="com.example.bytbok.SkapaAnnonsFragment"
+        android:label="fragment_skapa_annons"
+        tools:layout="@layout/fragment_skapa_annons" >
+        <argument
+            android:name="annonsid"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/minSidaFragment"
+        android:name="com.example.bytbok.MinSidaFragment"
+        android:label="fragment_min_sida"
+        tools:layout="@layout/fragment_min_sida" >
+        <action
+            android:id="@+id/action_minSidaFragment_to_skapaAnnonsFragment"
+            app:destination="@id/skapaAnnonsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/annonsFragment"
+        android:name="com.example.bytbok.AnnonsFragment"
+        android:label="fragment_annons"
+        tools:layout="@layout/fragment_annons" >
+        <action
+            android:id="@+id/action_annonsFragment_to_skapaAnnonsFragment"
+            app:destination="@id/skapaAnnonsFragment" />
+        <action
+            android:id="@+id/action_annonsFragment_to_fardigAnnonsFragment"
+            app:destination="@id/fardigAnnonsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/fardigAnnonsFragment"
+        android:name="com.example.bytbok.FardigAnnonsFragment"
+        android:label="fragment_fardig_annons"
+        tools:layout="@layout/fragment_fardig_annons" >
+        <argument
+            android:name="annonsid"
+            app:argType="string" />
+    </fragment>
+</navigation>
