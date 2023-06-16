@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5EBE0"
-    tools:context=".FardigAnnonsFragment">
+    tools:context=".listings.FardigAnnonsFragment">
 
     <ImageView
         android:id="@+id/bildFardigAnnons"

@@ -1,54 +1,63 @@
-package com.example.bytbok
+package se.rebeccazadig.bokholken.listings
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import layout.AnnonsAdapter
-import java.util.*
-import kotlin.collections.ArrayList
+import se.rebeccazadig.bokholken.R
+import se.rebeccazadig.bokholken.databinding.FragmentAnnonsBinding
 
 class AnnonsFragment : Fragment() {
 
     var aAdapter = AnnonsAdapter()
     private lateinit var searchView: SearchView
 
+    private val viewModel: AnnonsViewModel by viewModels()
+    private var _binding: FragmentAnnonsBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_annons, container, false)
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        _binding = FragmentAnnonsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        searchView = view.findViewById(R.id.searchView)
+        searchView = binding.searchView
 
-        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-               filterList(newText)
+                filterList(newText)
                 return true
             }
-
         })
 
         aAdapter.annonsfrag = this
 
-        val annonsRecview = view.findViewById<RecyclerView>(R.id.allaAnnonserRV)
+        val annonsRecview = binding.allaAnnonserRV
 
         val layoutmanager = GridLayoutManager(context, 2)
         annonsRecview.layoutManager = layoutmanager
@@ -59,20 +68,19 @@ class AnnonsFragment : Fragment() {
 
         loadBooks()
 
-        view.findViewById<Button>(R.id.nyAnnonsButton).setOnClickListener {
-
+        binding.nyAnnonsButton.setOnClickListener {
             var goreadmore = AnnonsFragmentDirections.actionAnnonsFragmentToSkapaAnnonsFragment("")
             findNavController().navigate(goreadmore)
         }
     }
 
-    fun clickReadmore(clickannons : Annons) {
-        var goreadmore = AnnonsFragmentDirections.actionAnnonsFragmentToFardigAnnonsFragment(clickannons.adid)
+    fun clickReadmore(clickannons: Annons) {
+        var goreadmore =
+            AnnonsFragmentDirections.actionAnnonsFragmentToFardigAnnonsFragment(clickannons.adid)
         findNavController().navigate(goreadmore)
     }
 
     fun loadBooks() {
-
         val database = Firebase.database
 
         val books = database.getReference("Books")
@@ -85,22 +93,21 @@ class AnnonsFragment : Fragment() {
                 fbfruits.add(tempad)
             }
 
-
             view?.let { fragview ->
-                //fragview.findViewById<TextView>(R.id.antalAnnonserTV).text = fbfruits.size.toString()
-                fragview.findViewById<TextView>(R.id.bytBokInfoTV).text = "Alla tillgängliga böcker " + fbfruits.size.toString()
+                // fragview.findViewById<TextView>(R.id.antalAnnonserTV).text = fbfruits.size.toString()
+                fragview.findViewById<TextView>(R.id.bytBokInfoTV).text =
+                    "Alla tillgängliga böcker " + fbfruits.size.toString()
             }
 
             aAdapter.filtreradeAnnonser = fbfruits
             aAdapter.allaAnnonser = fbfruits
             aAdapter.notifyDataSetChanged()
 
-            Log.i("pia11debug",fbfruits.toString())
-
+            Log.i("pia11debug", fbfruits.toString())
         }
     }
 
-    private fun filterList(query : String?) {
+    private fun filterList(query: String?) {
         if (query != null) {
             val filteredList = mutableListOf<Annons>()
             for (i in aAdapter.allaAnnonser) {

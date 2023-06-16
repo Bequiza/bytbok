@@ -1,16 +1,15 @@
-package com.example.bytbok
+package se.rebeccazadig.bokholken.mypage
 
-import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -18,18 +17,27 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import layout.AnnonsAdapter
+import se.rebeccazadig.bokholken.R
+import se.rebeccazadig.bokholken.databinding.FragmentMyPageBinding
+import se.rebeccazadig.bokholken.listings.Annons
+import se.rebeccazadig.bokholken.listings.AnnonsAdapter
 
-class MinSidaFragment : Fragment() {
+class MyPageFragment : Fragment() {
+
+    private val viewModel: MyPageViewModel by viewModels() // viewmodel
+    private lateinit var binding: FragmentMyPageBinding
 
     var aAdapter = AnnonsAdapter()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        return inflater.inflate(R.layout.fragment_min_sida, container, false)
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        binding = FragmentMyPageBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this // databinding
+        binding.vm = viewModel // databinding kopplad till denna fragmentets viewmodel
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,12 +45,10 @@ class MinSidaFragment : Fragment() {
 
         aAdapter.minSidaFrag = this
 
-
-        val annonsRecview = view.findViewById<RecyclerView>(R.id.minaAnnonserRV)
+        val annonsRecview = binding.minaAnnonserRV
 
         val layoutmanager = GridLayoutManager(context, 2)
         annonsRecview.layoutManager = layoutmanager
-
 
         annonsRecview.adapter = aAdapter
 
@@ -50,51 +56,21 @@ class MinSidaFragment : Fragment() {
 
         loadBooks()
 
-        view.findViewById<Button>(R.id.raderaKontoButton).setOnClickListener {
-            val builder = AlertDialog.Builder(requireContext())
-            builder.setMessage("Are you sure you want to Delete?")
-                .setCancelable(false)
-                .setPositiveButton("Yes") { dialog, id ->
-                    deleteaccount()
-                }
-                .setNegativeButton("No") { dialog, id ->
-                    dialog.dismiss()
-                }
-            val alert = builder.create()
-            alert.show()
-        }
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
 
-        view.findViewById<Button>(R.id.logOutButton).setOnClickListener {
-            Firebase.auth.signOut()
-        }
-
-    }
-
-    fun deleteaccount() {
-
-        val user = Firebase.auth.currentUser!!
-
-        Log.d("PIADELETE", "User " + user.uid)
-
-
-        user.delete()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("PIADELETE", "User account deleted.")
-                } else {
-                    Log.d("PIADELETE", "DELETE FAIL ")
-                    Log.d("PIADELETE", task.exception!!.toString())
-                }
+            uiState.message?.let/*om allt till vänster om ?+.let inte null, visa toast*/ {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
+        }
     }
 
-    fun clickReadmore(clickannons : Annons) {
-        var goreadmore = MinSidaFragmentDirections.actionMinSidaFragmentToSkapaAnnonsFragment(clickannons.adid)
+    fun clickReadmore(clickannons: Annons) {
+        var goreadmore =
+            MyPageFragmentDirections.actionMinSidaFragmentToSkapaAnnonsFragment(clickannons.adid)
         findNavController().navigate(goreadmore)
     }
 
     fun loadBooks() {
-
         val database = Firebase.database
 
         val books = database.getReference("Books")
@@ -114,7 +90,7 @@ class MinSidaFragment : Fragment() {
                 aAdapter.filtreradeAnnonser = fbfruits
                 aAdapter.notifyDataSetChanged()
 
-                Log.i("pia11debug",fbfruits.toString())
+                Log.i("pia11debug", fbfruits.toString())
             }
 
             override fun onCancelled(databaseError: DatabaseError) {
@@ -122,6 +98,5 @@ class MinSidaFragment : Fragment() {
             }
         }
         mybooks.addListenerForSingleValueEvent(bookListener)
-
     }
 }

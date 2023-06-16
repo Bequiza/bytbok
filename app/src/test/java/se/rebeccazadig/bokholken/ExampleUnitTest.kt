@@ -1,4 +1,4 @@
-package com.example.bytbok
+package se.rebeccazadig.bokholken
 
 import org.junit.Test
 

@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e3d5ca"
-    tools:context=".GilladeObjektFragment">
+    tools:context=".listings.GilladeObjektFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayout2"
+        android:id="@+id/headerContainer"
         android:layout_width="0dp"
         android:layout_height="130dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Böcker jag vill läsa!"
+            android:text="@string/books_to_read"
             android:textColor="#6C584C"
             android:textSize="34sp"
             android:textStyle="bold"
@@ -48,5 +48,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/headerContainer" />
 </androidx.constraintlayout.widget.ConstraintLayout>

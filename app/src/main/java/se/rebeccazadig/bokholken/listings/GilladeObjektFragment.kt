@@ -1,27 +1,29 @@
-package com.example.bytbok
+package se.rebeccazadig.bokholken.listings
 
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import layout.AnnonsAdapter
+// import se.rebeccazadig.bokholken.GilladeObjektFragmentDirections
+import se.rebeccazadig.bokholken.R
 
 class GilladeObjektFragment : Fragment() {
 
     var aAdapter = AnnonsAdapter()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.fragment_gillade_objekt, container, false)
     }
@@ -36,7 +38,6 @@ class GilladeObjektFragment : Fragment() {
         val layoutmanager = GridLayoutManager(context, 2)
         annonsRecview.layoutManager = layoutmanager
 
-
         annonsRecview.adapter = aAdapter
         // annonsRecview.layoutManager = LinearLayoutManager(requireContext())
 
@@ -44,15 +45,14 @@ class GilladeObjektFragment : Fragment() {
 
         loadBooks()
 
-        //Koden nedan är fel nånstans
-       /*view.findViewById<Button>(R.id.lasMerAnnonsButton).setOnClickListener {
+        // Koden nedan är fel nånstans
+        /*view.findViewById<Button>(R.id.lasMerAnnonsButton).setOnClickListener {
 
-        findNavController().navigate(R.id.action_gilladeObjektFragment_to_fardigAnnonsFragment)
-        }*/
+         findNavController().navigate(R.id.action_gilladeObjektFragment_to_fardigAnnonsFragment)
+         }*/
     }
 
     fun loadBooks() {
-
         val database = Firebase.database
 
         val books = database.getReference("Books")
@@ -67,11 +67,12 @@ class GilladeObjektFragment : Fragment() {
 
             val favAnnons = mutableListOf<Annons>()
 
-            val sharedPref = activity?.getSharedPreferences("se.rebecca.bytbok", Context.MODE_PRIVATE)
+            val sharedPref =
+                activity?.getSharedPreferences("se.rebecca.bytbok", Context.MODE_PRIVATE)
             var favbooks = sharedPref!!.getStringSet("favbooks", setOf<String>())
 
-            for(book in fbfruits) {
-                if(favbooks!!.contains(book.adid)) {
+            for (book in fbfruits) {
+                if (favbooks!!.contains(book.adid)) {
                     favAnnons.add(book)
                 }
             }
@@ -79,13 +80,15 @@ class GilladeObjektFragment : Fragment() {
             aAdapter.filtreradeAnnonser = favAnnons
             aAdapter.notifyDataSetChanged()
 
-            Log.i("pia11debug",fbfruits.toString())
-
+            Log.i("pia11debug", fbfruits.toString())
         }
     }
 
-    fun clickReadmore(clickannons : Annons) {
-        var goreadmore = GilladeObjektFragmentDirections.actionGilladeObjektFragmentToFardigAnnonsFragment(clickannons.adid)
+    fun clickReadmore(clickannons: Annons) {
+        var goreadmore =
+            GilladeObjektFragmentDirections.actionGilladeObjektFragmentToFardigAnnonsFragment(
+                clickannons.adid,
+            )
         findNavController().navigate(goreadmore)
     }
 }
