@@ -20,11 +20,11 @@ import com.google.firebase.storage.ktx.storage
 // import se.rebeccazadig.bokholken.FardigAnnonsFragmentArgs
 import se.rebeccazadig.bokholken.R
 
-class FardigAnnonsFragment : Fragment() {
+class PublishedListingsFragment : Fragment() {
 
-    val args: FardigAnnonsFragmentArgs by navArgs()
+    val args: PublishedListingsFragmentArgs by navArgs()
 
-    var currentannons = Annons()
+    var currentannons = Listing()
 
     var adid = ""
 
@@ -34,7 +34,7 @@ class FardigAnnonsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_fardig_annons, container, false)
+        return inflater.inflate(R.layout.fragment_published_listings, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,7 +47,7 @@ class FardigAnnonsFragment : Fragment() {
         val books = database.getReference("Books").child(adid)
 
         books.get().addOnSuccessListener {
-            currentannons = it.getValue<Annons>()!!
+            currentannons = it.getValue<Listing>()!!
             currentannons.adid = it.key!!
 
             view.findViewById<TextView>(R.id.titelFardigAnnonsTV).text = currentannons.bokTitel
@@ -66,8 +66,8 @@ class FardigAnnonsFragment : Fragment() {
             val sharedPref =
                 activity?.getSharedPreferences("se.rebecca.bytbok", Context.MODE_PRIVATE)
 
-            var favbooks = sharedPref!!.getStringSet("favbooks", setOf<String>())!!.toMutableSet()
-            if (favbooks!!.contains(currentannons.adid)) {
+            val favbooks = sharedPref!!.getStringSet("favbooks", setOf<String>())!!.toMutableSet()
+            if (favbooks.contains(currentannons.adid)) {
                 favbooks!!.remove(currentannons.adid)
                 Toast.makeText(requireContext(), "Borttagen från favisar", Toast.LENGTH_SHORT).show()
             } else {

@@ -16,16 +16,16 @@ import com.google.firebase.ktx.Firebase
 // import se.rebeccazadig.bokholken.GilladeObjektFragmentDirections
 import se.rebeccazadig.bokholken.R
 
-class GilladeObjektFragment : Fragment() {
+class FavoriteListingsFragment : Fragment() {
 
-    var aAdapter = AnnonsAdapter()
+    var aAdapter = ListingAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        return inflater.inflate(R.layout.fragment_gillade_objekt, container, false)
+        return inflater.inflate(R.layout.fragment_favorite_listings, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,14 +58,14 @@ class GilladeObjektFragment : Fragment() {
         val books = database.getReference("Books")
 
         books.get().addOnSuccessListener {
-            val fbfruits = mutableListOf<Annons>()
+            val fbfruits = mutableListOf<Listing>()
             it.children.forEach { childsnap ->
-                var tempad = childsnap.getValue<Annons>()!!
+                var tempad = childsnap.getValue<Listing>()!!
                 tempad.adid = childsnap.key!!
                 fbfruits.add(tempad)
             }
 
-            val favAnnons = mutableListOf<Annons>()
+            val favAnnons = mutableListOf<Listing>()
 
             val sharedPref =
                 activity?.getSharedPreferences("se.rebecca.bytbok", Context.MODE_PRIVATE)
@@ -84,9 +84,9 @@ class GilladeObjektFragment : Fragment() {
         }
     }
 
-    fun clickReadmore(clickannons: Annons) {
+    fun clickReadmore(clickannons: Listing) {
         var goreadmore =
-            GilladeObjektFragmentDirections.actionGilladeObjektFragmentToFardigAnnonsFragment(
+            FavoriteListingsFragmentDirections.actionGilladeObjektFragmentToFardigAnnonsFragment(
                 clickannons.adid,
             )
         findNavController().navigate(goreadmore)

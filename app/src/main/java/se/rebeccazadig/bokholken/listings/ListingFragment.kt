@@ -14,15 +14,15 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import se.rebeccazadig.bokholken.R
-import se.rebeccazadig.bokholken.databinding.FragmentAnnonsBinding
+import se.rebeccazadig.bokholken.databinding.FragmentListingBinding
 
-class AnnonsFragment : Fragment() {
+class ListingFragment : Fragment() {
 
-    var aAdapter = AnnonsAdapter()
+    var aAdapter = ListingAdapter()
     private lateinit var searchView: SearchView
 
-    private val viewModel: AnnonsViewModel by viewModels()
-    private var _binding: FragmentAnnonsBinding? = null
+    private val viewModel: ListingViewModel by viewModels()
+    private var _binding: FragmentListingBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -30,7 +30,7 @@ class AnnonsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentAnnonsBinding.inflate(inflater, container, false)
+        _binding = FragmentListingBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -69,14 +69,14 @@ class AnnonsFragment : Fragment() {
         loadBooks()
 
         binding.nyAnnonsButton.setOnClickListener {
-            var goreadmore = AnnonsFragmentDirections.actionAnnonsFragmentToSkapaAnnonsFragment("")
+            var goreadmore = ListingFragmentDirections.actionAnnonsFragmentToSkapaAnnonsFragment("")
             findNavController().navigate(goreadmore)
         }
     }
 
-    fun clickReadmore(clickannons: Annons) {
+    fun clickReadmore(clickannons: Listing) {
         var goreadmore =
-            AnnonsFragmentDirections.actionAnnonsFragmentToFardigAnnonsFragment(clickannons.adid)
+            ListingFragmentDirections.actionAnnonsFragmentToFardigAnnonsFragment(clickannons.adid)
         findNavController().navigate(goreadmore)
     }
 
@@ -86,9 +86,9 @@ class AnnonsFragment : Fragment() {
         val books = database.getReference("Books")
 
         books.get().addOnSuccessListener {
-            val fbfruits = mutableListOf<Annons>()
+            val fbfruits = mutableListOf<Listing>()
             it.children.forEach { childsnap ->
-                var tempad = childsnap.getValue<Annons>()!!
+                var tempad = childsnap.getValue<Listing>()!!
                 tempad.adid = childsnap.key!!
                 fbfruits.add(tempad)
             }
@@ -109,7 +109,7 @@ class AnnonsFragment : Fragment() {
 
     private fun filterList(query: String?) {
         if (query != null) {
-            val filteredList = mutableListOf<Annons>()
+            val filteredList = mutableListOf<Listing>()
             for (i in aAdapter.allaAnnonser) {
                 if (i.stad!!.lowercase().contains(query.lowercase())) {
                     filteredList.add(i)

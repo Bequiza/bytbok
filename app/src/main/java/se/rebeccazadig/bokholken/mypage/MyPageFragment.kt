@@ -17,17 +17,16 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.databinding.FragmentMyPageBinding
-import se.rebeccazadig.bokholken.listings.Annons
-import se.rebeccazadig.bokholken.listings.AnnonsAdapter
+import se.rebeccazadig.bokholken.listings.Listing
+import se.rebeccazadig.bokholken.listings.ListingAdapter
 
 class MyPageFragment : Fragment() {
 
     private val viewModel: MyPageViewModel by viewModels() // viewmodel
     private lateinit var binding: FragmentMyPageBinding
 
-    var aAdapter = AnnonsAdapter()
+    var aAdapter = ListingAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,7 +63,7 @@ class MyPageFragment : Fragment() {
         }
     }
 
-    fun clickReadmore(clickannons: Annons) {
+    fun clickReadmore(clickannons: Listing) {
         var goreadmore =
             MyPageFragmentDirections.actionMinSidaFragmentToSkapaAnnonsFragment(clickannons.adid)
         findNavController().navigate(goreadmore)
@@ -80,9 +79,9 @@ class MyPageFragment : Fragment() {
         val bookListener = object : ValueEventListener {
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val fbfruits = mutableListOf<Annons>()
+                val fbfruits = mutableListOf<Listing>()
                 dataSnapshot.children.forEach { childsnap ->
-                    var tempad = childsnap.getValue<Annons>()!!
+                    var tempad = childsnap.getValue<Listing>()!!
                     tempad.adid = childsnap.key!!
                     fbfruits.add(tempad)
                 }

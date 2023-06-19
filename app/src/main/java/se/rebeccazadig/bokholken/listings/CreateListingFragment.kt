@@ -25,13 +25,13 @@ import se.rebeccazadig.bokholken.R
 // import se.rebeccazadig.bokholken.SkapaAnnonsFragmentArgs
 import java.io.ByteArrayOutputStream
 
-class SkapaAnnonsFragment : Fragment() {
+class CreateListingFragment : Fragment() {
 
-    val args: SkapaAnnonsFragmentArgs by navArgs()
+    val args: CreateListingFragmentArgs by navArgs()
 
     val user = Firebase.auth.currentUser
 
-    var currentannons: Annons? = null
+    var currentannons: Listing? = null
 
     var annonsbild: Bitmap? = null
 
@@ -40,7 +40,7 @@ class SkapaAnnonsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        return inflater.inflate(R.layout.fragment_skapa_annons, container, false)
+        return inflater.inflate(R.layout.fragment_create_listing, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class SkapaAnnonsFragment : Fragment() {
             val books = database.getReference("Books").child(adid)
 
             books.get().addOnSuccessListener {
-                currentannons = it.getValue<Annons>()!!
+                currentannons = it.getValue<Listing>()!!
                 currentannons!!.adid = it.key!!
 
                 view.findViewById<EditText>(R.id.titelET).setText(currentannons!!.bokTitel)
@@ -82,7 +82,7 @@ class SkapaAnnonsFragment : Fragment() {
             val database = Firebase.database
             val myRef = database.getReference("Books")
 
-            var someBooks = Annons(
+            var someBooks = Listing(
                 bokTitel = addBokTitel,
                 bokForfattare =
                 addBokForfattare,

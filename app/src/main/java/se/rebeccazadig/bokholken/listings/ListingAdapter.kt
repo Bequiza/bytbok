@@ -14,14 +14,14 @@ import com.google.firebase.storage.ktx.storage
 import se.rebeccazadig.bokholken.*
 import se.rebeccazadig.bokholken.mypage.MyPageFragment
 
-class AnnonsAdapter() : RecyclerView.Adapter<AnnonsAdapter.ViewHolder>() {
+class ListingAdapter() : RecyclerView.Adapter<ListingAdapter.ViewHolder>() {
 
     var minSidaFrag: MyPageFragment? = null
-    var annonsfrag: AnnonsFragment? = null
-    var gilladefrag: GilladeObjektFragment? = null
+    var annonsfrag: ListingFragment? = null
+    var gilladefrag: FavoriteListingsFragment? = null
 
-    var allaAnnonser = mutableListOf<Annons>()
-    var filtreradeAnnonser = mutableListOf<Annons>()
+    var allaAnnonser = mutableListOf<Listing>()
+    var filtreradeAnnonser = mutableListOf<Listing>()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val bokBild: ImageView

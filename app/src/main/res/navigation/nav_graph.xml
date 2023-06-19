@@ -7,18 +7,18 @@
 
     <fragment
         android:id="@+id/gilladeObjektFragment"
-        android:name="se.rebeccazadig.bokholken.listings.GilladeObjektFragment"
+        android:name="se.rebeccazadig.bokholken.listings.FavoriteListingsFragment"
         android:label="fragment_gillade_objekt"
-        tools:layout="@layout/fragment_gillade_objekt" >
+        tools:layout="@layout/fragment_favorite_listings" >
         <action
             android:id="@+id/action_gilladeObjektFragment_to_fardigAnnonsFragment"
             app:destination="@id/fardigAnnonsFragment" />
     </fragment>
     <fragment
         android:id="@+id/skapaAnnonsFragment"
-        android:name="se.rebeccazadig.bokholken.listings.SkapaAnnonsFragment"
+        android:name="se.rebeccazadig.bokholken.listings.CreateListingFragment"
         android:label="fragment_skapa_annons"
-        tools:layout="@layout/fragment_skapa_annons" >
+        tools:layout="@layout/fragment_create_listing" >
         <argument
             android:name="annonsid"
             app:argType="string" />
@@ -34,9 +34,9 @@
     </fragment>
     <fragment
         android:id="@+id/annonsFragment"
-        android:name="se.rebeccazadig.bokholken.listings.AnnonsFragment"
+        android:name="se.rebeccazadig.bokholken.listings.ListingFragment"
         android:label="fragment_annons"
-        tools:layout="@layout/fragment_annons" >
+        tools:layout="@layout/fragment_listing" >
         <action
             android:id="@+id/action_annonsFragment_to_skapaAnnonsFragment"
             app:destination="@id/skapaAnnonsFragment" />
@@ -46,9 +46,9 @@
     </fragment>
     <fragment
         android:id="@+id/fardigAnnonsFragment"
-        android:name="se.rebeccazadig.bokholken.listings.FardigAnnonsFragment"
+        android:name="se.rebeccazadig.bokholken.listings.PublishedListingsFragment"
         android:label="fragment_fardig_annons"
-        tools:layout="@layout/fragment_fardig_annons" >
+        tools:layout="@layout/fragment_published_listings" >
         <argument
             android:name="annonsid"
             app:argType="string" />

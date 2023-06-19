@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e3d5ca"
-    tools:context=".listings.AnnonsFragment">
+    tools:context=".listings.ListingFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

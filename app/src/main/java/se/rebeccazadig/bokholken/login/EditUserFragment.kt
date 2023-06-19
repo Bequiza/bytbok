@@ -33,7 +33,7 @@ class EditUserFragment : Fragment() {
             val database = Firebase.database
             val myRef = database.getReference("EditMinSida")
 
-            var someChanges = EditPage(editUserName, editContact, editCity)
+            var someChanges = EditUser(editUserName, editContact, editCity)
             myRef.push().setValue(someChanges)
         }
     }

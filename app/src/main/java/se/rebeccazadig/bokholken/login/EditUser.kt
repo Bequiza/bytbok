@@ -1,6 +1,6 @@
 package se.rebeccazadig.bokholken.login
 
-data class EditPage(
+data class EditUser(
 
     val editUserName: String? = null,
     val editContact: String? = null,

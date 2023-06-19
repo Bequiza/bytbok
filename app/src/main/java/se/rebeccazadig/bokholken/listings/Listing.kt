@@ -1,6 +1,6 @@
 package se.rebeccazadig.bokholken.listings
 
-data class Annons(
+data class Listing(
     val bokTitel: String? = null,
     val bokForfattare: String? = null,
     val genre: String? = null,
