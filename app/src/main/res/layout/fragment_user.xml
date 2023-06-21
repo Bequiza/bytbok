@@ -8,7 +8,7 @@
     tools:context=".login.UserFragment">
 
     <TextView
-        android:id="@+id/editAnvandarnamnTV"
+        android:id="@+id/editNameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -17,10 +17,10 @@
         android:text="Ange nytt användarnamn:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAnvandareTV" />
+        app:layout_constraintTop_toBottomOf="@+id/editUserHeaderTV" />
 
     <TextView
-        android:id="@+id/editKontaktsattTV"
+        android:id="@+id/editcontactTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -29,10 +29,10 @@
         android:text="Redigera kontaktsätt:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAnvandarNamnET" />
+        app:layout_constraintTop_toBottomOf="@+id/editNameET" />
 
     <EditText
-        android:id="@+id/editAnvandarNamnET"
+        android:id="@+id/editNameET"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
@@ -42,10 +42,10 @@
         android:textColor="#6C584C"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editAnvandarnamnTV" />
+        app:layout_constraintTop_toBottomOf="@+id/editNameTV" />
 
     <Button
-        android:id="@+id/sparaÄndringarButton"
+        android:id="@+id/saveButton"
         android:layout_width="96dp"
         android:layout_height="50dp"
         android:layout_marginStart="8dp"
@@ -54,10 +54,10 @@
         android:textSize="10sp"
         android:backgroundTint="#774936"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editStadET" />
+        app:layout_constraintTop_toBottomOf="@+id/editCityET" />
 
     <Button
-        android:id="@+id/raderaButton"
+        android:id="@+id/eraseAccountButton"
         android:layout_width="96dp"
         android:layout_height="50dp"
         android:layout_marginStart="32dp"
@@ -65,11 +65,11 @@
         android:text="Radera konto"
         android:textSize="10sp"
         android:backgroundTint="#774936"
-        app:layout_constraintStart_toEndOf="@+id/sparaÄndringarButton"
-        app:layout_constraintTop_toBottomOf="@+id/editStadET" />
+        app:layout_constraintStart_toEndOf="@+id/saveButton"
+        app:layout_constraintTop_toBottomOf="@+id/editCityET" />
 
     <TextView
-        android:id="@+id/editAnvandareTV"
+        android:id="@+id/editUserHeaderTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -83,7 +83,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/editNyStadTV"
+        android:id="@+id/editCityTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -92,10 +92,10 @@
         android:text="Ange ny stad, stadsdel:"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editKontaktsattET" />
+        app:layout_constraintTop_toBottomOf="@+id/editContactET" />
 
     <EditText
-        android:id="@+id/editStadET"
+        android:id="@+id/editCityET"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
@@ -106,10 +106,10 @@
         android:hint="Stad, stadsdel"
         android:inputType="textMultiLine"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editNyStadTV" />
+        app:layout_constraintTop_toBottomOf="@+id/editCityTV" />
 
     <EditText
-        android:id="@+id/editKontaktsattET"
+        android:id="@+id/editContactET"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
@@ -120,5 +120,5 @@
         android:hint="Kontaktsätt"
         android:inputType="textMultiLine"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editKontaktsattTV" />
+        app:layout_constraintTop_toBottomOf="@+id/editcontactTV" />
 </androidx.constraintlayout.widget.ConstraintLayout>

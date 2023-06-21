@@ -2,7 +2,7 @@ package se.rebeccazadig.bokholken.mypage
 
 class MyPageRepository private constructor() {
 
-    // var aAdapter = ListingAdapter()
+    // var aAdapter = AdvertsAdapter()
     // // aAdapter.minSidaFrag = this
 
     // fun loadBooks() {
@@ -15,9 +15,9 @@ class MyPageRepository private constructor() {
     //     val bookListener = object : ValueEventListener {
 
     //         override fun onDataChange(dataSnapshot: DataSnapshot) {
-    //             val fbfruits = mutableListOf<Listing>()
+    //             val fbfruits = mutableListOf<Adverts>()
     //             dataSnapshot.children.forEach { childsnap ->
-    //                 var tempad = childsnap.getValue<Listing>()!!
+    //                 var tempad = childsnap.getValue<Adverts>()!!
     //                 tempad.adid = childsnap.key!!
     //                 fbfruits.add(tempad)
     //             }

@@ -1,4 +1,4 @@
-package se.rebeccazadig.bokholken.listings
+package se.rebeccazadig.bokholken.Adverts
 
 import android.content.Context
 import android.os.Bundle
@@ -16,16 +16,16 @@ import com.google.firebase.ktx.Firebase
 // import se.rebeccazadig.bokholken.GilladeObjektFragmentDirections
 import se.rebeccazadig.bokholken.R
 
-class FavoriteListingsFragment : Fragment() {
+class FavoriteFragment : Fragment() {
 
-    var aAdapter = ListingAdapter()
+    var aAdapter = AdvertsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        return inflater.inflate(R.layout.fragment_favorite_listings, container, false)
+        return inflater.inflate(R.layout.fragment_favorite, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -33,7 +33,7 @@ class FavoriteListingsFragment : Fragment() {
 
         aAdapter.gilladefrag = this
 
-        val annonsRecview = view.findViewById<RecyclerView>(R.id.villLäsaRV)
+        val annonsRecview = view.findViewById<RecyclerView>(R.id.favoritesRV)
 
         val layoutmanager = GridLayoutManager(context, 2)
         annonsRecview.layoutManager = layoutmanager
@@ -46,7 +46,7 @@ class FavoriteListingsFragment : Fragment() {
         loadBooks()
 
         // Koden nedan är fel nånstans
-        /*view.findViewById<Button>(R.id.lasMerAnnonsButton).setOnClickListener {
+        /*view.findViewById<Button>(R.id.favoritesButton).setOnClickListener {
 
          findNavController().navigate(R.id.action_gilladeObjektFragment_to_fardigAnnonsFragment)
          }*/
@@ -58,14 +58,14 @@ class FavoriteListingsFragment : Fragment() {
         val books = database.getReference("Books")
 
         books.get().addOnSuccessListener {
-            val fbfruits = mutableListOf<Listing>()
+            val fbfruits = mutableListOf<Adverts>()
             it.children.forEach { childsnap ->
-                var tempad = childsnap.getValue<Listing>()!!
+                var tempad = childsnap.getValue<Adverts>()!!
                 tempad.adid = childsnap.key!!
                 fbfruits.add(tempad)
             }
 
-            val favAnnons = mutableListOf<Listing>()
+            val favAnnons = mutableListOf<Adverts>()
 
             val sharedPref =
                 activity?.getSharedPreferences("se.rebecca.bytbok", Context.MODE_PRIVATE)
@@ -84,9 +84,9 @@ class FavoriteListingsFragment : Fragment() {
         }
     }
 
-    fun clickReadmore(clickannons: Listing) {
+    fun clickReadmore(clickannons: Adverts) {
         var goreadmore =
-            FavoriteListingsFragmentDirections.actionGilladeObjektFragmentToFardigAnnonsFragment(
+            FavoriteFragmentDirections.actionGilladeObjektFragmentToFardigAnnonsFragment(
                 clickannons.adid,
             )
         findNavController().navigate(goreadmore)

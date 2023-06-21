@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5EBE0"
-    tools:context=".listings.PublishedListingsFragment">
+    tools:context=".Adverts.PublishedAdvertsFragment">
 
     <ImageView
-        android:id="@+id/bildFardigAnnons"
+        android:id="@+id/publishedAdvertImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -18,7 +18,7 @@
         tools:src="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/titelFardigAnnonsTV"
+        android:id="@+id/titleAdvertTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
@@ -29,10 +29,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bildFardigAnnons" />
+        app:layout_constraintTop_toBottomOf="@+id/publishedAdvertImage" />
 
     <TextView
-        android:id="@+id/forfattareFardigAnnonsTV"
+        android:id="@+id/authorAdvertTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
@@ -42,10 +42,10 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/titelFardigAnnonsTV" />
+        app:layout_constraintTop_toBottomOf="@+id/titleAdvertTV" />
 
     <TextView
-        android:id="@+id/finnsFardigAnnonsTV"
+        android:id="@+id/locationAdvertTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -54,10 +54,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/genreFardigAnnons" />
+        app:layout_constraintTop_toBottomOf="@+id/genreAdvertTV" />
 
     <TextView
-        android:id="@+id/stadFardigAnnonsTV"
+        android:id="@+id/cityAdvertTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -65,10 +65,10 @@
         android:textColor="#6C584C"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/finnsFardigAnnonsTV" />
+        app:layout_constraintTop_toBottomOf="@+id/locationAdvertTV" />
 
     <TextView
-        android:id="@+id/kontaktFardigAnnonsTV"
+        android:id="@+id/contactAdvertTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -77,10 +77,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.513"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stadFardigAnnonsTV" />
+        app:layout_constraintTop_toBottomOf="@+id/cityAdvertTV" />
 
     <TextView
-        android:id="@+id/telEmailFardigAnnonsTV"
+        android:id="@+id/contactUserAdvertTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -88,10 +88,10 @@
         android:textColor="#6C584C"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/kontaktFardigAnnonsTV" />
+        app:layout_constraintTop_toBottomOf="@+id/contactAdvertTV" />
 
     <Button
-        android:id="@+id/villLasaFardigAnnonsButton"
+        android:id="@+id/favoriteButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -100,10 +100,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.531"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/telEmailFardigAnnonsTV" />
+        app:layout_constraintTop_toBottomOf="@+id/contactUserAdvertTV" />
 
     <TextView
-        android:id="@+id/genreFardigAnnons"
+        android:id="@+id/genreAdvertTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -111,7 +111,7 @@
         android:textColor="#6C584C"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/forfattareFardigAnnonsTV" />
+        app:layout_constraintTop_toBottomOf="@+id/authorAdvertTV" />
 
     <TextView
         android:id="@+id/genreFardigTV"
@@ -122,5 +122,5 @@
         android:textColor="#6C584C"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/forfattareFardigAnnonsTV" />
+        app:layout_constraintTop_toBottomOf="@+id/authorAdvertTV" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package se.rebeccazadig.bokholken.listings
+package se.rebeccazadig.bokholken.Adverts
 
 import android.os.Bundle
 import android.util.Log
@@ -14,15 +14,15 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import se.rebeccazadig.bokholken.R
-import se.rebeccazadig.bokholken.databinding.FragmentListingBinding
+import se.rebeccazadig.bokholken.databinding.FragmentAdvertsBinding
 
-class ListingFragment : Fragment() {
+class AdvertsFragment : Fragment() {
 
-    var aAdapter = ListingAdapter()
+    var aAdapter = AdvertsAdapter()
     private lateinit var searchView: SearchView
 
-    private val viewModel: ListingViewModel by viewModels()
-    private var _binding: FragmentListingBinding? = null
+    private val viewModel: AdvertViewModel by viewModels()
+    private var _binding: FragmentAdvertsBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -30,7 +30,7 @@ class ListingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentListingBinding.inflate(inflater, container, false)
+        _binding = FragmentAdvertsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -69,14 +69,14 @@ class ListingFragment : Fragment() {
         loadBooks()
 
         binding.nyAnnonsButton.setOnClickListener {
-            var goreadmore = ListingFragmentDirections.actionAnnonsFragmentToSkapaAnnonsFragment("")
+            var goreadmore = AdvertsFragmentDirections.actionAdvertsFragmentToCreateAdvertsFragment("")
             findNavController().navigate(goreadmore)
         }
     }
 
-    fun clickReadmore(clickannons: Listing) {
+    fun clickReadmore(clickannons: Adverts) {
         var goreadmore =
-            ListingFragmentDirections.actionAnnonsFragmentToFardigAnnonsFragment(clickannons.adid)
+            AdvertsFragmentDirections.actionAdvertsFragmentToPublishedAdvertsFragment(clickannons.adid)
         findNavController().navigate(goreadmore)
     }
 
@@ -86,16 +86,16 @@ class ListingFragment : Fragment() {
         val books = database.getReference("Books")
 
         books.get().addOnSuccessListener {
-            val fbfruits = mutableListOf<Listing>()
+            val fbfruits = mutableListOf<Adverts>()
             it.children.forEach { childsnap ->
-                var tempad = childsnap.getValue<Listing>()!!
+                var tempad = childsnap.getValue<Adverts>()!!
                 tempad.adid = childsnap.key!!
                 fbfruits.add(tempad)
             }
 
             view?.let { fragview ->
                 // fragview.findViewById<TextView>(R.id.antalAnnonserTV).text = fbfruits.size.toString()
-                fragview.findViewById<TextView>(R.id.bytBokInfoTV).text =
+                fragview.findViewById<TextView>(R.id.InfoAdvertsTV).text =
                     "Alla tillgängliga böcker " + fbfruits.size.toString()
             }
 
@@ -109,7 +109,7 @@ class ListingFragment : Fragment() {
 
     private fun filterList(query: String?) {
         if (query != null) {
-            val filteredList = mutableListOf<Listing>()
+            val filteredList = mutableListOf<Adverts>()
             for (i in aAdapter.allaAnnonser) {
                 if (i.stad!!.lowercase().contains(query.lowercase())) {
                     filteredList.add(i)

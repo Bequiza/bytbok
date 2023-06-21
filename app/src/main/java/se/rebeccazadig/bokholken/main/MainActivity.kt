@@ -21,8 +21,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
+        setContentView(binding.root)
 
         navController = findNavController(R.id.nav_host_fragment_activity_main)
         // Passing each menu ID as a set of Ids because each
@@ -30,15 +29,11 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        viewModel.isLoggedIn.observe(this) {
-            if (viewModel.isLoggedIn()) {
-                navController.apply {
-                    navigate(R.id.action_global_annonsFragment2)
-                }
+        viewModel.isLoggedIn.observe(this) { isLoggedIn ->
+            if (isLoggedIn == true) {
+                navController.navigate(R.id.action_to_advertsFragment)
             } else {
-                navController.apply {
-                    navigate(R.id.action_to_login)
-                }
+                navController.navigate(R.id.action_to_login_nav_graph)
             }
         }
     }
