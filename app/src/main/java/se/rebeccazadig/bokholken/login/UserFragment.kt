@@ -11,7 +11,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import se.rebeccazadig.bokholken.R
 
-class EditUserFragment : Fragment() {
+class UserFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +33,7 @@ class EditUserFragment : Fragment() {
             val database = Firebase.database
             val myRef = database.getReference("EditMinSida")
 
-            var someChanges = EditUser(editUserName, editContact, editCity)
+            var someChanges = User(editUserName, editContact, editCity)
             myRef.push().setValue(someChanges)
         }
     }
