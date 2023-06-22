@@ -24,7 +24,7 @@
             app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/myPageFragment"
+        android:id="@+id/userFragment"
         android:name="se.rebeccazadig.bokholken.mypage.MyPageFragment"
         android:label="fragment_my_page"
         tools:layout="@layout/fragment_my_page">
@@ -33,10 +33,10 @@
             app:destination="@id/createAdvertsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/advertsFragment"
-        android:name="se.rebeccazadig.bokholken.Adverts.AdvertsFragment"
-        android:label="fragment_adverts"
-        tools:layout="@layout/fragment_adverts">
+        android:id="@+id/advertFragment"
+        android:name="se.rebeccazadig.bokholken.listings.ListingFragment"
+        android:label="fragment_annons"
+        tools:layout="@layout/fragment_listing" >
         <action
             android:id="@+id/action_advertsFragment_to_createAdvertsFragment"
             app:destination="@id/createAdvertsFragment" />
@@ -62,7 +62,12 @@
             android:id="@+id/loginRegisterFragment"
             android:name="se.rebeccazadig.bokholken.login.LoginRegisterFragment"
             android:label="LoginRegisterFragment"
-            tools:layout="@layout/fragment_login" />
+            tools:layout="@layout/fragment_login">
+
+        </fragment>
+        <action
+            android:id="@+id/action_global_annonsFragment2"
+            app:destination="@id/advertFragment" />
     </navigation>
 
     <action

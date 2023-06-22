@@ -10,7 +10,11 @@
         android:icon="@drawable/baseline_favorite_24"
         android:title="Böcker" />
     <item
-        android:id="@+id/myPageFragment"
+        android:id="@+id/userFragment"
         android:icon="@drawable/baseline_person_24"
-        android:title="MinSida" />
+        android:title="Min Sida" />
+    <item
+        android:id="@+id/userContactFragment"
+        android:icon="@drawable/baseline_info_24"
+        android:title="Mina uppgifter" />
 </menu>
