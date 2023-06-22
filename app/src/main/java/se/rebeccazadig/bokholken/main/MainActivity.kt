@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.isLoggedIn.observe(this) {
             if (viewModel.isLoggedIn()) {
                 navController.apply {
-                    navigate(R.id.action_global_annonsFragment2)
+            //        navigate(R.id.action_global_annonsFragment2)
                 }
             } else {
                 navController.apply {

@@ -2,15 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/annonsFragment"
+        android:id="@+id/advertFragment"
         android:icon="@drawable/baseline_home_24"
         android:title="Alla annonser" />
     <item
-        android:id="@+id/gilladeObjektFragment"
+        android:id="@+id/favoritesFragment"
         android:icon="@drawable/baseline_favorite_24"
         android:title="Böcker" />
     <item
-        android:id="@+id/minSidaFragment"
+        android:id="@+id/userFragment"
         android:icon="@drawable/baseline_person_24"
-        android:title="MinSida" />
+        android:title="Min Sida" />
+    <item
+        android:id="@+id/userContactFragment"
+        android:icon="@drawable/baseline_info_24"
+        android:title="Mina uppgifter" />
 </menu>

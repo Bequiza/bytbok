@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/annonsFragment">
+    app:startDestination="@id/advertFragment">
 
     <fragment
-        android:id="@+id/gilladeObjektFragment"
+        android:id="@+id/favoritesFragment"
         android:name="se.rebeccazadig.bokholken.listings.FavoriteListingsFragment"
         android:label="fragment_gillade_objekt"
         tools:layout="@layout/fragment_favorite_listings" >
@@ -24,7 +24,7 @@
             app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/minSidaFragment"
+        android:id="@+id/userFragment"
         android:name="se.rebeccazadig.bokholken.mypage.MyPageFragment"
         android:label="fragment_min_sida"
         tools:layout="@layout/fragment_my_page" >
@@ -33,7 +33,7 @@
             app:destination="@id/skapaAnnonsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/annonsFragment"
+        android:id="@+id/advertFragment"
         android:name="se.rebeccazadig.bokholken.listings.ListingFragment"
         android:label="fragment_annons"
         tools:layout="@layout/fragment_listing" >
@@ -64,7 +64,7 @@
         </fragment>
         <action
             android:id="@+id/action_global_annonsFragment2"
-            app:destination="@id/annonsFragment" />
+            app:destination="@id/advertFragment" />
     </navigation>
     <action android:id="@+id/action_to_login" app:destination="@id/login_nav_graph" />
 </navigation>
