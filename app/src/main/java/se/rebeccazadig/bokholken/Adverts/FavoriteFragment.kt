@@ -48,7 +48,7 @@ class FavoriteFragment : Fragment() {
         // Koden nedan är fel nånstans
         /*view.findViewById<Button>(R.id.favoritesButton).setOnClickListener {
 
-         findNavController().navigate(R.id.action_gilladeObjektFragment_to_fardigAnnonsFragment)
+         findNavController().navigate(R.id.action_favoritesFragment_to_publishedAdvertsFragment)
          }*/
     }
 
@@ -85,10 +85,10 @@ class FavoriteFragment : Fragment() {
     }
 
     fun clickReadmore(clickannons: Adverts) {
-        var goreadmore =
-            FavoriteFragmentDirections.actionGilladeObjektFragmentToFardigAnnonsFragment(
-                clickannons.adid,
-            )
-        findNavController().navigate(goreadmore)
+      // var goreadmore =
+      //     FavoriteFragmentDirections.actionGilladeObjektFragmentToFardigAnnonsFragment(
+      //         clickannons.adid,
+      //     )
+      // findNavController().navigate(goreadmore)
     }
 }

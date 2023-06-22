@@ -12,11 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import se.rebeccazadig.bokholken.*
-import se.rebeccazadig.bokholken.mypage.MyPageFragment
+import se.rebeccazadig.bokholken.myAdverts.MyAdvertsFragment
 
 class AdvertsAdapter() : RecyclerView.Adapter<AdvertsAdapter.ViewHolder>() {
 
-    var minSidaFrag: MyPageFragment? = null
+    var minSidaFrag: MyAdvertsFragment? = null
     var annonsfrag: AdvertsFragment? = null
     var gilladefrag: FavoriteFragment? = null
 

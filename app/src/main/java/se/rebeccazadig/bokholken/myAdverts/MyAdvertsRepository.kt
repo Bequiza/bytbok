@@ -1,6 +1,6 @@
-package se.rebeccazadig.bokholken.mypage
+package se.rebeccazadig.bokholken.myAdverts
 
-class MyPageRepository private constructor() {
+class MyAdvertsRepository private constructor() {
 
     // var aAdapter = AdvertsAdapter()
     // // aAdapter.minSidaFrag = this
@@ -36,9 +36,9 @@ class MyPageRepository private constructor() {
     // }
 
     companion object {
-        private var instance: MyPageRepository? = null
+        private var instance: MyAdvertsRepository? = null
 
-        fun getInstance() = instance ?: MyPageRepository().also {
+        fun getInstance() = instance ?: MyAdvertsRepository().also {
             instance = it
         }
     }

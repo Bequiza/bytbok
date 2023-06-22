@@ -6,15 +6,15 @@
         android:icon="@drawable/baseline_home_24"
         android:title="Alla annonser" />
     <item
+        android:id="@+id/myAdvertsFragment"
+        android:icon="@drawable/baseline_advert"
+        android:title="Mina annonser" />
+    <item
         android:id="@+id/favoritesFragment"
         android:icon="@drawable/baseline_favorite_24"
-        android:title="Böcker" />
+        android:title="Favoriter" />
     <item
-        android:id="@+id/userFragment"
+        android:id="@+id/userInfoFragment"
         android:icon="@drawable/baseline_person_24"
-        android:title="Min Sida" />
-    <item
-        android:id="@+id/userContactFragment"
-        android:icon="@drawable/baseline_info_24"
-        android:title="Mina uppgifter" />
+        android:title="Min info" />
 </menu>

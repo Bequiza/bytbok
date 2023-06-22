@@ -75,8 +75,6 @@ class LoginRepository private constructor() /*primary constructor*/ {
             AuthResult.Failure("${e.message}")
         }
     }
-
-    // förklara koden nedan
     companion object {
         private var instance: LoginRepository? = null
 

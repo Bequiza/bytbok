@@ -1,4 +1,4 @@
-package se.rebeccazadig.bokholken.Adverts
+package se.rebeccazadig.bokholken.Adverts // ktlint-disable package-name
 
 import android.os.Bundle
 import android.util.Log
@@ -57,7 +57,7 @@ class AdvertsFragment : Fragment() {
 
         aAdapter.annonsfrag = this
 
-        val annonsRecview = binding.allaAnnonserRV
+        val annonsRecview = binding.allAdvertsRV
 
         val layoutmanager = GridLayoutManager(context, 2)
         annonsRecview.layoutManager = layoutmanager
@@ -68,7 +68,7 @@ class AdvertsFragment : Fragment() {
 
         loadBooks()
 
-        binding.nyAnnonsButton.setOnClickListener {
+        binding.newAdvertButton.setOnClickListener {
             var goreadmore = AdvertsFragmentDirections.actionAdvertsFragmentToCreateAdvertsFragment("")
             findNavController().navigate(goreadmore)
         }

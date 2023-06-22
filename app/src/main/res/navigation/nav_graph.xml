@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/advertsFragment">
+    app:startDestination="@id/advertFragment">
 
     <fragment
         android:id="@+id/favoritesFragment"
@@ -11,8 +11,17 @@
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorite">
         <action
-            android:id="@+id/action_gilladeObjektFragment_to_fardigAnnonsFragment"
+            android:id="@+id/action_favoritesFragment_to_publishedAdvertsFragment"
             app:destination="@id/publishedAdvertsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myAdvertsFragment"
+        android:name="se.rebeccazadig.bokholken.myAdverts.MyAdvertsFragment"
+        android:label="fragment_my_adverts"
+        tools:layout="@layout/fragment_my_adverts">
+        <action
+            android:id="@+id/action_myPageFragment_to_createAdvertsFragment"
+            app:destination="@id/createAdvertsFragment" />
     </fragment>
     <fragment
         android:id="@+id/createAdvertsFragment"
@@ -72,4 +81,9 @@
     <action
         android:id="@+id/action_to_login_nav_graph"
         app:destination="@id/login_nav_graph" />
+    <fragment
+        android:id="@+id/userInfoFragment"
+        android:name="se.rebeccazadig.bokholken.login.UserFragment"
+        android:label="fragment_user"
+        tools:layout="@layout/fragment_user" />
 </navigation>

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.google.firebase.database.ktx.database
@@ -16,12 +17,15 @@ class UserFragment : Fragment() {
 
     private val viewModel: UserViewModel by viewModels()
     private lateinit var binding: FragmentUserBinding
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         binding = FragmentUserBinding.inflate(layoutInflater, container, false)
+        binding.lifecycleOwner = this
+        binding.vm = viewModel
         // Inflate the layout for this fragment
         return binding.root
     }
@@ -39,6 +43,13 @@ class UserFragment : Fragment() {
 
             var someChanges = User(editUserName, editContact, editCity)
             myRef.push().setValue(someChanges)
+        }
+
+        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+
+            uiState.message?.let/*om allt till vänster om ?+.let inte null, visa toast*/ {
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            }
         }
     }
 }

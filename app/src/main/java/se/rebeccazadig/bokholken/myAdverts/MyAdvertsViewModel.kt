@@ -1,12 +1,10 @@
-package se.rebeccazadig.bokholken.mypage
+package se.rebeccazadig.bokholken.myAdverts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavController
 import kotlinx.coroutines.launch
-import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.login.AuthResult
 import se.rebeccazadig.bokholken.login.LoginRepository
 
@@ -16,10 +14,10 @@ internal data class UiState(
     val message: String?,
 )
 
-class MyPageViewModel : ViewModel() {
+class MyAdvertsViewModel : ViewModel() {
 
     private val loginRepo = LoginRepository.getInstance()
-    private val myPageRepo = MyPageRepository.getInstance()
+    private val myAdvertsRepo = MyAdvertsRepository.getInstance()
 
     val inProgress = MutableLiveData(false)
     private val _uiState = MutableLiveData(UiState(false, null))
