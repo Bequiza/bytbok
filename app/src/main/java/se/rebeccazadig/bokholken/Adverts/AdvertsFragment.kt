@@ -111,15 +111,15 @@ class AdvertsFragment : Fragment() {
         if (query != null) {
             val filteredList = mutableListOf<Adverts>()
             for (i in aAdapter.allaAnnonser) {
-                if (i.stad!!.lowercase().contains(query.lowercase())) {
+                if (i.city!!.lowercase().contains(query.lowercase())) {
                     filteredList.add(i)
                     continue
                 }
-                if (i.bokTitel!!.lowercase().contains(query.lowercase())) {
+                if (i.bookTitle!!.lowercase().contains(query.lowercase())) {
                     filteredList.add(i)
                     continue
                 }
-                if (i.bokForfattare!!.lowercase().contains(query.lowercase())) {
+                if (i.bookAuthor!!.lowercase().contains(query.lowercase())) {
                     filteredList.add(i)
                     continue
                 }

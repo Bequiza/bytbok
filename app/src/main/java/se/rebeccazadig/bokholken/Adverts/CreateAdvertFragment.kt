@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
@@ -22,11 +21,14 @@ import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import se.rebeccazadig.bokholken.R
+import se.rebeccazadig.bokholken.databinding.FragmentCreateAdvertBinding
 // import se.rebeccazadig.bokholken.SkapaAnnonsFragmentArgs
 import java.io.ByteArrayOutputStream
 
 class CreateAdvertFragment : Fragment() {
 
+    private var _binding: FragmentCreateAdvertBinding? = null
+    private val binding get() = _binding!!
     val args: CreateAdvertFragmentArgs by navArgs()
 
     val user = Firebase.auth.currentUser
@@ -40,7 +42,9 @@ class CreateAdvertFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        return inflater.inflate(R.layout.fragment_create_advert, container, false)
+        _binding = FragmentCreateAdvertBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,34 +65,33 @@ class CreateAdvertFragment : Fragment() {
                 currentannons = it.getValue<Adverts>()!!
                 currentannons!!.adid = it.key!!
 
-                view.findViewById<EditText>(R.id.titleET).setText(currentannons!!.bokTitel)
-                view.findViewById<EditText>(R.id.authorET)
-                    .setText(currentannons!!.bokForfattare)
-                view.findViewById<EditText>(R.id.genreET).setText(currentannons!!.genre)
-                view.findViewById<EditText>(R.id.cityET).setText(currentannons!!.stad)
-                view.findViewById<EditText>(R.id.contactET).setText(currentannons!!.kontaktsatt)
+                binding.titleET.setText(currentannons!!.bookTitle)
+                binding.authorET.setText(currentannons!!.bookAuthor)
+                binding.genreET.setText(currentannons!!.genre)
+                binding.cityET.setText(currentannons!!.city)
+                binding.contactET.setText(currentannons!!.contact)
             }
 
             downloadimage(adid)
         }
 
-        view.findViewById<Button>(R.id.publishButton).setOnClickListener {
-            var addBokTitel = view.findViewById<EditText>(R.id.titleET).text.toString()
-            var addBokForfattare = view.findViewById<EditText>(R.id.authorET).text.toString()
-            var addGenre = view.findViewById<EditText>(R.id.genreET).text.toString()
-            var addStad = view.findViewById<EditText>(R.id.cityET).text.toString()
-            var addKontaktsatt = view.findViewById<EditText>(R.id.contactET).text.toString()
+        binding.publishButton.setOnClickListener {
+            var addBokTitel = binding.titleET.text.toString()
+            var addBokForfattare = binding.authorET.text.toString()
+            var addGenre = binding.genreET.text.toString()
+            var addStad = binding.cityET.text.toString()
+            var addKontaktsatt = binding.contactET.text.toString()
 
             val database = Firebase.database
             val myRef = database.getReference("Books")
 
             var someBooks = Adverts(
-                bokTitel = addBokTitel,
-                bokForfattare =
+                bookTitle = addBokTitel,
+                bookAuthor =
                 addBokForfattare,
-                stad = addStad,
+                city = addStad,
                 genre = addGenre,
-                kontaktsatt = addKontaktsatt,
+                contact = addKontaktsatt,
             )
 
             someBooks.adcreator = Firebase.auth.currentUser!!.uid
@@ -109,7 +112,7 @@ class CreateAdvertFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        view.findViewById<ImageView>(R.id.advertImageView).setOnClickListener {
+        binding.advertImageView.setOnClickListener {
             getContent.launch("image/*")
         }
     }

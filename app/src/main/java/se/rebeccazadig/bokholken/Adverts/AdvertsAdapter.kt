@@ -50,9 +50,9 @@ class AdvertsAdapter() : RecyclerView.Adapter<AdvertsAdapter.ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.i("pia11debug", "RITA RAD " + position.toString())
 
-        holder.bokTitel.text = filtreradeAnnonser[position].bokTitel
-        holder.bokForfattare.text = filtreradeAnnonser[position].bokForfattare
-        holder.bokStad.text = filtreradeAnnonser[position].stad
+        holder.bokTitel.text = filtreradeAnnonser[position].bookTitle
+        holder.bokForfattare.text = filtreradeAnnonser[position].bookAuthor
+        holder.bokStad.text = filtreradeAnnonser[position].city
 
         holder.lasMerAnnonsButton.setOnClickListener {
             if (annonsfrag != null) {

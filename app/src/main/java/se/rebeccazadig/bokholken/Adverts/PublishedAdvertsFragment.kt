@@ -7,9 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -19,10 +17,13 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 // import se.rebeccazadig.bokholken.FardigAnnonsFragmentArgs
 import se.rebeccazadig.bokholken.R
+import se.rebeccazadig.bokholken.databinding.FragmentPublishedAdvertsBinding
 
 class PublishedAdvertsFragment : Fragment() {
 
     val args: PublishedAdvertsFragmentArgs by navArgs()
+    private var _binding: FragmentPublishedAdvertsBinding? = null
+    private val binding get() = _binding!!
 
     var currentannons = Adverts()
 
@@ -34,7 +35,14 @@ class PublishedAdvertsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_published_adverts, container, false)
+        _binding = FragmentPublishedAdvertsBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -50,26 +58,27 @@ class PublishedAdvertsFragment : Fragment() {
             currentannons = it.getValue<Adverts>()!!
             currentannons.adid = it.key!!
 
-            view.findViewById<TextView>(R.id.titleAdvertTV).text = currentannons.bokTitel
-            view.findViewById<TextView>(R.id.authorAdvertTV).text =
-                currentannons.bokForfattare
-            view.findViewById<TextView>(R.id.cityAdvertTV).text = currentannons.stad
-            view.findViewById<TextView>(R.id.contactUserAdvertTV).text =
-                currentannons.kontaktsatt
-            view.findViewById<TextView>(R.id.genreAdvertTV).text =
+            binding.titleAdvertTV.text = currentannons.bookTitle
+            binding.authorAdvertTV.text =
+                currentannons.bookAuthor
+            binding.cityAdvertTV.text = currentannons.city
+            binding.contactUserAdvertTV.text =
+                currentannons.contact
+            binding.genreAdvertTV.text =
                 "Genre: " + currentannons.genre
         }
 
         downloadimage()
 
-        view.findViewById<Button>(R.id.favoriteButton).setOnClickListener {
+        binding.favoriteButton.setOnClickListener {
             val sharedPref =
                 activity?.getSharedPreferences("se.rebecca.bytbok", Context.MODE_PRIVATE)
 
             val favbooks = sharedPref!!.getStringSet("favbooks", setOf<String>())!!.toMutableSet()
             if (favbooks.contains(currentannons.adid)) {
                 favbooks!!.remove(currentannons.adid)
-                Toast.makeText(requireContext(), "Borttagen från favisar", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Borttagen från favisar", Toast.LENGTH_SHORT)
+                    .show()
             } else {
                 favbooks!!.add(currentannons.adid)
                 Toast.makeText(requireContext(), "Tillagd i favoriter", Toast.LENGTH_SHORT).show()
