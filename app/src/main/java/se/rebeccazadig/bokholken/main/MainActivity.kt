@@ -1,6 +1,7 @@
 package se.rebeccazadig.bokholken.main
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -29,11 +30,13 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-    viewModel.isLoggedIn.observe(this) { isLoggedIn ->
+        viewModel.isLoggedIn.observe(this) { isLoggedIn ->
             if (isLoggedIn == true) {
                 navController.navigate(R.id.action_to_advertsFragment)
+                binding.bottomNavigationView.visibility = View.VISIBLE
             } else {
                 navController.navigate(R.id.action_to_login_nav_graph)
+                binding.bottomNavigationView.visibility = View.GONE
             }
         }
     }
