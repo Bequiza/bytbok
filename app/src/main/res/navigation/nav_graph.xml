@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/advertFragment">
+    app:startDestination="@id/advertsFragment">
 
     <fragment
         android:id="@+id/favoritesFragment"
@@ -31,15 +31,6 @@
         <argument
             android:name="annonsid"
             app:argType="string" />
-    </fragment>
-    <fragment
-        android:id="@+id/myPageFragment"
-        android:name="se.rebeccazadig.bokholken.mypage.MyPageFragment"
-        android:label="fragment_my_page"
-        tools:layout="@layout/fragment_my_page">
-        <action
-            android:id="@+id/action_myPageFragment_to_createAdvertsFragment"
-            app:destination="@id/createAdvertsFragment" />
     </fragment>
     <fragment
         android:id="@+id/advertsFragment"
