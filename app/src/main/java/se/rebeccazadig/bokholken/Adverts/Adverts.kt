@@ -1,6 +1,6 @@
-package se.rebeccazadig.bokholken.listings
+package se.rebeccazadig.bokholken.Adverts
 
-data class Listing(
+data class Adverts(
     val bokTitel: String? = null,
     val bokForfattare: String? = null,
     val genre: String? = null,

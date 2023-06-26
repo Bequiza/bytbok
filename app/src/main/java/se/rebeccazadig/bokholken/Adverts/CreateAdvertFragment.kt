@@ -1,4 +1,4 @@
-package se.rebeccazadig.bokholken.listings
+package se.rebeccazadig.bokholken.Adverts
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -25,13 +25,13 @@ import se.rebeccazadig.bokholken.R
 // import se.rebeccazadig.bokholken.SkapaAnnonsFragmentArgs
 import java.io.ByteArrayOutputStream
 
-class CreateListingFragment : Fragment() {
+class CreateAdvertFragment : Fragment() {
 
-    val args: CreateListingFragmentArgs by navArgs()
+    val args: CreateAdvertFragmentArgs by navArgs()
 
     val user = Firebase.auth.currentUser
 
-    var currentannons: Listing? = null
+    var currentannons: Adverts? = null
 
     var annonsbild: Bitmap? = null
 
@@ -40,7 +40,7 @@ class CreateListingFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        return inflater.inflate(R.layout.fragment_create_listing, container, false)
+        return inflater.inflate(R.layout.fragment_create_advert, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -58,31 +58,31 @@ class CreateListingFragment : Fragment() {
             val books = database.getReference("Books").child(adid)
 
             books.get().addOnSuccessListener {
-                currentannons = it.getValue<Listing>()!!
+                currentannons = it.getValue<Adverts>()!!
                 currentannons!!.adid = it.key!!
 
-                view.findViewById<EditText>(R.id.titelET).setText(currentannons!!.bokTitel)
-                view.findViewById<EditText>(R.id.forfattareET)
+                view.findViewById<EditText>(R.id.titleET).setText(currentannons!!.bokTitel)
+                view.findViewById<EditText>(R.id.authorET)
                     .setText(currentannons!!.bokForfattare)
                 view.findViewById<EditText>(R.id.genreET).setText(currentannons!!.genre)
-                view.findViewById<EditText>(R.id.stadET).setText(currentannons!!.stad)
-                view.findViewById<EditText>(R.id.kontaktsättET).setText(currentannons!!.kontaktsatt)
+                view.findViewById<EditText>(R.id.cityET).setText(currentannons!!.stad)
+                view.findViewById<EditText>(R.id.contactET).setText(currentannons!!.kontaktsatt)
             }
 
             downloadimage(adid)
         }
 
-        view.findViewById<Button>(R.id.publiceraButton).setOnClickListener {
-            var addBokTitel = view.findViewById<EditText>(R.id.titelET).text.toString()
-            var addBokForfattare = view.findViewById<EditText>(R.id.forfattareET).text.toString()
+        view.findViewById<Button>(R.id.publishButton).setOnClickListener {
+            var addBokTitel = view.findViewById<EditText>(R.id.titleET).text.toString()
+            var addBokForfattare = view.findViewById<EditText>(R.id.authorET).text.toString()
             var addGenre = view.findViewById<EditText>(R.id.genreET).text.toString()
-            var addStad = view.findViewById<EditText>(R.id.stadET).text.toString()
-            var addKontaktsatt = view.findViewById<EditText>(R.id.kontaktsättET).text.toString()
+            var addStad = view.findViewById<EditText>(R.id.cityET).text.toString()
+            var addKontaktsatt = view.findViewById<EditText>(R.id.contactET).text.toString()
 
             val database = Firebase.database
             val myRef = database.getReference("Books")
 
-            var someBooks = Listing(
+            var someBooks = Adverts(
                 bokTitel = addBokTitel,
                 bokForfattare =
                 addBokForfattare,
@@ -109,7 +109,7 @@ class CreateListingFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        view.findViewById<ImageView>(R.id.läggtillbildIV).setOnClickListener {
+        view.findViewById<ImageView>(R.id.advertImageView).setOnClickListener {
             getContent.launch("image/*")
         }
     }
@@ -144,7 +144,7 @@ class CreateListingFragment : Fragment() {
             annonsbild =
                 Bitmap.createScaledBitmap(valdbild, 800, valdbild.height * imagescale, false)
 
-            val theimage = requireView().findViewById<ImageView>(R.id.läggtillbildIV)
+            val theimage = requireView().findViewById<ImageView>(R.id.advertImageView)
             theimage.setImageBitmap(annonsbild)
         }
     }
@@ -156,7 +156,7 @@ class CreateListingFragment : Fragment() {
         imageRef.getBytes(1000000).addOnSuccessListener {
             var bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
 
-            var theimage = requireView().findViewById<ImageView>(R.id.läggtillbildIV)
+            var theimage = requireView().findViewById<ImageView>(R.id.advertImageView)
             theimage.setImageBitmap(bitmap)
         }.addOnFailureListener {
         }

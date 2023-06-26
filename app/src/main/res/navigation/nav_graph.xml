@@ -7,64 +7,86 @@
 
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="se.rebeccazadig.bokholken.listings.FavoriteListingsFragment"
-        android:label="fragment_gillade_objekt"
-        tools:layout="@layout/fragment_favorite_listings" >
+        android:name="se.rebeccazadig.bokholken.Adverts.FavoriteFragment"
+        android:label="fragment_favorites"
+        tools:layout="@layout/fragment_favorite">
         <action
-            android:id="@+id/action_gilladeObjektFragment_to_fardigAnnonsFragment"
-            app:destination="@id/fardigAnnonsFragment" />
+            android:id="@+id/action_favoritesFragment_to_publishedAdvertsFragment"
+            app:destination="@id/publishedAdvertsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/skapaAnnonsFragment"
-        android:name="se.rebeccazadig.bokholken.listings.CreateListingFragment"
-        android:label="fragment_skapa_annons"
-        tools:layout="@layout/fragment_create_listing" >
+        android:id="@+id/myAdvertsFragment"
+        android:name="se.rebeccazadig.bokholken.myAdverts.MyAdvertsFragment"
+        android:label="fragment_my_adverts"
+        tools:layout="@layout/fragment_my_adverts">
+        <action
+            android:id="@+id/action_myPageFragment_to_createAdvertsFragment"
+            app:destination="@id/createAdvertsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createAdvertsFragment"
+        android:name="se.rebeccazadig.bokholken.Adverts.CreateAdvertFragment"
+        android:label="fragment_create_adverts"
+        tools:layout="@layout/fragment_create_advert">
         <argument
             android:name="annonsid"
             app:argType="string" />
     </fragment>
     <fragment
-        android:id="@+id/userFragment"
+        android:id="@+id/myPageFragment"
         android:name="se.rebeccazadig.bokholken.mypage.MyPageFragment"
-        android:label="fragment_min_sida"
-        tools:layout="@layout/fragment_my_page" >
+        android:label="fragment_my_page"
+        tools:layout="@layout/fragment_my_page">
         <action
-            android:id="@+id/action_minSidaFragment_to_skapaAnnonsFragment"
-            app:destination="@id/skapaAnnonsFragment" />
+            android:id="@+id/action_myPageFragment_to_createAdvertsFragment"
+            app:destination="@id/createAdvertsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/advertFragment"
-        android:name="se.rebeccazadig.bokholken.listings.ListingFragment"
-        android:label="fragment_annons"
-        tools:layout="@layout/fragment_listing" >
+        android:id="@+id/advertsFragment"
+        android:name="se.rebeccazadig.bokholken.Adverts.AdvertsFragment"
+        android:label="fragment_adverts"
+        tools:layout="@layout/fragment_adverts">
+
         <action
-            android:id="@+id/action_annonsFragment_to_skapaAnnonsFragment"
-            app:destination="@id/skapaAnnonsFragment" />
+            android:id="@+id/action_advertsFragment_to_createAdvertsFragment"
+            app:destination="@id/createAdvertsFragment" />
         <action
-            android:id="@+id/action_annonsFragment_to_fardigAnnonsFragment"
-            app:destination="@id/fardigAnnonsFragment" />
+            android:id="@+id/action_advertsFragment_to_publishedAdvertsFragment"
+            app:destination="@id/publishedAdvertsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/fardigAnnonsFragment"
-        android:name="se.rebeccazadig.bokholken.listings.PublishedListingsFragment"
-        android:label="fragment_fardig_annons"
-        tools:layout="@layout/fragment_published_listings" >
+        android:id="@+id/publishedAdvertsFragment"
+        android:name="se.rebeccazadig.bokholken.Adverts.PublishedAdvertsFragment"
+        android:label="fragment_published_adverts"
+        tools:layout="@layout/fragment_published_adverts">
         <argument
             android:name="annonsid"
             app:argType="string" />
     </fragment>
-    <navigation android:id="@+id/login_nav_graph"
+
+    <navigation
+        android:id="@+id/login_nav_graph"
         app:startDestination="@id/loginRegisterFragment">
+
         <fragment
             android:id="@+id/loginRegisterFragment"
             android:name="se.rebeccazadig.bokholken.login.LoginRegisterFragment"
             android:label="LoginRegisterFragment"
-            tools:layout="@layout/fragment_login">
 
-        </fragment>
-        <action
-            android:id="@+id/action_global_annonsFragment2"
-            app:destination="@id/advertFragment" />
+            tools:layout="@layout/fragment_login" />
+
     </navigation>
-    <action android:id="@+id/action_to_login" app:destination="@id/login_nav_graph" />
+
+    <action
+        android:id="@+id/action_to_advertsFragment"
+        app:destination="@id/advertsFragment" />
+
+    <action
+        android:id="@+id/action_to_login_nav_graph"
+        app:destination="@id/login_nav_graph" />
+    <fragment
+        android:id="@+id/userInfoFragment"
+        android:name="se.rebeccazadig.bokholken.login.UserFragment"
+        android:label="fragment_user"
+        tools:layout="@layout/fragment_user" />
 </navigation>

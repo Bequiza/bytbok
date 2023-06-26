@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e3d5ca"
-    tools:context=".listings.FavoriteListingsFragment">
+    tools:context=".Adverts.FavoriteFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/headerContainer"
@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/attLäsaTV"
+            android:id="@+id/favoritesTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -29,7 +29,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/attLäsaInfoTV"
+            android:id="@+id/infoFavoritesTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -37,11 +37,11 @@
             android:textColor="#6C584C"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/attLäsaTV" />
+            app:layout_constraintTop_toBottomOf="@+id/favoritesTV" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/villLäsaRV"
+        android:id="@+id/favoritesRV"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#F5EBE0"

@@ -1,4 +1,4 @@
-package se.rebeccazadig.bokholken.listings
+package se.rebeccazadig.bokholken.Adverts
 
 import android.content.Context
 import android.graphics.BitmapFactory
@@ -20,11 +20,11 @@ import com.google.firebase.storage.ktx.storage
 // import se.rebeccazadig.bokholken.FardigAnnonsFragmentArgs
 import se.rebeccazadig.bokholken.R
 
-class PublishedListingsFragment : Fragment() {
+class PublishedAdvertsFragment : Fragment() {
 
-    val args: PublishedListingsFragmentArgs by navArgs()
+    val args: PublishedAdvertsFragmentArgs by navArgs()
 
-    var currentannons = Listing()
+    var currentannons = Adverts()
 
     var adid = ""
 
@@ -34,7 +34,7 @@ class PublishedListingsFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_published_listings, container, false)
+        return inflater.inflate(R.layout.fragment_published_adverts, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,22 +47,22 @@ class PublishedListingsFragment : Fragment() {
         val books = database.getReference("Books").child(adid)
 
         books.get().addOnSuccessListener {
-            currentannons = it.getValue<Listing>()!!
+            currentannons = it.getValue<Adverts>()!!
             currentannons.adid = it.key!!
 
-            view.findViewById<TextView>(R.id.titelFardigAnnonsTV).text = currentannons.bokTitel
-            view.findViewById<TextView>(R.id.forfattareFardigAnnonsTV).text =
+            view.findViewById<TextView>(R.id.titleAdvertTV).text = currentannons.bokTitel
+            view.findViewById<TextView>(R.id.authorAdvertTV).text =
                 currentannons.bokForfattare
-            view.findViewById<TextView>(R.id.stadFardigAnnonsTV).text = currentannons.stad
-            view.findViewById<TextView>(R.id.telEmailFardigAnnonsTV).text =
+            view.findViewById<TextView>(R.id.cityAdvertTV).text = currentannons.stad
+            view.findViewById<TextView>(R.id.contactUserAdvertTV).text =
                 currentannons.kontaktsatt
-            view.findViewById<TextView>(R.id.genreFardigAnnons).text =
+            view.findViewById<TextView>(R.id.genreAdvertTV).text =
                 "Genre: " + currentannons.genre
         }
 
         downloadimage()
 
-        view.findViewById<Button>(R.id.villLasaFardigAnnonsButton).setOnClickListener {
+        view.findViewById<Button>(R.id.favoriteButton).setOnClickListener {
             val sharedPref =
                 activity?.getSharedPreferences("se.rebecca.bytbok", Context.MODE_PRIVATE)
 
@@ -92,7 +92,7 @@ class PublishedListingsFragment : Fragment() {
         imageRef.getBytes(1000000).addOnSuccessListener {
             var bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
 
-            var theimage = requireView().findViewById<ImageView>(R.id.bildFardigAnnons)
+            var theimage = requireView().findViewById<ImageView>(R.id.publishedAdvertImage)
             theimage.setImageBitmap(bitmap)
         }.addOnFailureListener {
         }

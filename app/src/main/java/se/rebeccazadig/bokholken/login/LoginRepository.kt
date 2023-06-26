@@ -63,7 +63,7 @@ class LoginRepository private constructor() /*primary constructor*/ {
         myAuth.signOut()
     }
 
-    suspend fun deleteAccount(): AuthResult {
+    suspend fun deleteAccount(): AuthResult { // Delete account finns i my page Viewmodel
         val user = myAuth.currentUser
             ?: kotlin.run { return AuthResult.Failure("") }
 
@@ -75,8 +75,6 @@ class LoginRepository private constructor() /*primary constructor*/ {
             AuthResult.Failure("${e.message}")
         }
     }
-
-    // förklara koden nedan
     companion object {
         private var instance: LoginRepository? = null
 

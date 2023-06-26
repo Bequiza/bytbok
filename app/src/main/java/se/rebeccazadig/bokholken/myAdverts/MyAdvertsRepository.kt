@@ -1,8 +1,8 @@
-package se.rebeccazadig.bokholken.mypage
+package se.rebeccazadig.bokholken.myAdverts
 
-class MyPageRepository private constructor() {
+class MyAdvertsRepository private constructor() {
 
-    // var aAdapter = ListingAdapter()
+    // var aAdapter = AdvertsAdapter()
     // // aAdapter.minSidaFrag = this
 
     // fun loadBooks() {
@@ -15,9 +15,9 @@ class MyPageRepository private constructor() {
     //     val bookListener = object : ValueEventListener {
 
     //         override fun onDataChange(dataSnapshot: DataSnapshot) {
-    //             val fbfruits = mutableListOf<Listing>()
+    //             val fbfruits = mutableListOf<Adverts>()
     //             dataSnapshot.children.forEach { childsnap ->
-    //                 var tempad = childsnap.getValue<Listing>()!!
+    //                 var tempad = childsnap.getValue<Adverts>()!!
     //                 tempad.adid = childsnap.key!!
     //                 fbfruits.add(tempad)
     //             }
@@ -36,9 +36,9 @@ class MyPageRepository private constructor() {
     // }
 
     companion object {
-        private var instance: MyPageRepository? = null
+        private var instance: MyAdvertsRepository? = null
 
-        fun getInstance() = instance ?: MyPageRepository().also {
+        fun getInstance() = instance ?: MyAdvertsRepository().also {
             instance = it
         }
     }

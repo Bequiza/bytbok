@@ -1,4 +1,4 @@
-package se.rebeccazadig.bokholken.listings
+package se.rebeccazadig.bokholken.Adverts
 
 import android.graphics.BitmapFactory
 import android.util.Log
@@ -12,16 +12,16 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import se.rebeccazadig.bokholken.*
-import se.rebeccazadig.bokholken.mypage.MyPageFragment
+import se.rebeccazadig.bokholken.myAdverts.MyAdvertsFragment
 
-class ListingAdapter() : RecyclerView.Adapter<ListingAdapter.ViewHolder>() {
+class AdvertsAdapter() : RecyclerView.Adapter<AdvertsAdapter.ViewHolder>() {
 
-    var minSidaFrag: MyPageFragment? = null
-    var annonsfrag: ListingFragment? = null
-    var gilladefrag: FavoriteListingsFragment? = null
+    var minSidaFrag: MyAdvertsFragment? = null
+    var annonsfrag: AdvertsFragment? = null
+    var gilladefrag: FavoriteFragment? = null
 
-    var allaAnnonser = mutableListOf<Listing>()
-    var filtreradeAnnonser = mutableListOf<Listing>()
+    var allaAnnonser = mutableListOf<Adverts>()
+    var filtreradeAnnonser = mutableListOf<Adverts>()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val bokBild: ImageView
@@ -32,11 +32,11 @@ class ListingAdapter() : RecyclerView.Adapter<ListingAdapter.ViewHolder>() {
 
         init {
             bokBild = view.findViewById(R.id.imageView)
-            bokTitel = view.findViewById(R.id.listTitelTV)
-            bokForfattare = view.findViewById(R.id.listForfattareTV)
-            bokStad = view.findViewById(R.id.listStadTV)
-            lasMerAnnonsButton = view.findViewById(R.id.lasMerAnnonsButton)
-            // villLasa = view.findViewById(R.id.villLasaFardigAnnonsButton)
+            bokTitel = view.findViewById(R.id.titleTV)
+            bokForfattare = view.findViewById(R.id.authorTV)
+            bokStad = view.findViewById(R.id.cityTV)
+            lasMerAnnonsButton = view.findViewById(R.id.favoritesButton)
+            // villLasa = view.findViewById(R.id.favoriteButton)
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

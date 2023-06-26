@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e3d5ca"
-    tools:context=".listings.ListingFragment">
+    tools:context=".Adverts.AdvertsFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/bytBokRubrikTV"
+            android:id="@+id/bytBokHeaderTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -32,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/bytBokInfoTV"
+            android:id="@+id/InfoAdvertsTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -41,7 +41,7 @@
             android:textColor="#6C584C"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bytBokRubrikTV" />
+            app:layout_constraintTop_toBottomOf="@+id/bytBokHeaderTV" />
 
         <SearchView
             android:id="@+id/searchView"
@@ -53,12 +53,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bytBokInfoTV" />
+            app:layout_constraintTop_toBottomOf="@+id/InfoAdvertsTV" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
-        android:id="@+id/nyAnnonsButton"
+        android:id="@+id/newAdvertButton"
         android:layout_width="52dp"
         android:layout_height="54dp"
         android:layout_marginBottom="16dp"
@@ -70,7 +70,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/allaAnnonserRV"
+        android:id="@+id/allAdvertsRV"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#F5EBE0"
@@ -80,14 +80,14 @@
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/createAdvertTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:backgroundTint="#6C584C"
         android:text="Skapa ny annons"
         android:textColor="#6C584C"
-        app:layout_constraintBottom_toTopOf="@+id/nyAnnonsButton"
+        app:layout_constraintBottom_toTopOf="@+id/newAdvertButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

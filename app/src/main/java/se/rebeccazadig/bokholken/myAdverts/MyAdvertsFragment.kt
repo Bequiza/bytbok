@@ -1,4 +1,4 @@
-package se.rebeccazadig.bokholken.mypage
+package se.rebeccazadig.bokholken.myAdverts
 
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -17,23 +16,23 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
-import se.rebeccazadig.bokholken.databinding.FragmentMyPageBinding
-import se.rebeccazadig.bokholken.listings.Listing
-import se.rebeccazadig.bokholken.listings.ListingAdapter
+import se.rebeccazadig.bokholken.Adverts.Adverts
+import se.rebeccazadig.bokholken.Adverts.AdvertsAdapter
+import se.rebeccazadig.bokholken.databinding.FragmentMyAdvertsBinding
 
-class MyPageFragment : Fragment() {
+class MyAdvertsFragment : Fragment() {
 
-    private val viewModel: MyPageViewModel by viewModels() // viewmodel
-    private lateinit var binding: FragmentMyPageBinding
+    private val viewModel: MyAdvertsViewModel by viewModels() // viewmodel
+    private lateinit var binding: FragmentMyAdvertsBinding
 
-    var aAdapter = ListingAdapter()
+    var aAdapter = AdvertsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentMyPageBinding.inflate(inflater, container, false)
+        binding = FragmentMyAdvertsBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = this // databinding
         binding.vm = viewModel // databinding kopplad till denna fragmentets viewmodel
         return binding.root
@@ -44,7 +43,7 @@ class MyPageFragment : Fragment() {
 
         aAdapter.minSidaFrag = this
 
-        val annonsRecview = binding.minaAnnonserRV
+        val annonsRecview = binding.myAdvertsRV
 
         val layoutmanager = GridLayoutManager(context, 2)
         annonsRecview.layoutManager = layoutmanager
@@ -63,10 +62,10 @@ class MyPageFragment : Fragment() {
         }
     }
 
-    fun clickReadmore(clickannons: Listing) {
-        var goreadmore =
-            MyPageFragmentDirections.actionMinSidaFragmentToSkapaAnnonsFragment(clickannons.adid)
-        findNavController().navigate(goreadmore)
+    fun clickReadmore(clickannons: Adverts) {
+        //  var goreadmore =
+        //      MyPageFragmentDirections.actionMyPageFragmentToCreateAdvertsFragment(clickannons.adid)
+        //  findNavController().navigate(goreadmore)
     }
 
     fun loadBooks() {
@@ -79,9 +78,9 @@ class MyPageFragment : Fragment() {
         val bookListener = object : ValueEventListener {
 
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val fbfruits = mutableListOf<Listing>()
+                val fbfruits = mutableListOf<Adverts>()
                 dataSnapshot.children.forEach { childsnap ->
-                    var tempad = childsnap.getValue<Listing>()!!
+                    var tempad = childsnap.getValue<Adverts>()!!
                     tempad.adid = childsnap.key!!
                     fbfruits.add(tempad)
                 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5EBE0"
-    tools:context=".listings.CreateListingFragment">
+    tools:context=".Adverts.CreateAdvertFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <ScrollView
@@ -28,7 +28,7 @@
 
 
                 <TextView
-                    android:id="@+id/skapaannonsTV"
+                    android:id="@+id/createAdvertHeaderTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
@@ -41,7 +41,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/titelET"
+                    android:id="@+id/titleET"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
@@ -53,10 +53,10 @@
                     android:textColor="#6C584C"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/läggtillbildIV" />
+                    app:layout_constraintTop_toBottomOf="@+id/advertImageView" />
 
                 <EditText
-                    android:id="@+id/forfattareET"
+                    android:id="@+id/authorET"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
@@ -68,7 +68,7 @@
                     android:textColor="#6C584C"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/titelET" />
+                    app:layout_constraintTop_toBottomOf="@+id/titleET" />
 
                 <EditText
                     android:id="@+id/genreET"
@@ -81,10 +81,10 @@
                     android:inputType="textPersonName"
                     android:textColor="#6C584C"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/forfattareET" />
+                    app:layout_constraintTop_toBottomOf="@+id/authorET" />
 
                 <EditText
-                    android:id="@+id/kontaktsättET"
+                    android:id="@+id/contactET"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
@@ -98,10 +98,10 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/kontaktTV" />
+                    app:layout_constraintTop_toBottomOf="@+id/contactTV" />
 
                 <EditText
-                    android:id="@+id/stadET"
+                    android:id="@+id/cityET"
                     android:layout_width="0dp"
                     android:layout_height="48dp"
                     android:layout_marginStart="8dp"
@@ -113,10 +113,10 @@
                     android:textColor="#6C584C"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/finnsiTV" />
+                    app:layout_constraintTop_toBottomOf="@+id/whereTV" />
 
                 <TextView
-                    android:id="@+id/finnsiTV"
+                    android:id="@+id/whereTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -127,35 +127,35 @@
                     app:layout_constraintTop_toBottomOf="@+id/genreET" />
 
                 <TextView
-                    android:id="@+id/kontaktTV"
+                    android:id="@+id/contactTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Kontakta mig för att få boken:"
                     android:textColor="#6C584C"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/stadET" />
+                    app:layout_constraintTop_toBottomOf="@+id/cityET" />
 
                 <ImageView
-                    android:id="@+id/läggtillbildIV"
+                    android:id="@+id/advertImageView"
                     android:layout_width="176dp"
                     android:layout_height="170dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="24dp"
                     android:src="@drawable/baseline_add_photo_alternate_24"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/skapaannonsTV" />
+                    app:layout_constraintTop_toBottomOf="@+id/createAdvertHeaderTV" />
 
                 <Button
-                    android:id="@+id/publiceraButton"
+                    android:id="@+id/publishButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="60dp"
                     android:backgroundTint="#774936"
                     android:text="Publicera"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/läggtillbildIV"
-                    app:layout_constraintTop_toBottomOf="@+id/skapaannonsTV" />
+                    app:layout_constraintStart_toEndOf="@+id/advertImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/createAdvertHeaderTV" />
 
                 <Button
                     android:id="@+id/deleteButton"
@@ -166,8 +166,8 @@
                     android:visibility="invisible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.504"
-                    app:layout_constraintStart_toEndOf="@+id/läggtillbildIV"
-                    app:layout_constraintTop_toBottomOf="@+id/publiceraButton" />
+                    app:layout_constraintStart_toEndOf="@+id/advertImageView"
+                    app:layout_constraintTop_toBottomOf="@+id/publishButton" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
