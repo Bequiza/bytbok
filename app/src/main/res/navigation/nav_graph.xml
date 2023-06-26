@@ -46,6 +46,7 @@
         android:name="se.rebeccazadig.bokholken.Adverts.AdvertsFragment"
         android:label="fragment_adverts"
         tools:layout="@layout/fragment_adverts">
+
         <action
             android:id="@+id/action_advertsFragment_to_createAdvertsFragment"
             app:destination="@id/createAdvertsFragment" />
@@ -71,7 +72,9 @@
             android:id="@+id/loginRegisterFragment"
             android:name="se.rebeccazadig.bokholken.login.LoginRegisterFragment"
             android:label="LoginRegisterFragment"
+
             tools:layout="@layout/fragment_login" />
+
     </navigation>
 
     <action

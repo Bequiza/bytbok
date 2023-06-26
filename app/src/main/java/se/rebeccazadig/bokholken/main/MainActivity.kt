@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
-        viewModel.isLoggedIn.observe(this) { isLoggedIn ->
+    viewModel.isLoggedIn.observe(this) { isLoggedIn ->
             if (isLoggedIn == true) {
                 navController.navigate(R.id.action_to_advertsFragment)
             } else {
