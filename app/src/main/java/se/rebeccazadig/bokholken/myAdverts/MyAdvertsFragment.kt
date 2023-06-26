@@ -53,13 +53,6 @@ class MyAdvertsFragment : Fragment() {
         aAdapter.notifyDataSetChanged()
 
         loadBooks()
-
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-
-            uiState.message?.let/*om allt till vänster om ?+.let inte null, visa toast*/ {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
-            }
-        }
     }
 
     fun clickReadmore(clickannons: Adverts) {

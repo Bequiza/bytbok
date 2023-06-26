@@ -21,6 +21,10 @@ class UserViewModel : ViewModel() {
     private val _uiState = MutableLiveData(UiState(false, null))
     internal val uiState: LiveData<UiState> get() = _uiState
 
+    fun logOutInVm() {
+        loginRepo.logOutInRepo()
+    }
+
     fun deleteAccountInVM() {
         inProgress.value = true
         viewModelScope.launch {
