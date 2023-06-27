@@ -70,11 +70,15 @@
 
     <action
         android:id="@+id/action_to_advertsFragment"
-        app:destination="@id/advertsFragment" />
+        app:destination="@id/advertsFragment"
+        app:popUpTo="@id/advertsFragment"
+        app:popUpToInclusive="true" />
 
     <action
         android:id="@+id/action_to_login_nav_graph"
-        app:destination="@id/login_nav_graph" />
+        app:destination="@id/login_nav_graph"
+        app:popUpTo="@id/main_nav_graph"
+        app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/userInfoFragment"
         android:name="se.rebeccazadig.bokholken.login.UserFragment"
