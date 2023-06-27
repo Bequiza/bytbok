@@ -47,6 +47,11 @@ class CreateAdvertFragment : Fragment() {
         return view
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -65,8 +70,8 @@ class CreateAdvertFragment : Fragment() {
                 currentannons = it.getValue<Adverts>()!!
                 currentannons!!.adid = it.key!!
 
-                binding.titleET.setText(currentannons!!.bookTitle)
-                binding.authorET.setText(currentannons!!.bookAuthor)
+                binding.titleET.setText(currentannons!!.title)
+                binding.authorET.setText(currentannons!!.author)
                 binding.genreET.setText(currentannons!!.genre)
                 binding.cityET.setText(currentannons!!.city)
                 binding.contactET.setText(currentannons!!.contact)
@@ -86,8 +91,8 @@ class CreateAdvertFragment : Fragment() {
             val myRef = database.getReference("Books")
 
             var someBooks = Adverts(
-                bookTitle = addBokTitel,
-                bookAuthor =
+                title = addBokTitel,
+                author =
                 addBokForfattare,
                 city = addStad,
                 genre = addGenre,

@@ -32,6 +32,11 @@ class FavoriteFragment : Fragment() {
         return view
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -57,35 +62,35 @@ class FavoriteFragment : Fragment() {
     }
 
     fun loadBooks() {
-        val database = Firebase.database
-
-        val books = database.getReference("Books")
-
-        books.get().addOnSuccessListener {
-            val fbfruits = mutableListOf<Adverts>()
-            it.children.forEach { childsnap ->
-                var tempad = childsnap.getValue<Adverts>()!!
-                tempad.adid = childsnap.key!!
-                fbfruits.add(tempad)
-            }
-
-            val favAnnons = mutableListOf<Adverts>()
-
-            val sharedPref =
-                activity?.getSharedPreferences("se.rebecca.bytbok", Context.MODE_PRIVATE)
-            var favbooks = sharedPref!!.getStringSet("favbooks", setOf<String>())
-
-            for (book in fbfruits) {
-                if (favbooks!!.contains(book.adid)) {
-                    favAnnons.add(book)
-                }
-            }
-
-            aAdapter.filtreradeAnnonser = favAnnons
-            aAdapter.notifyDataSetChanged()
-
-            Log.i("pia11debug", fbfruits.toString())
-        }
+//        val database = Firebase.database
+//
+//        val books = database.getReference("Books")
+//
+//        books.get().addOnSuccessListener {
+//            val fbfruits = mutableListOf<Adverts>()
+//            it.children.forEach { childsnap ->
+//                var tempad = childsnap.getValue<Adverts>()!!
+//                tempad.adid = childsnap.key!!
+//                fbfruits.add(tempad)
+//            }
+//
+//            val favAnnons = mutableListOf<Adverts>()
+//
+//            val sharedPref =
+//                activity?.getSharedPreferences("se.rebecca.bytbok", Context.MODE_PRIVATE)
+//            var favbooks = sharedPref!!.getStringSet("favbooks", setOf<String>())
+//
+//            for (book in fbfruits) {
+//                if (favbooks!!.contains(book.adid)) {
+//                    favAnnons.add(book)
+//                }
+//            }
+//
+//            aAdapter.filtreradeAnnonser = favAnnons
+//            aAdapter.notifyDataSetChanged()
+//
+//            Log.i("pia11debug", fbfruits.toString())
+//        }
     }
 
     fun clickReadmore(clickannons: Adverts) {
