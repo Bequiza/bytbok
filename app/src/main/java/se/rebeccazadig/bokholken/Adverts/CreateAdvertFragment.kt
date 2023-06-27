@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
@@ -59,8 +58,7 @@ class CreateAdvertFragment : Fragment() {
 
         if (adid != "") {
             // VISA RADERA KNAPP
-            var raderaKnapp = view.findViewById<Button>(R.id.deleteButton)
-            raderaKnapp.visibility = View.VISIBLE
+            binding.deleteButton.visibility = View.VISIBLE
 
             val database = Firebase.database
 
