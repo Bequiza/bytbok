@@ -75,6 +75,17 @@ class LoginRepository private constructor() /*primary constructor*/ {
             AuthResult.Failure("${e.message}")
         }
     }
+
+    fun getUserId(): String {
+        val uid = myAuth.currentUser?.uid
+        return if (uid == null) {
+            assert(false) { "At this point currentUser must not (cannot) be null." }
+            ""
+        } else {
+            uid
+        }
+    }
+
     companion object {
         private var instance: LoginRepository? = null
 

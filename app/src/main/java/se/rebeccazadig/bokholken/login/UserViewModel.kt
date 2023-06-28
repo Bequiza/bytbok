@@ -1,5 +1,6 @@
 package se.rebeccazadig.bokholken.login
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,22 +8,35 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import se.rebeccazadig.bokholken.myAdverts.UiState
 
-// internal data class UiState(
-//    /*uiState är MLD är observed i frag men all ändring sker i viewmodel*/
-//    val isDeleted: Boolean,
-//    val message: String?,
-// )
 class UserViewModel : ViewModel() {
 
     private val loginRepo = LoginRepository.getInstance()
     private val userRepo = UserRepository.getInstance()
-
+    val userName = MutableLiveData("")
+    val userContact = MutableLiveData("")
+    val userCity = MutableLiveData("")
+    val userId = MutableLiveData("")
     val inProgress = MutableLiveData(false)
     private val _uiState = MutableLiveData(UiState(false, null))
     internal val uiState: LiveData<UiState> get() = _uiState
 
     fun logOutInVm() {
         loginRepo.logOutInRepo()
+    }
+
+    fun saveUser() {
+        inProgress.value = true
+
+        viewModelScope.launch {
+            val userId = userId.value.orEmpty()
+            val userInfo = userName.value.orEmpty()
+            val userContact = userContact.value.orEmpty()
+            val userCity = userCity.value.orEmpty()
+            val user = User(name = userInfo, contact = userContact, city = userCity, id = userId)
+
+            userRepo.saveUser(user)
+            inProgress.postValue(false)
+        }
     }
 
     fun deleteAccountInVM() {
