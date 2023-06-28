@@ -1,6 +1,5 @@
 package se.rebeccazadig.bokholken.login
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -15,7 +14,7 @@ class UserViewModel : ViewModel() {
     val userName = MutableLiveData("")
     val userContact = MutableLiveData("")
     val userCity = MutableLiveData("")
-    val userId = MutableLiveData("")
+
     val inProgress = MutableLiveData(false)
     private val _uiState = MutableLiveData(UiState(false, null))
     internal val uiState: LiveData<UiState> get() = _uiState
@@ -28,11 +27,11 @@ class UserViewModel : ViewModel() {
         inProgress.value = true
 
         viewModelScope.launch {
-            val userId = userId.value.orEmpty()
+            val userid = loginRepo.getUserId()
             val userInfo = userName.value.orEmpty()
             val userContact = userContact.value.orEmpty()
             val userCity = userCity.value.orEmpty()
-            val user = User(name = userInfo, contact = userContact, city = userCity, id = userId)
+            val user = User(id = userid, name = userInfo, contact = userContact, city = userCity)
 
             userRepo.saveUser(user)
             inProgress.postValue(false)
