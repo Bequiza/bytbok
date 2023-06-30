@@ -64,6 +64,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
             android:backgroundTint="#774936"
+            android:enabled="@{!vm.isButtonDisabled}"
             android:onClick="@{() -> vm.saveUser()}"
             android:text="Spara"
             android:textSize="14sp"

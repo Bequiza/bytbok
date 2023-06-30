@@ -7,9 +7,9 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 
-sealed class AuthResult {
-    data class Failure(val message: String) : AuthResult()
-    object Success : AuthResult()
+sealed class Result {
+    data class Failure(val message: String) : Result()
+    object Success : Result()
 }
 
 class LoginRepository private constructor() /*primary constructor*/ {
@@ -26,31 +26,31 @@ class LoginRepository private constructor() /*primary constructor*/ {
         }
     }
 
-    suspend fun loginInRepo(email: String, password: String)/*input*/: AuthResult /*output*/ {
+    suspend fun loginInRepo(email: String, password: String)/*input*/: Result /*output*/ {
         Log.i("Emma", "LOGIN IN REPOSITORY email=$email password=$password")
 
         return try {
             val result = myAuth.signInWithEmailAndPassword(email, password).await()
             if (result.user != null) {
-                AuthResult.Success
+                Result.Success
             } else {
-                AuthResult.Failure(message = "User does not exist")
+                Result.Failure(message = "User does not exist")
             }
         } catch (e: Exception) {
-            AuthResult.Failure("${e.message}")
+            Result.Failure("${e.message}")
         }
     }
 
-    suspend fun registerInRepo(email: String, password: String): AuthResult {
+    suspend fun registerInRepo(email: String, password: String): Result {
         Log.i("Emma", "REGISTER USER IN REPOSITORY email=$email password=$password")
 
         return try {
             val result = myAuth.createUserWithEmailAndPassword(email, password).await()
             Log.i("Emma", "registerInRepo SUCCESS=$result")
-            AuthResult.Success
+            Result.Success
         } catch (e: Exception) {
             Log.i("Emma", "registerInRepo FAILURE =$e")
-            AuthResult.Failure("${e.message}") // Är detta rätt?
+            Result.Failure("${e.message}") // Är detta rätt?
             // Ska inte visa hardcoded message, ska visa exception meddelande från firebase
         }
     }
@@ -63,16 +63,16 @@ class LoginRepository private constructor() /*primary constructor*/ {
         myAuth.signOut()
     }
 
-    suspend fun deleteAccount(): AuthResult { // Delete account finns i my page Viewmodel
+    suspend fun deleteAccount(): Result { // Delete account finns i my page Viewmodel
         val user = myAuth.currentUser
-            ?: kotlin.run { return AuthResult.Failure("") }
+            ?: kotlin.run { return Result.Failure("") }
 
         return try {
             user.delete().await()
-            AuthResult.Success
+            Result.Success
         } catch (e: Exception) {
             Log.e("DeleteAccount", "Error deleting user account: ${e.message}")
-            AuthResult.Failure("${e.message}")
+            Result.Failure("${e.message}")
         }
     }
 
