@@ -38,17 +38,17 @@ class LoginRegisterViewModel : ViewModel() {
             val emailValue = email.value.orEmpty()
             val passwordValue = password.value.orEmpty()
 
-            val result: AuthResult = if (isLoginMode.value == true) {
+            val result: Result = if (isLoginMode.value == true) {
                 loginRepo.loginInRepo(email = emailValue, password = passwordValue)
             } else {
                 loginRepo.registerInRepo(email = emailValue, password = passwordValue)
             }
             inProgress.postValue(false)
             when (result) { /*Läs mer om when, when är lika som if och else if*/
-                is AuthResult.Failure -> {
+                is Result.Failure -> {
                     _uiState.value = UiState(result.message)
                 }
-                is AuthResult.Success -> {
+                is Result.Success -> {
                     _uiState.value = UiState(null)
                 }
             }
