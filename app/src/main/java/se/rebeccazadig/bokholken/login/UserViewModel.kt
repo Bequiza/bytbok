@@ -1,6 +1,5 @@
 package se.rebeccazadig.bokholken.login
 
-import android.database.Observable
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
@@ -34,9 +33,9 @@ class UserViewModel : ViewModel() {
 
         viewModelScope.launch {
             val userid = loginRepo.getUserId()
-            val userInfo = userName.value.orEmpty()
-            val userContact = userContact.value.orEmpty()
-            val userCity = userCity.value.orEmpty()
+            val userInfo = userName.value.toString()
+            val userContact = userContact.value.toString()
+            val userCity = userCity.value.toString()
             val user = User(id = userid, name = userInfo, contact = userContact, city = userCity)
 
             userRepo.saveUser(user)
@@ -47,7 +46,8 @@ class UserViewModel : ViewModel() {
             when (result) {
                 is Result.Failure -> {
                     Log.i("Emma", "FAIL")
-                    _uiStateSave.value = UiStateSave(message = "Hoppsan något gick fel")
+                    _uiStateSave.value =
+                        UiStateSave(result.message) // UiStateSave(message = "Hoppsan något gick fel")
                 }
                 is Result.Success -> {
                     Log.i("Emma", "SUCCESS")
@@ -73,6 +73,7 @@ class UserViewModel : ViewModel() {
             }
         }
     }
+
     val isButtonDisabled = MediatorLiveData<Boolean>().apply {
         addSource(userContact) {
             value = (userContact.value ?: "").isBlank() || (userCity.value ?: "").isBlank()

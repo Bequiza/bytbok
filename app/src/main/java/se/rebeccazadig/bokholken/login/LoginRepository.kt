@@ -31,12 +31,10 @@ class LoginRepository private constructor() /*primary constructor*/ {
 
         return try {
             val result = myAuth.signInWithEmailAndPassword(email, password).await()
-            if (result.user != null) {
-                Result.Success
-            } else {
-                Result.Failure(message = "User does not exist")
-            }
+            Log.i("Emma", "loginInRepo SUCCESS=$result")
+            Result.Success
         } catch (e: Exception) {
+            Log.i("Emma", "loginInRepo FAILURE =$e")
             Result.Failure("${e.message}")
         }
     }
@@ -50,8 +48,7 @@ class LoginRepository private constructor() /*primary constructor*/ {
             Result.Success
         } catch (e: Exception) {
             Log.i("Emma", "registerInRepo FAILURE =$e")
-            Result.Failure("${e.message}") // Är detta rätt?
-            // Ska inte visa hardcoded message, ska visa exception meddelande från firebase
+            Result.Failure("${e.message}")
         }
     }
 

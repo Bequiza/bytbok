@@ -14,8 +14,8 @@ class UserRepository private constructor() {
                 Log.i("Emma", "Saving user ${user.name}, ${user.contact}, ${user.city}, ${user.id}")
                 Result.Success
             } else {
-                val errorMessage = "Name must start with 'A'"
-                Result.Failure(errorMessage)
+              //  val errorMessage = "Name must start with 'A'"
+                Result.Failure("Name must start with A")
             }
         }
     }

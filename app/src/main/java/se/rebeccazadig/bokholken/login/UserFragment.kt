@@ -44,7 +44,7 @@ class UserFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
 
             uiState.message?.let/*om allt till vänster om ?+.let inte null, visa toast*/ {
-                Toast.makeText(requireContext(), "Hoppsan nått blev fel", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), "${uiState.message}", Toast.LENGTH_LONG).show()
             }
         }
         viewModel.uiStateSave.observe(viewLifecycleOwner) { uiStateSave ->
