@@ -41,10 +41,10 @@ class UserFragment : Fragment() {
 //            myRef.push().setValue(someChanges)
 //        }
 
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
+        viewModel.uiStateSave.observe(viewLifecycleOwner) { uiStateSave ->
 
-            uiState.message?.let/*om allt till vänster om ?+.let inte null, visa toast*/ {
-                Toast.makeText(requireContext(), "${uiState.message}", Toast.LENGTH_LONG).show()
+            uiStateSave.message?.let/*om allt till vänster om ?+.let inte null, visa toast*/ {
+                Toast.makeText(requireContext(), "${uiStateSave.message}", Toast.LENGTH_LONG).show()
             }
         }
         viewModel.uiStateSave.observe(viewLifecycleOwner) { uiStateSave ->

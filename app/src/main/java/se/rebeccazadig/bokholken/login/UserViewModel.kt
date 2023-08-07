@@ -1,5 +1,6 @@
 package se.rebeccazadig.bokholken.login
 
+import android.app.AlertDialog
 import android.util.Log
 import androidx.lifecycle.*
 import kotlinx.coroutines.launch
@@ -19,11 +20,19 @@ class UserViewModel : ViewModel() {
     val userCity = MutableLiveData("")
 
     val inProgress = MutableLiveData(false)
-    private val _uiState = MutableLiveData(UiState(false, null))
-    internal val uiState: LiveData<UiState> get() = _uiState
+   //private val _uiState = MutableLiveData(UiState(false, null))
+   //internal val uiState: LiveData<UiState> get() = _uiState
     private val _uiStateSave = MutableLiveData(UiStateSave(null))
     internal val uiStateSave: LiveData<UiStateSave> get() = _uiStateSave
 
+    val isButtonDisabled = MediatorLiveData<Boolean>().apply {
+        addSource(userContact) {
+            value = (userContact.value ?: "").isBlank() || (userCity.value ?: "").isBlank()
+        }
+        addSource(userCity) {
+            value = userContact.value.isNullOrBlank() || (userCity.value ?: "").isBlank()
+        }
+    }
     fun logOutInVm() {
         loginRepo.logOutInRepo()
     }
@@ -33,10 +42,10 @@ class UserViewModel : ViewModel() {
 
         viewModelScope.launch {
             val userid = loginRepo.getUserId()
-            val userInfo = userName.value.toString()
+            val userName = userName.value.toString()
             val userContact = userContact.value.toString()
             val userCity = userCity.value.toString()
-            val user = User(id = userid, name = userInfo, contact = userContact, city = userCity)
+            val user = User(id = userid, name = userName, contact = userContact, city = userCity)
 
             userRepo.saveUser(user)
             val result = userRepo.saveUser(user)
@@ -47,14 +56,19 @@ class UserViewModel : ViewModel() {
                 is Result.Failure -> {
                     Log.i("Emma", "FAIL")
                     _uiStateSave.value =
-                        UiStateSave(result.message) // UiStateSave(message = "Hoppsan något gick fel")
+                        UiStateSave(result.message)
                 }
+
                 is Result.Success -> {
                     Log.i("Emma", "SUCCESS")
                     _uiStateSave.value = UiStateSave(message = "Informationen Sparad")
                 }
             }
         }
+    }
+
+    fun nullUiStateSave() {
+        UiStateSave(message = null)
     }
 
     fun deleteAccountInVM() {
@@ -65,21 +79,15 @@ class UserViewModel : ViewModel() {
 
             when (deleteResult) {
                 is Result.Failure -> {
-                    _uiState.value = UiState(false, deleteResult.message)
+                    _uiStateSave.value = UiStateSave(deleteResult.message)
+                    //_uiState.value = UiState(false, deleteResult.message)
                 }
+
                 is Result.Success -> {
-                    _uiState.value = UiState(true, null)
+                    _uiStateSave.value = UiStateSave(message = "Konto Raderat")
+                    //_uiState.value = UiState(true, null)
                 }
             }
-        }
-    }
-
-    val isButtonDisabled = MediatorLiveData<Boolean>().apply {
-        addSource(userContact) {
-            value = (userContact.value ?: "").isBlank() || (userCity.value ?: "").isBlank()
-        }
-        addSource(userCity) {
-            value = (userContact.value ?: "").isBlank() || (userCity.value ?: "").isBlank()
         }
     }
 }

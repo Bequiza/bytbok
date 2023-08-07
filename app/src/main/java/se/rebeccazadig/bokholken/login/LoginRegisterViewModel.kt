@@ -20,6 +20,7 @@ class LoginRegisterViewModel : ViewModel() {
     val password = MutableLiveData("")
     val isLoginMode = MutableLiveData(true)
     val inProgress = MutableLiveData(false)
+
     private val _uiState = MutableLiveData(UiState(null))
     internal val uiState: LiveData<UiState> get() = _uiState
 
