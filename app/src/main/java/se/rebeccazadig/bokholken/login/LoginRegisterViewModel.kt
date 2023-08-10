@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
 internal data class UiState(
-    /*uiState är MLD är observed i frag men all ändring sker i viewmodel*/
     val message: String?,
 )
 

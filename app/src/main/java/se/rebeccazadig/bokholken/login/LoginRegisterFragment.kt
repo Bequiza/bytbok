@@ -11,7 +11,7 @@ import se.rebeccazadig.bokholken.databinding.FragmentLoginBinding
 
 class LoginRegisterFragment : Fragment() {
 
-    private val viewModel: LoginRegisterViewModel by viewModels() // viewmodel
+    private val viewModel: LoginRegisterViewModel by viewModels()
     private lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(

@@ -3,6 +3,7 @@ package se.rebeccazadig.bokholken.login
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
@@ -73,6 +74,22 @@ class LoginRepository private constructor() /*primary constructor*/ {
         }
     }
 
+    suspend fun reAuthenticate(email: String, password: String): Result {
+        val user = myAuth.currentUser
+        if (user != null && email.isNotEmpty() && password.isNotEmpty()) {
+            val credential = EmailAuthProvider.getCredential(email, password)
+            return try {
+                user.reauthenticate(credential).await()
+                Result.Success
+            } catch (e: Exception) {
+                Log.e("ReAuthenticate", "Error re-authenticating: ${e.message}")
+                Result.Failure(e.message ?: "Error during re-authentication.")
+            }
+        }
+        return Result.Failure("Error during re-authentication.")
+    }
+
+
     fun getUserId(): String {
         val uid = myAuth.currentUser?.uid
         return if (uid == null) {
@@ -91,42 +108,3 @@ class LoginRepository private constructor() /*primary constructor*/ {
         }
     }
 }
-
-// auth.signInWithEmailAndPassword(userEmail, userPassword)
-//                .addOnCompleteListener(requireActivity()) { task ->
-//                    if (task.isSuccessful) {
-//                        // Sign in success, update UI with the signed-in user's information
-//                        // Toast.makeText(requireContext(), "Login ok", Toast.LENGTH_SHORT).show()
-//                    } else {
-//                        // If sign in fails, display a message to the user.
-//                        Toast.makeText(requireContext(), "Fel vid login", Toast.LENGTH_SHORT).show()
-//                    }
-//                }
-// suspend fun deleteAccount() {
-//    //  myAuth.currentUser
-//
-//    val user = myAuth.currentUser ?: myAuth.currentUser //Firebase.auth.currentUser!! // rewrite, använd inte !! använd elvis istället
-//
-//    Log.d("PIADELETE", "User " + user.uid) // AndroidSTudio vill ändra till if sats
-//    // skriv om kod och använd coroutines nedanför
-//    // läs om exception, finns massor som kan gå fel, logga ut sen in och då kan man radera
-//    user.delete() // AndroidSTudio vill ändra till if sats
-//        .addOnCompleteListener { task ->
-//            if (task.isSuccessful) {
-//                Log.d("PIADELETE", "User account deleted.")
-//            } else {
-//                Log.d("PIADELETE", "DELETE FAIL ")
-//                Log.d("PIADELETE", task.exception!!.toString())
-//            }
-//        }
-// }
-// Log.d("PIADELETE", "User " + user.uid) // AndroidSTudio vill ändra till if sats
-// skriv om kod och använd coroutines nedanför
-// läs om exception, finns massor som kan gå fel, logga ut sen in och då kan man radera
-
-// Log.d("PIADELETE", "User account deleted.")
-
-//  Log.d("PIADELETE", "DELETE FAIL ")
-//  Log.d("PIADELETE", task.exception!!.toString())
-// val user = myAuth.currentUser ?: myAuth.currentUser //Firebase.auth.currentUser!! // rewrite, använd inte !! använd elvis istället
-// AndroidSTudio vill ändra till if sats

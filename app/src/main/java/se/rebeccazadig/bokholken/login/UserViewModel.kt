@@ -1,13 +1,17 @@
 package se.rebeccazadig.bokholken.login
 
-import android.app.AlertDialog
+import android.content.Context
 import android.util.Log
-import androidx.lifecycle.*
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import se.rebeccazadig.bokholken.myAdverts.UiState
 
 internal data class UiStateSave(
-
     val message: String?,
 )
 
@@ -15,39 +19,42 @@ class UserViewModel : ViewModel() {
 
     private val loginRepo = LoginRepository.getInstance()
     private val userRepo = UserRepository.getInstance()
+
+    private val _uiStateSave = MutableLiveData(UiStateSave(null))
+    internal val uiStateSave: LiveData<UiStateSave> get() = _uiStateSave
+
     val userName = MutableLiveData("")
     val userContact = MutableLiveData("")
     val userCity = MutableLiveData("")
 
     val inProgress = MutableLiveData(false)
-   //private val _uiState = MutableLiveData(UiState(false, null))
-   //internal val uiState: LiveData<UiState> get() = _uiState
-    private val _uiStateSave = MutableLiveData(UiStateSave(null))
-    internal val uiStateSave: LiveData<UiStateSave> get() = _uiStateSave
 
     val isButtonDisabled = MediatorLiveData<Boolean>().apply {
         addSource(userContact) {
-            value = (userContact.value ?: "").isBlank() || (userCity.value ?: "").isBlank()
+            value = it.isBlank() || userCity.value.isNullOrBlank()
         }
         addSource(userCity) {
-            value = userContact.value.isNullOrBlank() || (userCity.value ?: "").isBlank()
+            value = it.isBlank() || userContact.value.isNullOrBlank()
         }
     }
+
     fun logOutInVm() {
         loginRepo.logOutInRepo()
     }
 
-    fun saveUser() {
+    fun saveUser(view: View) {
         inProgress.value = true
 
         viewModelScope.launch {
-            val userid = loginRepo.getUserId()
-            val userName = userName.value.toString()
-            val userContact = userContact.value.toString()
-            val userCity = userCity.value.toString()
-            val user = User(id = userid, name = userName, contact = userContact, city = userCity)
+            val userId = loginRepo.getUserId()
 
-            userRepo.saveUser(user)
+            val user = User(
+                id = userId,
+                name = userName.value ?: "",
+                contact = userContact.value ?: "",
+                city = userCity.value ?: ""
+            )
+
             val result = userRepo.saveUser(user)
 
             inProgress.postValue(false)
@@ -64,30 +71,43 @@ class UserViewModel : ViewModel() {
                     _uiStateSave.value = UiStateSave(message = "Informationen Sparad")
                 }
             }
+            closeKeyboard(view)
         }
     }
 
-    fun nullUiStateSave() {
-        UiStateSave(message = null)
+
+    private fun closeKeyboard(view: View) {
+        val inputMethodManager = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
-    fun deleteAccountInVM() {
+    fun nullUiStateSave() {
+        _uiStateSave.value = UiStateSave(message = null)
+    }
+
+    fun deleteAccountInVM(email: String, password: String) {
         inProgress.value = true
+
         viewModelScope.launch {
-            val deleteResult: Result = loginRepo.deleteAccount()
-            inProgress.postValue(false)
+            val reAuthResult = loginRepo.reAuthenticate(email, password)
 
-            when (deleteResult) {
-                is Result.Failure -> {
-                    _uiStateSave.value = UiStateSave(deleteResult.message)
-                    //_uiState.value = UiState(false, deleteResult.message)
-                }
+            if (reAuthResult is Result.Success) {
+                val deleteResult = loginRepo.deleteAccount()
 
-                is Result.Success -> {
-                    _uiStateSave.value = UiStateSave(message = "Konto Raderat")
-                    //_uiState.value = UiState(true, null)
+                when (deleteResult) {
+                    is Result.Failure -> {
+                        _uiStateSave.value = UiStateSave(deleteResult.message)
+                    }
+
+                    is Result.Success -> {
+                        _uiStateSave.value = UiStateSave(message = "Konto Raderat")
+                    }
                 }
+            } else if (reAuthResult is Result.Failure) {
+                _uiStateSave.value = UiStateSave(reAuthResult.message)
             }
+
+            inProgress.postValue(false)
         }
     }
 }

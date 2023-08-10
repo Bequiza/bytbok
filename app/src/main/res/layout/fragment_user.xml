@@ -19,141 +19,104 @@
         android:background="#F5EBE0"
         tools:context=".login.UserFragment">
 
-        <TextView
-            android:id="@+id/editNameTV"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/editUserToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="4dp"
+            android:textColor="@color/tabbar_backgroundcolor"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/user_edit_title" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editNameInputLayout"
+            style="@style/CustomOutlinedTextInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
-            android:text="Ange nytt användarnamn:"
-            android:textColor="#6C584C"
-            android:textSize="16sp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editUserHeaderTV" />
+            app:layout_constraintTop_toBottomOf="@+id/editUserToolbar">
 
-        <TextView
-            android:id="@+id/editcontactTV"
-            android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editNameET"
+                style="@style/CustomTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_username"
+                android:inputType="textPersonName"
+                android:text="@={vm.userName}"
+                android:textColor="#6C584C" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editContactInputLayout"
+            style="@style/CustomOutlinedTextInputLayout"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:text="Redigera kontaktsätt:"
-            android:textColor="#6C584C"
-            android:textSize="16sp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editNameET" />
+            app:layout_constraintTop_toBottomOf="@+id/editNameInputLayout">
 
-        <EditText
-            android:id="@+id/editNameET"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editContactET"
+                style="@style/CustomTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_contact"
+                android:inputType="textMultiLine"
+                android:text="@={vm.userContact}"
+                android:textColor="#6C584C" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/editCityInputLayout"
+            style="@style/CustomOutlinedTextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:ems="10"
-            android:text="@={vm.userName}"
-            android:hint="Användarnamn"
-            android:inputType="textPersonName"
-            android:textColor="#6C584C"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editNameTV" />
+            app:layout_constraintTop_toBottomOf="@+id/editContactInputLayout">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editCityET"
+                style="@style/CustomTextInputEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_city"
+                android:inputType="textMultiLine"
+                android:text="@={vm.userCity}"
+                android:textColor="#6C584C" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/saveButton"
-            android:layout_width="88dp"
-            android:layout_height="58dp"
-            android:layout_marginStart="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:backgroundTint="#774936"
             android:enabled="@{!vm.isButtonDisabled}"
-            android:onClick="@{() -> vm.saveUser()}"
-            android:text="Spara"
+            android:onClick="@{(view) -> vm.saveUser(view)}"
+            android:text="@string/save_button_text"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editCityET" />
+            app:layout_constraintTop_toBottomOf="@+id/editCityInputLayout" />
 
-        <Button
-            android:id="@+id/eraseAccountButton"
-            android:layout_width="88dp"
-            android:layout_height="58dp"
-            android:layout_marginEnd="100dp"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="#774936"
-            android:onClick="@{() -> vm.deleteAccountInVM()}"
-            android:text="Radera konto"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <Button
-            android:id="@+id/logOutButton"
-            android:layout_width="88dp"
-            android:layout_height="58dp"
-            android:layout_marginStart="100dp"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="#774936"
-            android:onClick="@{() -> vm.logOutInVm()}"
-            android:text="Logga ut"
-            android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/editUserHeaderTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="32dp"
-            android:text="Redigera användare"
-            android:textAllCaps="true"
-            android:textColor="#6C584C"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/editCityTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:text="Ange ny stad, stadsdel:"
-            android:textColor="#6C584C"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editContactET" />
-
-        <EditText
-            android:id="@+id/editCityET"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:hint="Stad, stadsdel"
-            android:text="@={vm.userCity}"
-            android:inputType="textMultiLine"
-            android:textColor="#6C584C"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editCityTV" />
-
-        <EditText
-            android:id="@+id/editContactET"
-            android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            android:ems="10"
-            android:gravity="start|top"
-            android:text="@={vm.userContact}"
-            android:hint="Kontaktsätt"
-            android:inputType="textMultiLine"
-            android:textColor="#6C584C"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editcontactTV" />
-
-        <!-- region ProgressBar -->
+        <!-- ProgressBar Layout -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/progressbar_container"
             android:layout_width="match_parent"
@@ -163,22 +126,34 @@
             tools:visibility="gone">
 
             <View
+                android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clickable="true"
-                android:focusable="true"
                 android:alpha="0.25"
-                android:background="@color/black" />
+                android:background="@color/black"
+                android:clickable="true"
+                android:focusable="true" />
 
             <ProgressBar
+                android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/loadingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/loading"
+                android:textColor="#FFFFFF"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/progressBar" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-        <!-- endregion -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

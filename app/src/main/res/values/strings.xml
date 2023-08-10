@@ -10,4 +10,31 @@
     <string name="login_button">Login</string>
     <string name="books_to_read">Böcker jag vill läsa!</string>
     <string name="header_myPage">Min Sida</string>
+    <string name="user_edit_title">Redigera användare</string>
+    <string name="hint_username">Ange nytt användarnamn</string>
+    <string name="hint_contact">Redigera kontaktsätt</string>
+    <string name="hint_city">Ange ny stad, stadsdel</string>
+    <string name="save_button_text">Spara</string>
+    <string name="delete_account_button_text">Radera konto</string>
+    <string name="logout_button_text">Logga ut</string>
+    <string name="loading">Laddar…</string>
+    <string name="logout_title">Logga ut</string>
+    <string name="logout_message">Är du säker på att du vill logga ut?</string>
+    <string name="delete_account_title">Radera konto</string>
+    <string name="delete_account_message">Är du säker på att du vill radera ditt konto? Denna åtgärd kan inte ångras.</string>
+    <string name="confirm">Bekräfta</string>
+    <string name="cancel">Avbryt</string>>
+    <string name="hint_email">E-post</string>
+    <string name="hint_password">Lösenord</string>
+
+    <string name="user_details_username">Användarnamn: %1$s</string>
+    <string name="user_details_contact">Kontaktsätt: %1$s</string>
+    <string name="user_details_city">Stad: %1$s</string>
+
+    <string name="credentials_dialog_title">Ange dina uppgifter igen</string>
+    <string name="submit_button_label">Skicka</string>
+    <string name="cancel_button_label">Avbryt</string>
+    <string name="credentials_toast_message">Ange både e-post och lösenord.</string>
+
+
 </resources>

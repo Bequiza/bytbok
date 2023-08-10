@@ -1,21 +1,24 @@
 package se.rebeccazadig.bokholken.login
 
-import android.util.Log
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class UserRepository private constructor() {
 
+    private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("users")
+
     suspend fun saveUser(user: User): Result {
         delay(2_000)
         return withContext(Dispatchers.IO) {
-            if (user.name.startsWith("A", ignoreCase = true)) {
-                Log.i("Emma", "Saving user ${user.name}, ${user.contact}, ${user.city}, ${user.id}")
+            try {
+                databaseReference.child(user.id).setValue(user).await()
                 Result.Success
-            } else {
-              //  val errorMessage = "Name must start with 'A'"
-                Result.Failure("Name must start with A")
+            } catch (e: Exception) {
+                Result.Failure(e.message ?: "Error saving user!")
             }
         }
     }

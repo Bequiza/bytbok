@@ -12,6 +12,10 @@
     <color name="fragment_backgroundcolor">#F5EBE0</color>
     <color name="bottom_nav_selected">#774936</color>
 
+    <color name="custom_border_color">@color/bottom_nav_selected</color>
+    <color name="custom_hint_color">#5555</color>
+    <color name="custom_text_color">#6C584C</color>
+
     // #F9DCC4
 
 </resources>
