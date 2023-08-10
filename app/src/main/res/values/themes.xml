@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.BytBok" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
+        <item name="colorPrimary">@color/bottom_nav_selected</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -12,5 +12,21 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">@color/bottom_nav_selected</item>
         <!-- Customize your theme here. -->
+    </style>
+
+     Outlined TextInputLayout Style
+    <style name="CustomOutlinedTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <!-- Border color -->
+        <item name="boxStrokeColor">@color/custom_border_color</item>
+        <!-- Hint text color -->
+        <item name="hintTextColor">@color/custom_border_color</item>
+        <!-- ... add other styling attributes if needed ... -->
+    </style>
+
+    <!-- TextInputEditText Style -->
+    <style name="CustomTextInputEditText" parent="ThemeOverlay.MaterialComponents.TextInputEditText">
+        <!-- Text color -->
+        <item name="android:textColor">@color/custom_text_color</item>
+        <!-- ... add other styling attributes if needed ... -->
     </style>
 </resources>

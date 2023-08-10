@@ -1,16 +1,18 @@
 package se.rebeccazadig.bokholken.login
 
+import android.content.DialogInterface
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
 import se.rebeccazadig.bokholken.R
+import se.rebeccazadig.bokholken.databinding.DialogCredentialsBinding
 import se.rebeccazadig.bokholken.databinding.FragmentUserBinding
 
 class UserFragment : Fragment() {
@@ -22,34 +24,98 @@ class UserFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
-    ): View? {
+    ): View {
         binding = FragmentUserBinding.inflate(layoutInflater, container, false)
         binding.lifecycleOwner = this
         binding.vm = viewModel
-        // Inflate the layout for this fragment
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.saveButton.setOnClickListener {
-            var editUserName = view.findViewById<EditText>(R.id.editNameET).text.toString()
-            var editContact = view.findViewById<EditText>(R.id.editContactET).text.toString()
-            var editCity = view.findViewById<EditText>(R.id.editCityET).text.toString()
-
-            val database = Firebase.database
-            val myRef = database.getReference("EditMinSida")
-
-            var someChanges = User(editUserName, editContact, editCity)
-            myRef.push().setValue(someChanges)
-        }
-
-        viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
-
-            uiState.message?.let/*om allt till vänster om ?+.let inte null, visa toast*/ {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+        binding.editUserToolbar.inflateMenu(R.menu.menu_user)
+        binding.editUserToolbar.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.logout -> {
+                    showConfirmationDialog(
+                        title = getString(R.string.logout_title),
+                        message = getString(R.string.logout_message),
+                        positiveAction = {
+                            viewModel.logOutInVm()
+                        }
+                    )
+                    true
+                }
+                R.id.delete_account -> {
+                    showConfirmationDialog(
+                        title = getString(R.string.delete_account_title),
+                        message = getString(R.string.delete_account_message),
+                        positiveAction = {
+                            showCredentialsDialog { email, password ->
+                                viewModel.deleteAccountInVM(email, password)
+                            }
+                        }
+                    )
+                    true
+                }
+                else -> false
             }
         }
+
+        viewModel.uiStateSave.observe(viewLifecycleOwner) { uiStateSave ->
+            uiStateSave.message?.let {
+                Toast.makeText(requireContext(), "${uiStateSave.message}", Toast.LENGTH_LONG).show()
+                viewModel.nullUiStateSave()
+            }
+        }
+    }
+
+    private fun showConfirmationDialog(title: String, message: String, positiveAction: () -> Unit) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton(getString(R.string.confirm)) { _, _ ->
+                positiveAction.invoke()
+            }
+            .setNegativeButton(getString(R.string.cancel), null)
+            .create()
+            .show()
+    }
+
+    private fun showCredentialsDialog(onCredentialsProvided: (email: String, password: String) -> Unit) {
+        val binding = DialogCredentialsBinding.inflate(layoutInflater)
+
+        val dialog = AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.credentials_dialog_title))
+            .setView(binding.root)
+            .setPositiveButton(getString(R.string.submit_button_label), null)
+            .setNegativeButton(getString(R.string.cancel_button_label)) { _, _ -> }
+            .create()
+
+        dialog.show()
+
+        val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE).apply {
+            isEnabled = false
+            setOnClickListener {
+                onCredentialsProvided(binding.emailEditText.text.toString().trim(), binding.passwordEditText.text.toString().trim())
+                dialog.dismiss()
+            }
+        }
+
+        val checkAndUpdateButtonState = {
+            val email = binding.emailEditText.text.toString().trim()
+            val password = binding.passwordEditText.text.toString().trim()
+            positiveButton.isEnabled = email.isNotEmpty() && password.isNotEmpty()
+        }
+
+        val textWatcher = object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) = checkAndUpdateButtonState()
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        }
+
+        binding.emailEditText.addTextChangedListener(textWatcher)
+        binding.passwordEditText.addTextChangedListener(textWatcher)
     }
 }

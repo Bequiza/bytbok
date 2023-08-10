@@ -11,7 +11,7 @@ import se.rebeccazadig.bokholken.databinding.FragmentLoginBinding
 
 class LoginRegisterFragment : Fragment() {
 
-    private val viewModel: LoginRegisterViewModel by viewModels() // viewmodel
+    private val viewModel: LoginRegisterViewModel by viewModels()
     private lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(
@@ -30,7 +30,7 @@ class LoginRegisterFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner) { uiState ->
 
             uiState.message?.let/*om allt till vänster om ?+.let inte null, visa toast*/ {
-                Toast.makeText(requireContext(), "Hoppsan nått blev fel", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         }
     }
