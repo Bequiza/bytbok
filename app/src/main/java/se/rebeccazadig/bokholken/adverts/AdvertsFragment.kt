@@ -13,7 +13,7 @@ import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.Advert
 import se.rebeccazadig.bokholken.databinding.FragmentAdvertsBinding
 
-class AdvertsFragment : Fragment(R.layout.fragment_adverts) {
+class AdvertsFragment : Fragment() {
 
     private var _binding: FragmentAdvertsBinding? = null
     private val binding get() = _binding!!

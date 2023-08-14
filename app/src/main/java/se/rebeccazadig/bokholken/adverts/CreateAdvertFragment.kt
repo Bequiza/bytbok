@@ -51,10 +51,6 @@ class CreateAdvertFragment : Fragment() {
         _binding = null
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        Log.d("FragmentLifecycle", "onAttach")
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
