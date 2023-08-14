@@ -1,4 +1,4 @@
-package se.rebeccazadig.bokholken.login
+package se.rebeccazadig.bokholken.data
 
 data class User(
     val id: String = "",

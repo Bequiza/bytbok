@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">BytBok</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="new_user">Ny Användare?</string>
     <string name="already_user">Redan registrerat dig?</string>
     <string name="header_login">Login</string>
@@ -12,7 +10,7 @@
     <string name="header_myPage">Min Sida</string>
     <string name="user_edit_title">Redigera användare</string>
     <string name="hint_username">Ange nytt användarnamn</string>
-    <string name="hint_contact">Redigera kontaktsätt</string>
+    <string name="hint_contact">Kontaktsätt</string>
     <string name="hint_city">Ange ny stad, stadsdel</string>
     <string name="save_button_text">Spara</string>
     <string name="delete_account_button_text">Radera konto</string>
@@ -36,5 +34,36 @@
     <string name="cancel_button_label">Avbryt</string>
     <string name="credentials_toast_message">Ange både e-post och lösenord.</string>
 
+
+    <string name="create_new_ad">Skapa ny annons</string>
+    <string name="create_new_ad_text">Skapa ny annons</string>
+    <string name="read_more_button_text">Läs mer</string>
+    <string name="ads_details_text">Annons Detaljer</string>
+    <string name="create_ads_text">Skapa anons</string>
+    <string name="hint_search">Sök böcker...</string>
+
+    <string name="hint_title">Titel</string>
+    <string name="hint_author">Författare</string>
+    <string name="hint_genre">Genre</string>
+    <string name="label_where">Finns i:</string>
+    <string name="label_contact_info">Kontakta mig för att få boken:</string>
+    <string name="publish_button_text">Publicera</string>
+
+    <string name="author_advert_tv">Författare: %1$s</string>
+    <string name="location_advert_tv">Finns i: %1$s</string>
+    <string name="contact_advert_tv">Kontaktsätt: %1$s</string>
+    <string name="genre_advert_tv">Genre: %1$s</string>
+    <string name="posted_on_date">Skapat: %1$s</string>
+    <string name="creation_time_label">Inlagd %1$s</string>
+
+    <string name="today">Idag</string>
+    <string name="yesterday">Igår</string>
+    <string name="sunday">i söndags</string>
+    <string name="monday">i måndags</string>
+    <string name="tuesday">i tisdags</string>
+    <string name="wednesday">i onsdags</string>
+    <string name="thursday">i torsdags</string>
+    <string name="friday">i fredags</string>
+    <string name="saturday">i lördags</string>
 
 </resources>

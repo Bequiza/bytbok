@@ -25,6 +25,7 @@ import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import se.rebeccazadig.bokholken.R
+import se.rebeccazadig.bokholken.data.Advert
 import se.rebeccazadig.bokholken.databinding.FragmentCreateAdvertBinding
 import java.io.ByteArrayOutputStream
 
@@ -36,14 +37,11 @@ class CreateAdvertFragment : Fragment() {
 
     private val viewModel: AdvertViewModel by viewModels()
 
-    private var currentAd: Adverts? = null
+    private var currentAd: Advert? = null
     private var adImage: Bitmap? = null
+    private var draftAd: Advert? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         _binding = FragmentCreateAdvertBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -61,92 +59,105 @@ class CreateAdvertFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupToolbar()
+        setupPublishButton()
+        setupLoadingObserver()
+        setupAdvertSaveObserver()
+        setupImageViewClick()
+    }
+
+    private fun setupToolbar() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
 
         val adId = args.annonsid
         adId.takeIf { it.isNotEmpty() }?.let {
-            binding.deleteButton.visibility = View.VISIBLE
-
             fetchAdvertDetails(it)
             downloadImage(it)
         }
+    }
 
-
+    private fun setupPublishButton() {
         binding.publishButton.setOnClickListener {
             if (!areFieldsValid()) {
-                Toast.makeText(requireContext(), "All fields are required!", Toast.LENGTH_SHORT)
-                    .show()
+                showToast("All fields are required!")
                 return@setOnClickListener
             }
-            val addBookTitle = binding.titleET.text.toString()
-            val addBookWriter = binding.authorET.text.toString()
-            val addGenre = binding.genreET.text.toString()
-            val addCity = binding.cityET.text.toString()
-            val addContactMethod = binding.contactET.text.toString()
 
-            val someBooks = Adverts(
-                title = addBookTitle,
-                author = addBookWriter,
-                city = addCity,
-                genre = addGenre,
-                contact = addContactMethod
-            )
+            draftAd = createAdvertFromInput()
 
-            Firebase.auth.currentUser?.let { currentUser ->
-                someBooks.adCreator = currentUser.uid
-            }
-
-            viewModel.advertSaveStatus.observe(viewLifecycleOwner) { isSuccessful ->
-                if (isSuccessful) {
-                    lifecycleScope.launch {
-                        // If there's an image, upload it.
-                        adImage?.let {
-                            // Use the adId for the image upload
-                            val adId = someBooks.adId ?: return@launch
-                            uploadImage(adId)
-
-                            // Introduce a delay of 3 seconds (or however long you want)
-                            delay(3000)
-                        }
-
-                        // After the delay, navigate back
-                        navigateBack()
-                    }
+            draftAd?.let { advert ->
+                if (currentAd == null) {
+                    viewModel.saveAdvert(advert)
                 } else {
-                    Toast.makeText(
-                        requireContext(),
-                        "Failed to save advert. Please try again.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-
-            if (currentAd == null) {
-                viewModel.saveAdvert(someBooks)
-            } else {
-                currentAd?.adId?.let { existingAdId ->
-                    someBooks.adId = existingAdId
-                    viewModel.saveAdvert(someBooks)
+                    currentAd?.adId?.let { existingAdId ->
+                        advert.adId = existingAdId
+                        viewModel.saveAdvert(advert)
+                    }
                 }
             }
         }
+    }
 
+    private fun createAdvertFromInput(): Advert {
+        val addBookTitle = binding.titleET.text.toString()
+        val addBookWriter = binding.authorET.text.toString()
+        val addGenre = binding.genreET.text.toString()
+        val addCity = binding.cityET.text.toString()
+        val addContactMethod = binding.contactET.text.toString()
+
+        val someBooks = Advert(
+            title = addBookTitle,
+            author = addBookWriter,
+            city = addCity,
+            genre = addGenre,
+            contact = addContactMethod
+        )
+
+        Firebase.auth.currentUser?.let { currentUser ->
+            someBooks.adCreator = currentUser.uid
+        }
+
+        return someBooks
+    }
+
+    private fun setupLoadingObserver() {
+        viewModel.inProgress.observe(viewLifecycleOwner) { isLoading ->
+            binding.progressbarContainer.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun setupAdvertSaveObserver() {
         viewModel.advertSaveStatus.observe(viewLifecycleOwner) { isSuccessful ->
             if (isSuccessful) {
-                Toast.makeText(requireContext(), "Advert saved successfully!", Toast.LENGTH_SHORT)
-                    .show()
-                findNavController().popBackStack()
+                onAdvertSaveSuccess()
             } else {
-                Toast.makeText(
-                    requireContext(),
-                    "Failed to save advert. Please try again.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                onAdvertSaveFailure()
             }
         }
+    }
 
+    private fun onAdvertSaveSuccess() {
+        lifecycleScope.launch {
+            adImage?.let {
+                val adId = draftAd?.adId ?: return@launch
+                uploadImage(adId)
+                delay(2000)
+            }
+            navigateBack()
+        }
+    }
+
+    private fun onAdvertSaveFailure() {
+        showToast("Failed to save advert. Please try again.")
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun setupImageViewClick() {
         binding.advertImageView.setOnClickListener {
             getContent.launch("image/*")
         }
@@ -157,7 +168,7 @@ class CreateAdvertFragment : Fragment() {
         val books = database.getReference("Books").child(adId)
 
         books.get().addOnSuccessListener { dataSnapshot ->
-            val advert = dataSnapshot.getValue<Adverts>()
+            val advert = dataSnapshot.getValue<Advert>()
             advert?.let {
                 it.adId = dataSnapshot.key
                 updateUIWithAdvertDetails(it)
@@ -168,7 +179,7 @@ class CreateAdvertFragment : Fragment() {
         }
     }
 
-    private fun updateUIWithAdvertDetails(advert: Adverts) {
+    private fun updateUIWithAdvertDetails(advert: Advert) {
         currentAd = advert
         binding.run {
             titleET.setText(advert.title)
@@ -179,40 +190,46 @@ class CreateAdvertFragment : Fragment() {
         }
     }
 
-
     private fun uploadImage(adId: String) {
-        adImage?.let {
+        adImage?.let { image ->
             val storageRef = Firebase.storage.reference
             val imageRef = storageRef.child("annonser").child(adId)
 
-            val baos = ByteArrayOutputStream()
-            it.compress(Bitmap.CompressFormat.JPEG, 80, baos)
-            val data = baos.toByteArray()
+            val data = image.toByteArray()
 
-            binding.progressBar.visibility = View.VISIBLE
+            showProgressBar()
 
             imageRef.putBytes(data)
-                .addOnSuccessListener {
-                    if (isAdded) {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(
-                            requireContext(),
-                            "The image has successfully uploaded.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        navigateBack()
-                    }
-                }
-                .addOnFailureListener {
-                    if (isAdded) {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(
-                            requireContext(),
-                            "Failed to upload image. Please try again.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                }
+                .addOnSuccessListener { onImageUploadSuccess() }
+                .addOnFailureListener { onImageUploadFailure() }
+        }
+    }
+
+    private fun Bitmap.toByteArray(): ByteArray {
+        val baos = ByteArrayOutputStream()
+        this.compress(Bitmap.CompressFormat.JPEG, 80, baos)
+        return baos.toByteArray()
+    }
+
+    private fun showProgressBar() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        binding.progressBar.visibility = View.GONE
+    }
+
+    private fun onImageUploadSuccess() {
+        if (isAdded) {
+            hideProgressBar()
+            navigateBack()
+        }
+    }
+
+    private fun onImageUploadFailure() {
+        if (isAdded) {
+            hideProgressBar()
+            showToast("Failed to upload image. Please try again.")
         }
     }
 
@@ -251,11 +268,11 @@ class CreateAdvertFragment : Fragment() {
     }
 
     private fun areFieldsValid(): Boolean {
-        return binding.titleET.text.isNotEmpty() &&
-                binding.authorET.text.isNotEmpty() &&
-                binding.genreET.text.isNotEmpty() &&
-                binding.cityET.text.isNotEmpty() &&
-                binding.contactET.text.isNotEmpty()
+        return binding.titleET.text?.isNotEmpty() == true &&
+                binding.authorET.text?.isNotEmpty() == true &&
+                binding.genreET.text?.isNotEmpty() == true &&
+                binding.cityET.text?.isNotEmpty() == true &&
+                binding.contactET.text?.isNotEmpty() == true
     }
 
     private fun navigateBack() {
