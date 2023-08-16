@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#e3d5ca"
-    tools:context=".Adverts.FavoriteFragment">
+    tools:context=".adverts.FavoriteFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/headerContainer"

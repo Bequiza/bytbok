@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/favoritesFragment"
-        android:name="se.rebeccazadig.bokholken.Adverts.FavoriteFragment"
+        android:name="se.rebeccazadig.bokholken.adverts.FavoriteFragment"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorite">
         <action
             android:id="@+id/action_favoritesFragment_to_publishedAdvertsFragment"
-            app:destination="@id/publishedAdvertsFragment" />
+            app:destination="@id/advertsDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/myAdvertsFragment"
@@ -25,16 +25,17 @@
     </fragment>
     <fragment
         android:id="@+id/createAdvertsFragment"
-        android:name="se.rebeccazadig.bokholken.Adverts.CreateAdvertFragment"
+        android:name="se.rebeccazadig.bokholken.adverts.CreateAdvertFragment"
         android:label="fragment_create_adverts"
         tools:layout="@layout/fragment_create_advert">
         <argument
             android:name="annonsid"
-            app:argType="string" />
+            app:argType="string"
+            android:defaultValue="default_value_here" />
     </fragment>
     <fragment
         android:id="@+id/advertsFragment"
-        android:name="se.rebeccazadig.bokholken.Adverts.AdvertsFragment"
+        android:name="se.rebeccazadig.bokholken.adverts.AdvertsFragment"
         android:label="fragment_adverts"
         tools:layout="@layout/fragment_adverts">
 
@@ -42,18 +43,18 @@
             android:id="@+id/action_advertsFragment_to_createAdvertsFragment"
             app:destination="@id/createAdvertsFragment" />
         <action
-            android:id="@+id/action_advertsFragment_to_publishedAdvertsFragment"
-            app:destination="@id/publishedAdvertsFragment" />
+            android:id="@+id/action_advertsFragment_to_advertsDetailsFragment"
+            app:destination="@id/advertsDetailsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/publishedAdvertsFragment"
-        android:name="se.rebeccazadig.bokholken.Adverts.PublishedAdvertsFragment"
-        android:label="fragment_published_adverts"
-        tools:layout="@layout/fragment_published_adverts">
+        android:id="@+id/advertsDetailsFragment"
+        android:name="se.rebeccazadig.bokholken.adverts.AdvertDetailsFragment"
+        android:label="Published Advert">
         <argument
-            android:name="annonsid"
+            android:name="advertId"
             app:argType="string" />
     </fragment>
+
 
     <navigation
         android:id="@+id/login_nav_graph"

@@ -1,9 +1,6 @@
-package se.rebeccazadig.bokholken.adverts // ktlint-disable package-name
+package se.rebeccazadig.bokholken.adverts
 
-import android.content.Context
-import android.net.ConnectivityManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,22 +10,19 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import se.rebeccazadig.bokholken.R
+import se.rebeccazadig.bokholken.data.Advert
 import se.rebeccazadig.bokholken.databinding.FragmentAdvertsBinding
 
-class AdvertsFragment : Fragment(R.layout.fragment_adverts) {
+class AdvertsFragment : Fragment() {
 
     private var _binding: FragmentAdvertsBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: AdvertViewModel by viewModels()
     private val advertsAdapter = AdvertsAdapter(
-        onAdvertClick = { _ ->
-            // Handle the list item click if needed
-        },
-        onReadMoreClick = { advert ->
+        onAdvertClick = { advert ->
             navigateToAdvertDetail(advert)
-        },
-        onHeartClick = {}
+        }
     )
 
     override fun onCreateView(
@@ -47,31 +41,24 @@ class AdvertsFragment : Fragment(R.layout.fragment_adverts) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.registerNetworkCallback(requireContext())
-
-        viewModel.isInternetAvailable.observe(viewLifecycleOwner) { isConnected ->
-            if (!isConnected) {
-                // No internet connection
-                binding.noInternetTextView.visibility = View.VISIBLE
-                binding.allAdvertsRV.visibility = View.GONE
-            } else {
-                // Internet connection is available
-                binding.noInternetTextView.visibility = View.GONE
-                binding.allAdvertsRV.visibility = View.VISIBLE
-            }
-        }
-
 
         binding.allAdvertsRV.layoutManager = LinearLayoutManager(context)
         binding.allAdvertsRV.adapter = advertsAdapter
 
-        viewModel.advertsLiveData.observe(viewLifecycleOwner) { adverts ->
-            Log.d("FragmentData", "Adverts in Fragment: $adverts")
-            advertsAdapter.submitList(adverts)
+        viewModel.filteredAdverts.observe(viewLifecycleOwner) { adverts ->
+            val wasEmpty = advertsAdapter.currentList.isEmpty()
+            advertsAdapter.submitList(adverts) {
+                // Check if the previous list was empty (meaning this is an initial load) and if not, scroll to the top
+                if (!wasEmpty) {
+                    binding.allAdvertsRV.scrollToPosition(0)
+                }
+            }
         }
 
-        viewModel.filteredAdverts.observe(viewLifecycleOwner) { adverts ->
-            advertsAdapter.submitList(adverts)
+        binding.searchView.also {
+            it.setIconifiedByDefault(false)
+            it.onActionViewExpanded()
+            it.clearFocus()
         }
 
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -86,23 +73,15 @@ class AdvertsFragment : Fragment(R.layout.fragment_adverts) {
             }
         })
 
-
-
         binding.newAdvertButton.setOnClickListener {
             val action = AdvertsFragmentDirections.actionAdvertsFragmentToCreateAdvertsFragment("annonsid")
             findNavController().navigate(action)
         }
     }
 
-    private fun navigateToAdvertDetail(advert: Adverts) {
-        val action = AdvertsFragmentDirections.actionAdvertsFragmentToPublishedAdvertsFragment(advert.adId!!)
+    private fun navigateToAdvertDetail(advert: Advert) {
+        val action = AdvertsFragmentDirections.actionAdvertsFragmentToAdvertsDetailsFragment(advert.adId!!)
         findNavController().navigate(action)
-    }
-
-    fun isNetworkAvailable(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        return networkInfo != null && networkInfo.isConnected
     }
 }
 

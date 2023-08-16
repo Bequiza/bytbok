@@ -1,23 +1,11 @@
 package se.rebeccazadig.bokholken.myAdverts
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.GridLayoutManager
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
-import se.rebeccazadig.bokholken.Adverts.Adverts
-import se.rebeccazadig.bokholken.Adverts.AdvertsAdapter
 import se.rebeccazadig.bokholken.databinding.FragmentMyAdvertsBinding
 
 class MyAdvertsFragment : Fragment() {
@@ -55,7 +43,7 @@ class MyAdvertsFragment : Fragment() {
 //        loadBooks()
     }
 
-//    fun clickReadmore(clickannons: Adverts) {
+//    fun clickReadmore(clickannons: Advert) {
 //        //  var goreadmore =
 //        //      MyPageFragmentDirections.actionMyPageFragmentToCreateAdvertsFragment(clickannons.adid)
 //        //  findNavController().navigate(goreadmore)
@@ -71,9 +59,9 @@ class MyAdvertsFragment : Fragment() {
 //        val bookListener = object : ValueEventListener {
 //
 //            override fun onDataChange(dataSnapshot: DataSnapshot) {
-//                val fbfruits = mutableListOf<Adverts>()
+//                val fbfruits = mutableListOf<Advert>()
 //                dataSnapshot.children.forEach { childsnap ->
-//                    var tempad = childsnap.getValue<Adverts>()!!
+//                    var tempad = childsnap.getValue<Advert>()!!
 //                    tempad.adid = childsnap.key!!
 //                    fbfruits.add(tempad)
 //                }

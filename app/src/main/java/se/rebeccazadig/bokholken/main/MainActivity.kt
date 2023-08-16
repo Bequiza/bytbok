@@ -5,6 +5,7 @@ import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import se.rebeccazadig.bokholken.R
@@ -29,6 +30,23 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
 
         binding.bottomNavigationView.setupWithNavController(navController)
+
+        binding.bottomNavigationView.setOnItemSelectedListener { item ->
+            val currentDest = navController.currentDestination?.id
+            if (item.itemId != currentDest) {
+                val builder = NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .setPopUpTo(R.id.advertsFragment, false)
+                val options = builder.build()
+                try {
+                    // Try to make the navigation to the selected item's destination
+                    navController.navigate(item.itemId, null, options)
+                    true
+                } catch (e: IllegalArgumentException) {
+                    false
+                }
+            } else false
+        }
 
         viewModel.isLoggedIn.observe(this) { isLoggedIn ->
             if (isLoggedIn == true) {

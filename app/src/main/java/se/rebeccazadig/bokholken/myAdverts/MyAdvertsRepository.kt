@@ -15,9 +15,9 @@ class MyAdvertsRepository private constructor() {
     //     val bookListener = object : ValueEventListener {
 
     //         override fun onDataChange(dataSnapshot: DataSnapshot) {
-    //             val fbfruits = mutableListOf<Adverts>()
+    //             val fbfruits = mutableListOf<Advert>()
     //             dataSnapshot.children.forEach { childsnap ->
-    //                 var tempad = childsnap.getValue<Adverts>()!!
+    //                 var tempad = childsnap.getValue<Advert>()!!
     //                 tempad.adid = childsnap.key!!
     //                 fbfruits.add(tempad)
     //             }
