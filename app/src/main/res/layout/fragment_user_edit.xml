@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F5EBE0"
-        tools:context=".login.UserFragment">
+        tools:context=".login.UserEditFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/editUserToolbar"

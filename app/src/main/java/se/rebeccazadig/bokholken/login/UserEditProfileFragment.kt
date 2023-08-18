@@ -4,28 +4,29 @@ import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.databinding.DialogCredentialsBinding
-import se.rebeccazadig.bokholken.databinding.FragmentUserBinding
+import se.rebeccazadig.bokholken.databinding.FragmentUserEditProfileBinding
 
-class UserFragment : Fragment() {
+class UserEditProfileFragment : Fragment() {
 
     private val viewModel: UserViewModel by viewModels()
-    private lateinit var binding: FragmentUserBinding
+    private lateinit var binding: FragmentUserEditProfileBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentUserBinding.inflate(layoutInflater, container, false)
+        binding = FragmentUserEditProfileBinding.inflate(layoutInflater, container, false)
         binding.lifecycleOwner = this
         binding.vm = viewModel
         return binding.root
@@ -34,8 +35,26 @@ class UserFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.editUserToolbar.inflateMenu(R.menu.menu_user)
-        binding.editUserToolbar.setOnMenuItemClickListener { item ->
+        viewModel.fetchUserData()
+
+        viewModel.user.observe(viewLifecycleOwner) { user ->
+            binding.userNameTV.text = getString(R.string.user_details_username, user.name)
+            binding.contactTV.text = getString(R.string.user_details_contact, user.contact)
+            binding.cityTV.text = getString(R.string.user_details_city, user.city)
+        }
+
+        binding.editUserButton.setOnClickListener {
+            val editButton = UserEditProfileFragmentDirections.actionUserProfileFragment2ToUserInfoFragment()
+            findNavController().navigate(editButton)
+        }
+
+        binding.myAdvertsButton.setOnClickListener {
+            val myAdvertsButton = UserEditProfileFragmentDirections.actionUserProfileFragment2ToMyAdvertsFragment()
+            findNavController().navigate(myAdvertsButton)
+        }
+
+        binding.profileToolbar.inflateMenu(R.menu.menu_user)
+        binding.profileToolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.logout -> {
                     showConfirmationDialog(

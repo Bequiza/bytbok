@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -77,28 +78,6 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    //fun fetchUserData() {
-    //    val userId = loginRepo.getUserId()
-    //    if (userId.isNotEmpty()) {
-    //        viewModelScope.launch {
-    //            val (result, fetchedUser) = userRepo.fetchUser(userId)
-    //            when (result) {
-    //                is Result.Success -> {
-    //                    if (fetchedUser != null) {
-    //                        user.value = fetchedUser
-    //                    } else {
-//
-    //                    }
-    //                }
-//
-    //                is Result.Failure -> {
-    //                    Result.Failure(message = "Something went wrong")
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-//
     fun fetchUserData() {
         val userId = loginRepo.getUserId()
         if (userId.isNotEmpty()) {
@@ -106,20 +85,19 @@ class UserViewModel : ViewModel() {
                 val (result, fetchedUser) = userRepo.fetchUser(userId)
                 when (result) {
                     is Result.Success -> {
-                        if (fetchedUser != null) {
-                        } else {
+                        fetchedUser?.let {
+                            user.value = it
+                        } ?: Log.e("UserDataFetch", "User fetched was null for userId: $userId")
 
-                        }
                     }
-
                     is Result.Failure -> {
-                        Result.Failure(message = "Something went wrong")
+                        Log.e("UserDataFetch", result.message)
+
                     }
                 }
             }
         }
     }
-
 
     private fun closeKeyboard(view: View) {
         val inputMethodManager =

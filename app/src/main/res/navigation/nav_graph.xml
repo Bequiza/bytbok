@@ -82,12 +82,16 @@
         app:popUpToInclusive="true" />
     <fragment
         android:id="@+id/userInfoFragment"
-        android:name="se.rebeccazadig.bokholken.login.UserFragment"
+        android:name="se.rebeccazadig.bokholken.login.UserEditFragment"
         android:label="fragment_user"
-        tools:layout="@layout/fragment_user" />
+        tools:layout="@layout/fragment_user_edit" >
+        <action
+            android:id="@+id/action_userInfoFragment_to_userProfileFragment2"
+            app:destination="@id/userProfileFragment2" />
+    </fragment>
     <fragment
         android:id="@+id/userProfileFragment2"
-        android:name="se.rebeccazadig.bokholken.login.UserProfileFragment"
+        android:name="se.rebeccazadig.bokholken.login.UserEditProfileFragment"
         android:label="UserProfileFragment" >
         <action
             android:id="@+id/action_userProfileFragment2_to_myAdvertsFragment"
