@@ -48,6 +48,7 @@ class LoginRegisterViewModel : ViewModel() {
                 is Result.Failure -> {
                     _uiState.value = UiState(result.message)
                 }
+
                 is Result.Success -> {
                     _uiState.value = UiState(null)
                 }

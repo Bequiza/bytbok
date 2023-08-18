@@ -33,13 +33,22 @@
     <string name="submit_button_label">Skicka</string>
     <string name="cancel_button_label">Avbryt</string>
     <string name="credentials_toast_message">Ange både e-post och lösenord.</string>
-
+    <string name="edit_user">Redigera</string>
+    <string name="my_adds">Mina Annonser</string>
+    <string name="user_profile_bottomNav">Min info</string>
+    <string name="favorites_bottomNav">Favoriter</string>
+    <string name="adverts_bottomNav">Alla annonser</string>
+    <string name="my_adverts_">Mina Annonser</string>
+    <string name="my_adverts_header_text">Mina annonser</string>
+    <string name="sub_header">Hantera ditt konto och annonser</string>
+    <string name="edit_info_toolbar">Redigera information</string>
+    <string name="profile_toolbar">Min profil</string>
 
     <string name="create_new_ad">Skapa ny annons</string>
     <string name="create_new_ad_text">Skapa ny annons</string>
     <string name="read_more_button_text">Läs mer</string>
     <string name="ads_details_text">Annons Detaljer</string>
-    <string name="create_ads_text">Skapa anons</string>
+    <string name="create_ads_text">Skapa annons</string>
     <string name="hint_search">Sök böcker...</string>
 
     <string name="hint_title">Titel</string>
@@ -65,5 +74,8 @@
     <string name="thursday">i torsdags</string>
     <string name="friday">i fredags</string>
     <string name="saturday">i lördags</string>
+    <string name="header_adverts_frag">Byt Din Bok</string>
+    <string name="avalible_books">Alla tillgängliga böcker</string>
+    <string name="no_internet_connection">No internet connection</string>
 
 </resources>

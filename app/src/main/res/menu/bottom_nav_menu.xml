@@ -5,17 +5,13 @@
 
         android:id="@+id/advertsFragment"
         android:icon="@drawable/baseline_home_24"
-        android:title="Alla annonser" />
-    <item
-        android:id="@+id/myAdvertsFragment"
-        android:icon="@drawable/baseline_advert"
-        android:title="Mina annonser" />
+        android:title="@string/adverts_bottomNav" />
     <item
         android:id="@+id/favoritesFragment"
         android:icon="@drawable/baseline_favorite_24"
-        android:title="Favoriter" />
+        android:title="@string/favorites_bottomNav" />
     <item
-        android:id="@+id/userInfoFragment"
+        android:id="@+id/userProfileFragment2"
         android:icon="@drawable/baseline_person_24"
-        android:title="Min info" />
+        android:title="@string/user_profile_bottomNav" />
 </menu>

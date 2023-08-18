@@ -24,6 +24,7 @@ class UserViewModel : ViewModel() {
     private val _uiStateSave = MutableLiveData(UiStateSave(null))
     internal val uiStateSave: LiveData<UiStateSave> get() = _uiStateSave
 
+    val user = MutableLiveData<User>()
     val userName = MutableLiveData("")
     val userContact = MutableLiveData("")
     val userCity = MutableLiveData("")
@@ -76,9 +77,53 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    //fun fetchUserData() {
+    //    val userId = loginRepo.getUserId()
+    //    if (userId.isNotEmpty()) {
+    //        viewModelScope.launch {
+    //            val (result, fetchedUser) = userRepo.fetchUser(userId)
+    //            when (result) {
+    //                is Result.Success -> {
+    //                    if (fetchedUser != null) {
+    //                        user.value = fetchedUser
+    //                    } else {
+//
+    //                    }
+    //                }
+//
+    //                is Result.Failure -> {
+    //                    Result.Failure(message = "Something went wrong")
+    //                }
+    //            }
+    //        }
+    //    }
+    //}
+//
+    fun fetchUserData() {
+        val userId = loginRepo.getUserId()
+        if (userId.isNotEmpty()) {
+            viewModelScope.launch {
+                val (result, fetchedUser) = userRepo.fetchUser(userId)
+                when (result) {
+                    is Result.Success -> {
+                        if (fetchedUser != null) {
+                        } else {
+
+                        }
+                    }
+
+                    is Result.Failure -> {
+                        Result.Failure(message = "Something went wrong")
+                    }
+                }
+            }
+        }
+    }
+
 
     private fun closeKeyboard(view: View) {
-        val inputMethodManager = view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 

@@ -23,15 +23,13 @@
             android:id="@+id/editUserToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="#e3d5ca"
             android:elevation="4dp"
-            android:textColor="@color/tabbar_backgroundcolor"
-            android:textSize="20sp"
-            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="@string/user_edit_title" />
+            app:navigationIcon="@drawable/ic_back_arrow"
+            app:title="@string/edit_info_toolbar" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/editNameInputLayout"
@@ -103,7 +101,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/saveButton"
+            android:id="@+id/editUserButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

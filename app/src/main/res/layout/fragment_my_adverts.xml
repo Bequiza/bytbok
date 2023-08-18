@@ -16,44 +16,23 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#e3d5ca"
+        android:background="#F5EBE0"
         tools:context=".myAdverts.MyAdvertsFragment">
 
-        <!-- TODO: Update blank fragment layout -->
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraintLayout3"
-            android:layout_width="0dp"
-            android:layout_height="130dp"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/editUserToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="#e3d5ca"
+            android:elevation="4dp"
+            android:paddingTop="@dimen/cardview_default_radius"
+            android:paddingBottom="@dimen/cardview_default_radius"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <TextView
-                android:id="@+id/myPageTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text="Min Sida"
-                android:textColor="#6C584C"
-                android:textSize="34sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/infoUserPageTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Hantera ditt konto och annonser"
-                android:textColor="#6C584C"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/myPageTV" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_back_arrow"
+            app:subtitle="@string/sub_header"
+            app:title="@string/my_adds" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/myAdvertsRV"
@@ -64,7 +43,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
+            app:layout_constraintTop_toBottomOf="@id/editUserToolbar"
             app:layout_constraintVertical_bias="1.0" />
 
 

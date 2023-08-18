@@ -85,4 +85,15 @@
         android:name="se.rebeccazadig.bokholken.login.UserFragment"
         android:label="fragment_user"
         tools:layout="@layout/fragment_user" />
+    <fragment
+        android:id="@+id/userProfileFragment2"
+        android:name="se.rebeccazadig.bokholken.login.UserProfileFragment"
+        android:label="UserProfileFragment" >
+        <action
+            android:id="@+id/action_userProfileFragment2_to_myAdvertsFragment"
+            app:destination="@id/myAdvertsFragment" />
+        <action
+            android:id="@+id/action_userProfileFragment2_to_userInfoFragment"
+            app:destination="@id/userInfoFragment" />
+    </fragment>
 </navigation>
