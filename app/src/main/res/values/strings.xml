@@ -15,7 +15,7 @@
     <string name="save_button_text">Spara</string>
     <string name="delete_account_button_text">Radera konto</string>
     <string name="logout_button_text">Logga ut</string>
-    <string name="loading">Laddar…</string>
+    <string name="Saving">Sparar…</string>
     <string name="logout_title">Logga ut</string>
     <string name="logout_message">Är du säker på att du vill logga ut?</string>
     <string name="delete_account_title">Radera konto</string>

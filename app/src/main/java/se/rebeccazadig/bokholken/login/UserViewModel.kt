@@ -10,6 +10,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.findNavController
 import kotlinx.coroutines.launch
 import se.rebeccazadig.bokholken.data.User
 
@@ -28,17 +29,11 @@ class UserViewModel : ViewModel() {
     val user = MutableLiveData<User>()
     val userName = MutableLiveData("")
     val userContact = MutableLiveData("")
-    val userCity = MutableLiveData("")
 
     val inProgress = MutableLiveData(false)
 
     val isButtonDisabled = MediatorLiveData<Boolean>().apply {
-        addSource(userContact) {
-            value = it.isBlank() || userCity.value.isNullOrBlank()
-        }
-        addSource(userCity) {
-            value = it.isBlank() || userContact.value.isNullOrBlank()
-        }
+        addSource(userContact) { value = it.isBlank() }
     }
 
     fun logOutInVm() {
@@ -54,8 +49,7 @@ class UserViewModel : ViewModel() {
             val user = User(
                 id = userId,
                 name = userName.value ?: "",
-                contact = userContact.value ?: "",
-                city = userCity.value ?: ""
+                contact = userContact.value ?: ""
             )
 
             val result = userRepo.saveUser(user)
@@ -72,6 +66,9 @@ class UserViewModel : ViewModel() {
                 is Result.Success -> {
                     Log.i("Emma", "SUCCESS")
                     _uiStateSave.value = UiStateSave(message = "Informationen Sparad")
+
+                    view.findNavController().popBackStack()
+
                 }
             }
             closeKeyboard(view)

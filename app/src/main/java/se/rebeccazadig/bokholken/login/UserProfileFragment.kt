@@ -14,19 +14,19 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.databinding.DialogCredentialsBinding
-import se.rebeccazadig.bokholken.databinding.FragmentUserEditProfileBinding
+import se.rebeccazadig.bokholken.databinding.FragmentUserProfileBinding
 
-class UserEditProfileFragment : Fragment() {
+class UserProfileFragment : Fragment() {
 
     private val viewModel: UserViewModel by viewModels()
-    private lateinit var binding: FragmentUserEditProfileBinding
+    private lateinit var binding: FragmentUserProfileBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = FragmentUserEditProfileBinding.inflate(layoutInflater, container, false)
+        binding = FragmentUserProfileBinding.inflate(layoutInflater, container, false)
         binding.lifecycleOwner = this
         binding.vm = viewModel
         return binding.root
@@ -40,16 +40,15 @@ class UserEditProfileFragment : Fragment() {
         viewModel.user.observe(viewLifecycleOwner) { user ->
             binding.userNameTV.text = getString(R.string.user_details_username, user.name)
             binding.contactTV.text = getString(R.string.user_details_contact, user.contact)
-            binding.cityTV.text = getString(R.string.user_details_city, user.city)
         }
 
         binding.editUserButton.setOnClickListener {
-            val editButton = UserEditProfileFragmentDirections.actionUserProfileFragment2ToUserInfoFragment()
+            val editButton = UserProfileFragmentDirections.actionUserProfileFragment2ToUserInfoFragment()
             findNavController().navigate(editButton)
         }
 
         binding.myAdvertsButton.setOnClickListener {
-            val myAdvertsButton = UserEditProfileFragmentDirections.actionUserProfileFragment2ToMyAdvertsFragment()
+            val myAdvertsButton = UserProfileFragmentDirections.actionUserProfileFragment2ToMyAdvertsFragment()
             findNavController().navigate(myAdvertsButton)
         }
 

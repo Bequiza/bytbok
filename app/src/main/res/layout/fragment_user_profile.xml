@@ -17,16 +17,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F5EBE0"
-        tools:context=".login.UserEditFragment">
+        tools:context=".login.EditUserProfileFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/profileToolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="70dp"
             android:background="#e3d5ca"
             android:elevation="4dp"
-            android:paddingTop="@dimen/cardview_default_radius"
-            android:paddingBottom="@dimen/cardview_default_radius"
+            android:paddingVertical="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -62,20 +61,6 @@
             app:layout_constraintTop_toBottomOf="@id/userNameTV"
             tools:text="@string/user_details_contact" />
 
-        <TextView
-            android:id="@+id/cityTV"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:textColor="@color/bottom_nav_item"
-            android:textSize="20sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/contactTV"
-            tools:text="@string/user_details_city" />
-
         <Button
             android:id="@+id/editUserButton"
             android:layout_width="wrap_content"
@@ -87,7 +72,7 @@
             android:text="@string/edit_user"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cityTV" />
+            app:layout_constraintTop_toBottomOf="@id/contactTV" />
 
         <Button
             android:id="@+id/myAdvertsButton"
@@ -100,8 +85,7 @@
             android:text="@string/my_adds"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cityTV" />
-
+            app:layout_constraintTop_toBottomOf="@+id/contactTV" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

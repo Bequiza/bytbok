@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 import se.rebeccazadig.bokholken.data.Advert
 import se.rebeccazadig.bokholken.myAdverts.UiState
 
-class AdvertViewModel : ViewModel() {
+open class AdvertViewModel : ViewModel() {
     private val advertsRepo = AdvertsRepository.getInstance()
 
     private val _advertsLiveData = advertsRepo.advertsLiveData

@@ -20,13 +20,12 @@
         tools:context=".myAdverts.MyAdvertsFragment">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/editUserToolbar"
+            android:id="@+id/myAdvertsToolbar"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:background="#e3d5ca"
             android:elevation="4dp"
-            android:paddingTop="@dimen/cardview_default_radius"
-            android:paddingBottom="@dimen/cardview_default_radius"
+            android:paddingVertical="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -43,12 +42,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editUserToolbar"
+            app:layout_constraintTop_toBottomOf="@id/myAdvertsToolbar"
             app:layout_constraintVertical_bias="1.0" />
-
-
-        <!-- region ProgressBar -->
-        <!-- endregion -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
