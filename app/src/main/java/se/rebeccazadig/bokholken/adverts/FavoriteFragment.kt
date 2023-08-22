@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import se.rebeccazadig.bokholken.data.Advert
+import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.databinding.FragmentFavoriteBinding
 
 class FavoriteFragment : Fragment() {

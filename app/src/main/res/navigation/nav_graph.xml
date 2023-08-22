@@ -30,8 +30,7 @@
         tools:layout="@layout/fragment_create_advert">
         <argument
             android:name="annonsid"
-            app:argType="string"
-            android:defaultValue="default_value_here" />
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/advertsFragment"

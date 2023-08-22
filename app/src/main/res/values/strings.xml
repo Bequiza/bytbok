@@ -11,7 +11,7 @@
     <string name="user_edit_title">Redigera användare</string>
     <string name="hint_username">Ange nytt användarnamn</string>
     <string name="hint_contact">Kontaktsätt</string>
-    <string name="hint_city">Ange ny stad, stadsdel</string>
+    <string name="hint_advert_location">Plats</string>
     <string name="save_button_text">Spara</string>
     <string name="delete_account_button_text">Radera konto</string>
     <string name="logout_button_text">Logga ut</string>
@@ -61,9 +61,11 @@
     <string name="author_advert_tv">Författare: %1$s</string>
     <string name="location_advert_tv">Finns i: %1$s</string>
     <string name="contact_advert_tv">Kontaktsätt: %1$s</string>
+    <string name="contact_ad_creator_button_text">Kontakta annonsören</string>
     <string name="genre_advert_tv">Genre: %1$s</string>
     <string name="posted_on_date">Skapat: %1$s</string>
     <string name="creation_time_label">Inlagd %1$s</string>
+    <string name="ad_creator_label">Skapad av %1$s</string>
 
     <string name="today">Idag</string>
     <string name="yesterday">Igår</string>
@@ -77,5 +79,13 @@
     <string name="header_adverts_frag">Byt Din Bok</string>
     <string name="avalible_books">Alla tillgängliga böcker</string>
     <string name="no_internet_connection">No internet connection</string>
+
+    <string name="email_subject">Angående annonsen: %1$s</string>
+    <string name="email_body">Hej,\n\nJag är intresserad av din annons: %1$s.\n\nMvh,\n%2$s.</string>
+    <string name="choose_email_app">Välj en e-postapp</string>
+    <string name="advert_saved_successfully">Annonsen sparades framgångsrikt!</string>
+    <string name="advert_save_failed">Misslyckades med att spara annonsen. Försök igen.</string>
+    <string name="publishing">Publicerar…</string>
+    <string name="invalid_contact_info">Kontaktinformationen är ogiltig.</string>
 
 </resources>

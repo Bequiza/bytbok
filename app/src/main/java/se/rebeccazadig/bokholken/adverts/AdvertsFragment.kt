@@ -1,29 +1,30 @@
 package se.rebeccazadig.bokholken.adverts
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import se.rebeccazadig.bokholken.R
-import se.rebeccazadig.bokholken.data.Advert
 import se.rebeccazadig.bokholken.databinding.FragmentAdvertsBinding
+import se.rebeccazadig.bokholken.models.Advert
 
 class AdvertsFragment : Fragment() {
 
     private var _binding: FragmentAdvertsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: AdvertViewModel by viewModels()
+    private val viewModel by lazy {
+        ViewModelProvider(this)[AdvertViewModel::class.java]
+    }
     private val advertsAdapter = AdvertsAdapter(
         onAdvertClick = { advert ->
             navigateToAdvertDetail(advert)
-        }
-    )
+        })
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +49,6 @@ class AdvertsFragment : Fragment() {
         viewModel.filteredAdverts.observe(viewLifecycleOwner) { adverts ->
             val wasEmpty = advertsAdapter.currentList.isEmpty()
             advertsAdapter.submitList(adverts) {
-                // Check if the previous list was empty (meaning this is an initial load) and if not, scroll to the top
                 if (!wasEmpty) {
                     binding.allAdvertsRV.scrollToPosition(0)
                 }

@@ -34,7 +34,7 @@ class UserProfileFragment : Fragment() {
         viewModel.user.observe(viewLifecycleOwner) { user ->
             binding.userNameTV.text = user.name
             binding.contactTV.text = user.contact
-            binding.cityTV.text = user.city
+            binding.locationTV.text = user.city
         }
 
         binding.editUserButton.setOnClickListener {

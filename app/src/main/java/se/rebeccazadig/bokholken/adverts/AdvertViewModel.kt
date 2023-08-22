@@ -1,66 +1,108 @@
 package se.rebeccazadig.bokholken.adverts
 
+import android.app.Application
+import android.graphics.Bitmap
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import se.rebeccazadig.bokholken.data.Advert
-import se.rebeccazadig.bokholken.myAdverts.UiState
+import se.rebeccazadig.bokholken.R
+import se.rebeccazadig.bokholken.data.Result
+import se.rebeccazadig.bokholken.data.UiStateSave
+import se.rebeccazadig.bokholken.models.Advert
 
-class AdvertViewModel : ViewModel() {
+class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
+
     private val advertsRepo = AdvertsRepository.getInstance()
 
-    private val _advertsLiveData = advertsRepo.advertsLiveData
-    private val _uiState = MutableLiveData(UiState(false, null))
-    internal val uiState: LiveData<UiState> get() = _uiState
-    val inProgress = MutableLiveData(false)
-
-
-    private val _adverts = MutableLiveData<List<Advert>?>()
-    val adverts: MutableLiveData<List<Advert>?> = _adverts
-
+    val isSavingInProgress = MutableLiveData(false)
     val searchQuery = MutableLiveData("")
 
-    private val _filteredAdverts = MediatorLiveData<List<Advert>>()
-    val filteredAdverts: LiveData<List<Advert>> get() = _filteredAdverts
+    val title = MutableLiveData<String>()
+    val author = MutableLiveData<String>()
+    val genre = MutableLiveData<String>()
+    val location = MutableLiveData<String>()
+    val adImage: MutableLiveData<Bitmap?> = MutableLiveData()
 
-    private val _advertSaveStatus = MutableLiveData<Boolean>()
-    val advertSaveStatus: LiveData<Boolean> get() = _advertSaveStatus
+
+    val isButtonDisabled: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
+        val update = {
+            value = title.value.isNullOrEmpty() ||
+                    author.value.isNullOrEmpty() ||
+                    genre.value.isNullOrEmpty() ||
+                    location.value.isNullOrEmpty() ||
+                    isSavingInProgress.value == true
+        }
+        addSource(title) { update() }
+        addSource(author) { update() }
+        addSource(genre) { update() }
+        addSource(location) { update() }
+        addSource(isSavingInProgress) { update() }
+    }
+
+    private val _advertSaveStatus = MutableLiveData<UiStateSave>(null)
+    val advertSaveStatus: LiveData<UiStateSave> get() = _advertSaveStatus
 
     private val advertsLiveData: LiveData<List<Advert>> get() = advertsRepo.advertsLiveData
 
+    val advertDetailsLiveData = advertsRepo.advertDetailLiveData
 
-    init {
-        _filteredAdverts.addSource(searchQuery) { filterAdverts() }
-        _filteredAdverts.addSource(advertsLiveData) { filterAdverts() }
+    private val _filteredAdverts = MediatorLiveData<List<Advert>>().apply {
+        addSource(searchQuery) { filterAdverts() }
+        addSource(advertsLiveData) { filterAdverts() }
     }
+    val filteredAdverts: LiveData<List<Advert>> get() = _filteredAdverts
 
     private fun filterAdverts() {
-        val query = searchQuery.value
-        _advertsLiveData.value?.let { adverts ->
-            _filteredAdverts.value = when {
-                query.isNullOrEmpty() -> adverts
-                else -> adverts.filter {
-                    it.title?.contains(query, true) == true ||
-                            it.author?.contains(query, true) == true
-                }
-            }
+        val query = searchQuery.value ?: ""
+        val currentAdverts = advertsLiveData.value.orEmpty()
+
+        _filteredAdverts.value = currentAdverts.filter { advert ->
+            query.isBlank() ||
+                    listOfNotNull(advert.title, advert.author, advert.genre, advert.location)
+                        .any { field -> field.contains(query, ignoreCase = true) }
         }
     }
 
-    fun saveAdvert(advert: Advert) {
-        inProgress.value = true
-
+    fun saveAdvert( adImage: Bitmap?) {
+        isSavingInProgress.value = true
+        val advert = Advert(
+            title = title.value ?: "",
+            author = author.value ?: "",
+            genre = genre.value ?: "",
+            location = location.value ?: ""
+        )
         viewModelScope.launch {
-            try {
-                advertsRepo.saveAdvert(advert)
-                _advertSaveStatus.value = true
-            } catch (e: Exception) {
-                _advertSaveStatus.value = false
-                inProgress.postValue(false)
+            val saveResult = advertsRepo.saveAdvert(advert, adImage)
+            isSavingInProgress.postValue(false)
+            when (saveResult) {
+                is Result.Failure -> {
+                    _advertSaveStatus.value =
+                        UiStateSave(saveResult.message)
+                }
+
+                is Result.Success -> {
+                    _advertSaveStatus.value =
+                        UiStateSave(message = app.getString(R.string.advert_saved_successfully))
+                }
             }
+
         }
+    }
+
+    fun resetUiStateSave() {
+        _advertSaveStatus.value = UiStateSave(message = null)
+    }
+
+    fun getAdvertDetails(advertId: String) {
+        viewModelScope.launch {
+            advertsRepo.fetchAdvertAndUserDetails(advertId)
+        }
+    }
+
+    fun cleanUp() {
+        advertsRepo.cleanUp()
     }
 }

@@ -1,5 +1,6 @@
 package se.rebeccazadig.bokholken.adverts
 
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,43 +9,100 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import se.rebeccazadig.bokholken.data.Advert
+import se.rebeccazadig.bokholken.data.User
+import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.data.Result
+import se.rebeccazadig.bokholken.utils.ImageUtils.Companion.toByteArray
+import java.util.UUID
 
 class AdvertsRepository private constructor() {
 
     private val firebaseAuth = FirebaseAuth.getInstance()
-    private val databaseRef = FirebaseDatabase.getInstance().getReference(NODE_BOOKS)
+    private val advertRef = FirebaseDatabase.getInstance().getReference("Adverts")
+    private val usersRef = FirebaseDatabase.getInstance().getReference("users")
+    private val storageRef = Firebase.storage.reference.child("advert_images")
 
     private val _advertsLiveData = MutableLiveData<List<Advert>>()
     val advertsLiveData: LiveData<List<Advert>> get() = _advertsLiveData
 
+    private val _advertDetailLiveData = MutableLiveData<Pair<Advert, User?>?>()
+    val advertDetailLiveData: LiveData<Pair<Advert, User?>?> get() = _advertDetailLiveData
+
+
     init {
-        databaseRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                val advertsList = dataSnapshot.children.mapNotNull { it.getValue(Advert::class.java) }
-                _advertsLiveData.value = advertsList.sortedByDescending { it.creationTime }
+        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(usersSnapshot: DataSnapshot) {
+                val usersMap = mutableMapOf<String, User>()
+                for (snapshot in usersSnapshot.children) {
+                    val user = snapshot.getValue(User::class.java)
+                    user?.id?.let { usersMap[it] = user }
+                }
+
+                advertRef.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val advertsList =
+                            dataSnapshot.children.mapNotNull { it.getValue(Advert::class.java) }
+                        _advertsLiveData.value = advertsList.sortedByDescending { it.creationTime }
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e("DatabaseError", "Error fetching data: ${error.message}")
+                    }
+                })
             }
 
-            override fun onCancelled(databaseError: DatabaseError) {
-                Log.e("DatabaseError", "Error fetching data: ${databaseError.message}")
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("DatabaseError", "Error fetching users data: ${error.message}")
             }
         })
     }
 
-    suspend fun saveAdvert(advert: Advert): Result {
-        delay(2_000)
+    suspend fun fetchAdvertAndUserDetails(advertId: String) {
+        withContext(Dispatchers.IO) {
+            try {
+                val advertSnapshot = advertRef.child(advertId).get().await()
+                val advertData = advertSnapshot.getValue(Advert::class.java)
+
+                val userId = advertData?.adCreator
+                if (userId != null) {
+                    val userSnapshot = usersRef.child(userId).get().await()
+                    val userData = userSnapshot.getValue(User::class.java)
+                    _advertDetailLiveData.postValue(Pair(advertData, userData))
+                } else {
+                    _advertDetailLiveData.postValue(null)
+                    Log.e("AdvertsRepository", "Advert data was null for advertId: $advertId")
+                }
+            } catch (e: Exception) {
+                Log.e("AdvertsRepository", "Error fetching advert and user details", e)
+            }
+        }
+    }
+
+    suspend fun saveAdvert(advert: Advert, adImage: Bitmap?): Result {
+        delay(2000)
         return withContext(Dispatchers.IO) {
             try {
-                val adId = databaseRef.push().key ?: return@withContext Result.Failure("Failed to generate Ad ID")
+                val adId = generateRandomAdId()
                 advert.adId = adId
-                advert.adCreator = firebaseAuth.currentUser?.uid ?: ""
+                advert.adCreator = getCurrentUserId()
                 advert.creationTime = System.currentTimeMillis()
-                databaseRef.child(adId).setValue(advert).await()
+
+                adImage?.let {
+                    val imageRef = storageRef.child(adId)
+                    val data = it.toByteArray()
+                    imageRef.putBytes(data).await()
+
+                    val imageUrl = imageRef.downloadUrl.await().toString()
+                    advert.imageUrl = imageUrl
+                }
+
+                advertRef.child(adId).setValue(advert).await()
                 Result.Success
             } catch (e: Exception) {
                 Result.Failure(e.message ?: "Error saving advert!")
@@ -52,16 +110,23 @@ class AdvertsRepository private constructor() {
         }
     }
 
-    companion object {
-        private const val NODE_BOOKS = "Books"
+    private fun getCurrentUserId(): String? {
+        return firebaseAuth.currentUser?.uid
+    }
 
+    private fun generateRandomAdId(): String {
+        return UUID.randomUUID().toString()
+    }
+
+    fun cleanUp() {
+        _advertDetailLiveData.value = null
+    }
+
+    companion object {
         private var instance: AdvertsRepository? = null
 
-        fun getInstance(): AdvertsRepository {
-            if (instance == null) {
-                instance = AdvertsRepository()
-            }
-            return instance!!
+        fun getInstance() = instance ?: AdvertsRepository().also {
+            instance = it
         }
     }
 }
