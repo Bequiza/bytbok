@@ -1,14 +1,12 @@
-package se.rebeccazadig.bokholken.data
+package se.rebeccazadig.bokholken.models
 
 data class Advert(
-    val imageUri: String? = null,
+    var imageUrl: String? = null,
     val title: String? = null,
     val author: String? = null,
     val genre: String? = null,
-    val city: String? = null,
-    val contact: String? = null,
     var adId: String? = null,
     var adCreator: String? = null,
     var creationTime: Long? = null,
-    var isFavorite: Boolean = false
+    var location: String? = null
 )

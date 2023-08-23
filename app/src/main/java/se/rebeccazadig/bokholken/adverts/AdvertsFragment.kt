@@ -9,9 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import se.rebeccazadig.bokholken.R
-import se.rebeccazadig.bokholken.data.Advert
 import se.rebeccazadig.bokholken.databinding.FragmentAdvertsBinding
+import se.rebeccazadig.bokholken.models.Advert
 
 class AdvertsFragment : Fragment() {
 
@@ -22,8 +21,7 @@ class AdvertsFragment : Fragment() {
     private val advertsAdapter = AdvertsAdapter(
         onAdvertClick = { advert ->
             navigateToAdvertDetail(advert)
-        }
-    )
+        })
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +46,6 @@ class AdvertsFragment : Fragment() {
         viewModel.filteredAdverts.observe(viewLifecycleOwner) { adverts ->
             val wasEmpty = advertsAdapter.currentList.isEmpty()
             advertsAdapter.submitList(adverts) {
-                // Check if the previous list was empty (meaning this is an initial load) and if not, scroll to the top
                 if (!wasEmpty) {
                     binding.allAdvertsRV.scrollToPosition(0)
                 }

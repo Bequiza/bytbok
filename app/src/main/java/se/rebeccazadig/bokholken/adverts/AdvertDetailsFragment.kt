@@ -1,30 +1,30 @@
 package se.rebeccazadig.bokholken.adverts
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.getValue
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import se.rebeccazadig.bokholken.R
-import androidx.navigation.fragment.findNavController
-import se.rebeccazadig.bokholken.data.Advert
-import se.rebeccazadig.bokholken.data.Result
+import se.rebeccazadig.bokholken.data.User
 import se.rebeccazadig.bokholken.databinding.FragmentAdvertDetailsBinding
+import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.utils.formatDateForDisplay
+import se.rebeccazadig.bokholken.utils.showToast
 
 class AdvertDetailsFragment : Fragment() {
 
     private val args: AdvertDetailsFragmentArgs by navArgs()
     private var _binding: FragmentAdvertDetailsBinding? = null
     private val binding get() = _binding!!
+    private val viewModel: AdvertViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,53 +42,88 @@ class AdvertDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel.cleanUp()
+
+        viewModel.getAdvertDetails(args.advertId)
+
         binding.toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-        fetchAdvertDetails(args.advertId)
+
+        viewModel.advertDetailsLiveData.observe(viewLifecycleOwner) { pair ->
+            pair?.let { (advert, user) ->
+                displayAdvertDetails(advert, user)
+            }
+        }
     }
 
-    private fun fetchAdvertDetails(advertId: String) {
-        val database = Firebase.database
-        val books = database.getReference("Books").child(advertId)
+    private fun displayAdvertDetails(advert: Advert, user: User?) {
+        binding.apply {
+            titleAdvertTV.text = advert.title
+            authorAdvertTV.text = getString(R.string.author_advert_tv, advert.author)
+            genreTV.text = getString(R.string.genre_advert_tv, advert.genre)
+            locationAdvertTV.text = getString(R.string.location_advert_tv, advert.location)
+            adCreatorTV.text = getString(R.string.ad_creator_label, user?.name)
 
-        books.get().addOnSuccessListener { dataSnapshot ->
-            val advert = dataSnapshot.getValue<Advert>()
-            advert?.let {
-                displayAdvertDetails(it, advertId)
-                Result.Success
-            }
-        }.addOnFailureListener { exception ->
-            Result.Failure("${exception.message}")
-            Log.e("AdvertDetailsFragment", "Failed to fetch advert details", exception)
+            val formattedDate =
+                advert.creationTime?.let { formatDateForDisplay(binding.root.context, it) }
+            creationTimeTV.text = getString(R.string.creation_time_label, formattedDate)
         }
 
+        val imageUrl = advert.imageUrl
+        Log.d("Fragment", "Setting Image URL to ImageView: $imageUrl ")
+
+        Glide.with(binding.publishedAdvertImage.context)
+            .load(imageUrl)
+            .placeholder(R.drawable.loading_image)
+            .error(R.drawable.error_image)
+            .into(binding.publishedAdvertImage)
+
+        binding.contactUserAdvertButton.setOnClickListener {
+            handleContactAction(user?.contact.orEmpty(), advert.title, user?.name ?:"")
+        }
     }
 
-    private fun displayAdvertDetails(advert: Advert, advertId: String) {
-        binding.titleAdvertTV.text = advert.title
-        binding.authorAdvertTV.text = getString(R.string.author_advert_tv, advert.author)
-        binding.cityAdvertTV.text = getString(R.string.location_advert_tv, advert.city)
-        binding.contactUserAdvertTV.text = getString(R.string.contact_advert_tv, advert.contact)
-        binding.genreFardigTV.text = getString(R.string.genre_advert_tv, advert.genre)
+    private fun sendEmail(email: String, advertTitle: String, userName: String) {
+        val intent = Intent(Intent.ACTION_SEND)
+        intent.type = "text/plain"
+        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject, advertTitle))
+        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_body, advertTitle, userName))
 
-        val formattedDate =
-            advert.creationTime?.let { formatDateForDisplay(binding.root.context, it) }
-        binding.creationTimeTV.text = getString(R.string.creation_time_label, formattedDate)
+        startActivity(Intent.createChooser(intent, getString(R.string.choose_email_app)))
+    }
 
-        // Fetch and display the image
-        val imageRef = Firebase.storage.reference.child("annonser").child(advertId)
-        imageRef.downloadUrl.addOnSuccessListener { uri ->
-            val imageUrl = uri.toString()
-            Glide.with(this)
-                .load(imageUrl)
-                .placeholder(R.drawable.placeholder_image)
-                .error(R.drawable.placeholder_image)
-                .into(binding.publishedAdvertImage)
-        }.addOnFailureListener {
-            Glide.with(this)
-                .load(R.drawable.placeholder_image)
-                .into(binding.publishedAdvertImage)
+    private fun dialNumber(phoneNumber: String) {
+        val intent = Intent(Intent.ACTION_DIAL)
+        intent.data = Uri.parse("tel:$phoneNumber")
+        startActivity(intent)
+    }
+
+    private fun isEmail(contact: String): Boolean {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(contact).matches()
+    }
+
+    private fun isPhoneNumber(contact: String): Boolean {
+        return contact.matches("^\\d{10}$".toRegex())
+    }
+
+    private fun handleContactAction(contact: String, advertTitle: String?, userName: String) {
+        when {
+            isEmail(contact) -> {
+                advertTitle?.let {
+                    sendEmail(contact, it, userName)
+                }
+            }
+
+            isPhoneNumber(contact) -> {
+                dialNumber(contact)
+            }
+
+            else -> {
+                showToast(getString(R.string.invalid_contact_info))
+            }
         }
     }
 }

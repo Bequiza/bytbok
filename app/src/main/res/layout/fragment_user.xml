@@ -94,7 +94,7 @@
                 style="@style/CustomTextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_city"
+                android:hint="@string/hint_advert_location"
                 android:inputType="textMultiLine"
                 android:text="@={vm.userCity}"
                 android:textColor="#6C584C" />

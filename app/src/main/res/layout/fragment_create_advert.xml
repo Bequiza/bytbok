@@ -6,19 +6,18 @@
     <data>
 
         <import type="android.view.View" />
-
         <variable
             name="vm"
-            type="se.rebeccazadig.bokholken.login.UserViewModel" />
-
+            type="se.rebeccazadig.bokholken.adverts.AdvertViewModel" />
     </data>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F5EBE0"
-        tools:context=".adverts.CreateAdvertFragment"
-        android:windowSoftInputMode="adjustResize">
+        android:windowSoftInputMode="adjustResize"
+        tools:context=".adverts.CreateAdvertFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -33,7 +32,7 @@
             app:title="@string/create_ads_text" />
 
         <ScrollView
-            android:id="@+id/scrollView2"
+            android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:fillViewport="true"
@@ -47,13 +46,15 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:padding="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="parent">
 
                 <ImageView
                     android:id="@+id/advertImageView"
                     android:layout_width="176dp"
                     android:layout_height="170dp"
-                    android:layout_marginBottom="24dp"
+                    android:layout_marginTop="24dp"
                     android:src="@drawable/baseline_add_photo_alternate_24"
                     app:layout_constraintBottom_toTopOf="@+id/titleInputLayout"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -76,6 +77,7 @@
                         style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@={vm.title}"
                         android:hint="@string/hint_title"
                         android:textColor="#6C584C" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -96,6 +98,7 @@
                         style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@={vm.author}"
                         android:hint="@string/hint_author"
                         android:textColor="#6C584C" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -116,6 +119,7 @@
                         style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:text="@={vm.genre}"
                         android:hint="@string/hint_genre"
                         android:textColor="#6C584C" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -136,27 +140,8 @@
                         style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/hint_city"
-                        android:textColor="#6C584C" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/contactInputLayout"
-                    style="@style/CustomOutlinedTextInputLayout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cityInputLayout">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/contactET"
-                        style="@style/CustomTextInputEditText"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/hint_contact"
+                        android:text="@={vm.location}"
+                        android:hint="@string/hint_advert_location"
                         android:textColor="#6C584C" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -164,18 +149,17 @@
                     android:id="@+id/publishButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="32dp"
                     android:backgroundTint="#774936"
+                    android:enabled="@{!vm.isButtonDisabled}"
                     android:text="@string/publish_button_text"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:onClick="@{() -> vm.saveAdvert(vm.adImage)}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/contactInputLayout"
+                    app:layout_constraintTop_toBottomOf="@+id/cityInputLayout"
                     app:layout_constraintWidth_percent="0.4" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
-
 
         <!-- ProgressBar Layout -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -183,7 +167,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clickable="true"
-            android:visibility="@{vm.inProgress ? View.VISIBLE : View.GONE}"
+            android:visibility="@{vm.isSavingInProgress ? View.VISIBLE : View.GONE}"
             tools:visibility="gone">
 
             <View
@@ -209,7 +193,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/loading"
+                android:text="@string/publishing"
                 android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
