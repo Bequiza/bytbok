@@ -1,13 +1,12 @@
 package se.rebeccazadig.bokholken.adverts
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import se.rebeccazadig.bokholken.databinding.FragmentAdvertsBinding
@@ -18,9 +17,7 @@ class AdvertsFragment : Fragment() {
     private var _binding: FragmentAdvertsBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by lazy {
-        ViewModelProvider(this)[AdvertViewModel::class.java]
-    }
+    private val viewModel: AdvertViewModel by viewModels()
     private val advertsAdapter = AdvertsAdapter(
         onAdvertClick = { advert ->
             navigateToAdvertDetail(advert)

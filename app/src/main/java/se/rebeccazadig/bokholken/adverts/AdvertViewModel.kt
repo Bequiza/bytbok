@@ -26,20 +26,22 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
     val location = MutableLiveData<String>()
     val adImage: MutableLiveData<Bitmap?> = MutableLiveData()
 
-
     val isButtonDisabled: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
         val update = {
-            value = title.value.isNullOrEmpty() ||
-                    author.value.isNullOrEmpty() ||
-                    genre.value.isNullOrEmpty() ||
-                    location.value.isNullOrEmpty() ||
-                    isSavingInProgress.value == true
+            value = listOf(
+                title,
+                author,
+                genre,
+                location
+            ).any { it.value.isNullOrEmpty() } || isSavingInProgress.value == true
         }
-        addSource(title) { update() }
-        addSource(author) { update() }
-        addSource(genre) { update() }
-        addSource(location) { update() }
-        addSource(isSavingInProgress) { update() }
+        listOf(
+            title,
+            author,
+            genre,
+            location,
+            isSavingInProgress
+        ).forEach { addSource(it) { update() } }
     }
 
     private val _advertSaveStatus = MutableLiveData<UiStateSave>(null)
