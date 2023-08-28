@@ -111,9 +111,9 @@ class CreateAdvertFragment : Fragment() {
             contact = addContactMethod
         )
 
-        Firebase.auth.currentUser?.let { currentUser ->
-            someBooks.adCreator = currentUser.uid
-        }
+        //Firebase.auth.currentUser?.let { currentUser ->
+        //    someBooks.adCreator = currentUser.uid
+        //}
 
         return someBooks
     }

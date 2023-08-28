@@ -63,10 +63,10 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:hint="@string/hint_password"
+            app:endIconMode="password_toggle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/email_layout"
-            app:endIconMode="password_toggle">
+            app:layout_constraintTop_toBottomOf="@+id/email_layout">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/password"
@@ -77,6 +77,90 @@
                 android:text="@={vm.password}"
                 android:textColor="#6C584C" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/radio_group_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:clickable="true"
+            android:visibility="@{vm.isLoginMode ? View.GONE : View.VISIBLE}"
+            app:layout_constraintTop_toBottomOf="@id/password_layout"
+            tools:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name_layout"
+                style="@style/CustomOutlinedTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/name"
+                    style="@style/CustomTextInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:text="@={vm.name}"
+                    android:textColor="#6C584C"
+                    android:visibility="@{vm.isLoginMode ? View.GONE : View.VISIBLE}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <RadioGroup
+                android:id="@+id/contactMethodRadioGroup"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/name_layout"
+                app:layout_editor_absoluteX="83dp"
+                app:layout_editor_absoluteY="169dp">
+
+                <RadioButton
+                    android:id="@+id/radioBtnPhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/mobile_number" />
+
+                <RadioButton
+                    android:id="@+id/radioBtnEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/e_post" />
+
+            </RadioGroup>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/contact_layout"
+                style="@style/CustomOutlinedTextInputLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:hint="@string/way_of_contact"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/contactMethodRadioGroup">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/contact"
+                    style="@style/CustomTextInputEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:text="@={vm.contact}"
+                    android:textColor="#6C584C"
+                    android:visibility="@{vm.isLoginMode ? View.GONE : View.VISIBLE}" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <Button
             android:id="@+id/login_register"
@@ -90,7 +174,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/password_layout"
+            app:layout_constraintTop_toBottomOf="@+id/radio_group_container"
             tools:enabled="true" />
 
         <TextView
@@ -108,6 +192,7 @@
             tools:text="@string/new_user" />
 
         <!-- region ProgressBar -->
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/progressbar_container"
             android:layout_width="match_parent"
@@ -119,10 +204,10 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:clickable="true"
-                android:focusable="true"
                 android:alpha="0.25"
-                android:background="@color/black" />
+                android:background="@color/black"
+                android:clickable="true"
+                android:focusable="true" />
 
             <ProgressBar
                 android:layout_width="wrap_content"

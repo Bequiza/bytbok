@@ -1,5 +1,8 @@
 package se.rebeccazadig.bokholken.adverts
 
+import android.app.Application
+import android.util.Log
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,10 +10,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import se.rebeccazadig.bokholken.data.Advert
+import se.rebeccazadig.bokholken.login.LoginRepository
+import se.rebeccazadig.bokholken.login.UserStorage
 import se.rebeccazadig.bokholken.myAdverts.UiState
+import java.lang.Appendable
 
-open class AdvertViewModel : ViewModel() {
+class AdvertViewModel(app: Application) : AndroidViewModel(app) {
     private val advertsRepo = AdvertsRepository.getInstance()
+    private val loginRepo = LoginRepository.getInstance(UserStorage(app))
 
     private val _advertsLiveData = advertsRepo.advertsLiveData
     private val _uiState = MutableLiveData(UiState(false, null))
@@ -54,13 +61,16 @@ open class AdvertViewModel : ViewModel() {
         inProgress.value = true
 
         viewModelScope.launch {
-            try {
-                advertsRepo.saveAdvert(advert)
-                _advertSaveStatus.value = true
-            } catch (e: Exception) {
-                _advertSaveStatus.value = false
-                inProgress.postValue(false)
-            }
+                try {
+                    advert.adCreator = loginRepo.getUserId()
+                    Log.i("--adCreator", "adCreator")
+                    advertsRepo.saveAdvert(advert)
+                    _advertSaveStatus.value = true
+
+                } catch (e: Exception) {
+                    _advertSaveStatus.value = false
+                    inProgress.postValue(false)
+                }
         }
     }
 }

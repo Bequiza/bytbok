@@ -14,31 +14,29 @@ class UserRepository private constructor() {
     private val databaseReference: DatabaseReference =
         FirebaseDatabase.getInstance().getReference("users")
 
-    suspend fun saveUser(user: User): Result {
+    suspend fun saveUser(user: User): Result<Unit> {
         delay(2_000)
         return withContext(Dispatchers.IO) {
             try {
                 databaseReference.child(user.id).setValue(user).await()
-                Result.Success
+                Result.Success(Unit)
             } catch (e: Exception) {
                 Result.Failure(e.message ?: "Error saving user!")
             }
         }
     }
 
-    suspend fun fetchUser(userId: String): Pair<Result, User?> {
-
+    suspend fun fetchUser(userId: String): Result<User> {
         return withContext(Dispatchers.IO) {
             try {
-                val snapshot = databaseReference.child(userId).get().await()
-                val user = snapshot.getValue(User::class.java)
-                if (user != null) {
-                    Pair(Result.Success, user)
+                val result = databaseReference.child(userId).get().await().getValue(User::class.java)
+                if (result != null) {
+                    Result.Success(result)
                 } else {
-                    Pair(Result.Failure("User not found"), null)
+                    Result.Failure("User not found!")
                 }
             } catch (e: Exception) {
-            Pair(Result.Failure(e.message ?: "error fetching user!"), null)
+                Result.Failure(e.message ?: "error fetching user!")
             }
         }
     }

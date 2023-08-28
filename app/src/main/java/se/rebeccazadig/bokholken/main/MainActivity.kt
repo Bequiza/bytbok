@@ -13,11 +13,11 @@ import se.rebeccazadig.bokholken.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+
+    private val viewModel: MainActivityViewModel by viewModels()
     private val navController: NavController by lazy {
         (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment).navController
     }
-
-    private val viewModel: MainViewModel by viewModels()
 
     private lateinit var binding: ActivityMainBinding
 
@@ -47,15 +47,23 @@ class MainActivity : AppCompatActivity() {
                 }
             } else false
         }
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loginRegisterFragment -> {
+                    binding.bottomNavigationView.visibility = View.GONE
+                }
 
-        viewModel.isLoggedIn.observe(this) { isLoggedIn ->
-            if (isLoggedIn == true) {
-                navController.navigate(R.id.action_to_advertsFragment)
-                binding.bottomNavigationView.visibility = View.VISIBLE
-            } else {
-                navController.navigate(R.id.action_to_login_nav_graph)
-                binding.bottomNavigationView.visibility = View.GONE
+                else -> {
+                    binding.bottomNavigationView.visibility = View.VISIBLE
+                }
             }
+        }
+
+        if (savedInstanceState == null && !viewModel.isLoggedIn()) {
+            navController.navigate((R.id.action_to_login_nav_graph))
+        } else {
+            navController.navigate(R.id.advertsFragment)
         }
     }
 }
+

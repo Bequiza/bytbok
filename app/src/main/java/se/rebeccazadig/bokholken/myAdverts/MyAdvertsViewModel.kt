@@ -13,9 +13,7 @@ data class UiState(
 )
 
 class MyAdvertsViewModel : ViewModel() {
-    private val loginRepo = LoginRepository.getInstance()
-    private val myAdvertsRepo = MyAdvertsRepository.getInstance()
-
+    //private val loginRepo = LoginRepository.getInstance()
 
     //private fun currentUserAdvert(): LiveData<List<Advert>> {
     //    return myAdvertsRepo.getAdvertsByCurrentUser()

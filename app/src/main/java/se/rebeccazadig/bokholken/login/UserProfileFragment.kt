@@ -38,18 +38,24 @@ class UserProfileFragment : Fragment() {
         viewModel.fetchUserData()
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
-            binding.userNameTV.text = getString(R.string.user_details_username, user.name)
-            binding.contactTV.text = getString(R.string.user_details_contact, user.contact)
+            if (user != null) {
+                binding.userNameTV.text = getString(R.string.user_details_username, user.name)
+            }
+            if (user != null) {
+                binding.contactTV.text = getString(R.string.user_details_contact, user.contact)
+            }
         }
 
         binding.editUserButton.setOnClickListener {
-            val editButton = UserProfileFragmentDirections.actionUserProfileFragment2ToUserInfoFragment()
-            findNavController().navigate(editButton)
+            findNavController().navigate(
+                UserProfileFragmentDirections.actionUserProfileFragment2ToUserInfoFragment()
+            )
         }
 
         binding.myAdvertsButton.setOnClickListener {
-            val myAdvertsButton = UserProfileFragmentDirections.actionUserProfileFragment2ToMyAdvertsFragment()
-            findNavController().navigate(myAdvertsButton)
+            findNavController().navigate(
+                UserProfileFragmentDirections.actionUserProfileFragment2ToMyAdvertsFragment()
+            )
         }
 
         binding.profileToolbar.inflateMenu(R.menu.menu_user)
@@ -61,6 +67,7 @@ class UserProfileFragment : Fragment() {
                         message = getString(R.string.logout_message),
                         positiveAction = {
                             viewModel.logOutInVm()
+                            findNavController().navigate(R.id.action_to_login_nav_graph)
                         }
                     )
                     true

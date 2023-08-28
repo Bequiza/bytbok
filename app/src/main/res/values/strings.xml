@@ -77,5 +77,9 @@
     <string name="header_adverts_frag">Byt Din Bok</string>
     <string name="avalible_books">Alla tillgängliga böcker</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="name">Namn</string>
+    <string name="way_of_contact">Välj hur du vill bli kontaktad</string>
+    <string name="e_post">E-Post</string>
+    <string name="mobile_number">Mobilnummer</string>
 
 </resources>

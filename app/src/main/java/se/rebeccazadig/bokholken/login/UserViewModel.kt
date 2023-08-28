@@ -1,14 +1,15 @@
 package se.rebeccazadig.bokholken.login
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.findNavController
 import kotlinx.coroutines.launch
@@ -18,15 +19,15 @@ data class UiStateSave(
     val message: String?,
 )
 
-class UserViewModel : ViewModel() {
+class UserViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val loginRepo = LoginRepository.getInstance()
+    private val loginRepo = LoginRepository.getInstance(UserStorage(app))
     private val userRepo = UserRepository.getInstance()
 
     private val _uiStateSave = MutableLiveData(UiStateSave(null))
     internal val uiStateSave: LiveData<UiStateSave> get() = _uiStateSave
 
-    val user = MutableLiveData<User>()
+    val user = MutableLiveData<User?>()
     val userName = MutableLiveData("")
     val userContact = MutableLiveData("")
 
@@ -35,7 +36,7 @@ class UserViewModel : ViewModel() {
     val isButtonDisabled = MediatorLiveData<Boolean>().apply {
         addSource(userContact) { value = it.isBlank() }
     }
-
+    val isButtonDisabled2 = userContact.map { it.isBlank() }
     fun logOutInVm() {
         loginRepo.logOutInRepo()
     }
@@ -75,21 +76,19 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    // Kolla fetchUser som vitaliy gjort i hans app och skriv om
     fun fetchUserData() {
-        val userId = loginRepo.getUserId()
-        if (userId.isNotEmpty()) {
-            viewModelScope.launch {
-                val (result, fetchedUser) = userRepo.fetchUser(userId)
-                when (result) {
+        val userId = loginRepo.getUserId() ?: return
+        viewModelScope.launch {
+            if (userId.isNotEmpty()) {
+                when (val result = userRepo.fetchUser(userId)) {
                     is Result.Success -> {
-                        fetchedUser?.let {
-                            user.value = it
-                        } ?: Log.e("UserDataFetch", "User fetched was null for userId: $userId")
-
+                        user.value = result.data
+                        Log.i("UserDataFetch", "User fetched: ${result.data.name}")
                     }
+
                     is Result.Failure -> {
                         Log.e("UserDataFetch", result.message)
-
                     }
                 }
             }
