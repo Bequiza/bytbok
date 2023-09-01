@@ -20,7 +20,7 @@
         tools:context=".myAdverts.MyAdvertsFragment">
 
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/editUserToolbar"
+            android:id="@+id/my_advert_toolbar"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="#e3d5ca"
@@ -43,12 +43,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/editUserToolbar"
+            app:layout_constraintTop_toBottomOf="@id/my_advert_toolbar"
             app:layout_constraintVertical_bias="1.0" />
-
-
-        <!-- region ProgressBar -->
-        <!-- endregion -->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

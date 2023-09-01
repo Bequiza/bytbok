@@ -17,14 +17,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F5EBE0"
-        tools:context=".login.UserFragment">
+        tools:context=".login.EditUserProfileFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/editUserToolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:background="#e3d5ca"
             android:elevation="4dp"
+            android:paddingVertical="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -67,38 +68,48 @@
             app:layout_constraintTop_toBottomOf="@+id/editNameInputLayout">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editContactET"
+                android:id="@+id/phone_number_edit_text_input"
                 style="@style/CustomTextInputEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_contact"
-                android:inputType="textMultiLine"
+                android:hint="@string/hint_phone"
+                android:inputType="phone"
                 android:text="@={vm.userContact}"
                 android:textColor="#6C584C" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/editCityInputLayout"
-            style="@style/CustomOutlinedTextInputLayout"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/preferred_contact_method_title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="@string/preferred_contact_text"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editContactInputLayout">
+            app:layout_constraintTop_toBottomOf="@id/editContactInputLayout" />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editCityET"
-                style="@style/CustomTextInputEditText"
-                android:layout_width="match_parent"
+        <RadioGroup
+            android:id="@+id/contactMethodRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/preferred_contact_method_title">
+
+            <RadioButton
+                android:id="@+id/radioBtnPhone"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="@string/hint_advert_location"
-                android:inputType="textMultiLine"
-                android:text="@={vm.userCity}"
-                android:textColor="#6C584C" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:checked="true"
+                android:text="@string/mobile_number" />
+
+            <RadioButton
+                android:id="@+id/radioBtnEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/e_post" />
+        </RadioGroup>
 
         <Button
             android:id="@+id/editUserButton"
@@ -112,7 +123,7 @@
             android:text="@string/save_button_text"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editCityInputLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/contactMethodRadioGroup" />
 
         <!-- ProgressBar Layout -->
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -146,7 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/loading"
+                android:text="@string/Saving"
                 android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
