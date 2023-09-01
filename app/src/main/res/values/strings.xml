@@ -10,12 +10,12 @@
     <string name="header_myPage">Min Sida</string>
     <string name="user_edit_title">Redigera användare</string>
     <string name="hint_username">Ange nytt användarnamn</string>
-    <string name="hint_contact">Kontaktsätt</string>
+    <string name="hint_phone">Telefonnummer</string>
     <string name="hint_advert_location">Plats</string>
     <string name="save_button_text">Spara</string>
     <string name="delete_account_button_text">Radera konto</string>
     <string name="logout_button_text">Logga ut</string>
-    <string name="loading">Laddar…</string>
+    <string name="Saving">Sparar…</string>
     <string name="logout_title">Logga ut</string>
     <string name="logout_message">Är du säker på att du vill logga ut?</string>
     <string name="delete_account_title">Radera konto</string>
@@ -26,7 +26,7 @@
     <string name="hint_password">Lösenord</string>
 
     <string name="user_details_username">Användarnamn: %1$s</string>
-    <string name="user_details_contact">Kontaktsätt: %1$s</string>
+    <string name="user_details_contact">Telefonnummer: %1$s</string>
     <string name="user_details_city">Stad: %1$s</string>
 
     <string name="credentials_dialog_title">Ange dina uppgifter igen</string>
@@ -79,6 +79,12 @@
     <string name="header_adverts_frag">Byt Din Bok</string>
     <string name="avalible_books">Alla tillgängliga böcker</string>
     <string name="no_internet_connection">No internet connection</string>
+    <string name="name">Namn</string>
+    <string name="way_of_contact">Välj hur du vill bli kontaktad</string>
+    <string name="e_post">E-Post</string>
+    <string name="mobile_number">Mobilnummer</string>
+    <string name="invalid_phone_number">Ogiltigt telefonnummer</string>
+    <string name="hint_phone_number">Telefonnummer</string>
 
     <string name="email_subject">Angående annonsen: %1$s</string>
     <string name="email_body">Hej,\n\nJag är intresserad av din annons: %1$s.\n\nMvh,\n%2$s.</string>
@@ -87,5 +93,6 @@
     <string name="advert_save_failed">Misslyckades med att spara annonsen. Försök igen.</string>
     <string name="publishing">Publicerar…</string>
     <string name="invalid_contact_info">Kontaktinformationen är ogiltig.</string>
+    <string name="preferred_contact_text">Välj önskad kontaktsätt</string>
 
 </resources>

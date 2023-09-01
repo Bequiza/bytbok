@@ -37,7 +37,6 @@
         android:name="se.rebeccazadig.bokholken.adverts.AdvertsFragment"
         android:label="fragment_adverts"
         tools:layout="@layout/fragment_adverts">
-
         <action
             android:id="@+id/action_advertsFragment_to_createAdvertsFragment"
             app:destination="@id/createAdvertsFragment" />
@@ -54,7 +53,6 @@
             app:argType="string" />
     </fragment>
 
-
     <navigation
         android:id="@+id/login_nav_graph"
         app:startDestination="@id/loginRegisterFragment">
@@ -63,7 +61,6 @@
             android:id="@+id/loginRegisterFragment"
             android:name="se.rebeccazadig.bokholken.login.LoginRegisterFragment"
             android:label="LoginRegisterFragment"
-
             tools:layout="@layout/fragment_login" />
 
     </navigation>
@@ -80,19 +77,18 @@
         app:popUpTo="@id/main_nav_graph"
         app:popUpToInclusive="true" />
     <fragment
-        android:id="@+id/userInfoFragment"
-        android:name="se.rebeccazadig.bokholken.login.UserFragment"
-        android:label="fragment_user"
-        tools:layout="@layout/fragment_user" />
+        android:id="@+id/editUserProfileFragment"
+        android:name="se.rebeccazadig.bokholken.login.EditUserProfileFragment"
+        android:label="fragment_edit_user_profile" />
     <fragment
-        android:id="@+id/userProfileFragment2"
+        android:id="@+id/userProfileFragment"
         android:name="se.rebeccazadig.bokholken.login.UserProfileFragment"
-        android:label="UserProfileFragment" >
+        android:label="fragment_user_profile">
         <action
-            android:id="@+id/action_userProfileFragment2_to_myAdvertsFragment"
+            android:id="@+id/action_userProfileFragment_to_myAdvertsFragment"
             app:destination="@id/myAdvertsFragment" />
         <action
-            android:id="@+id/action_userProfileFragment2_to_userInfoFragment"
-            app:destination="@id/userInfoFragment" />
+            android:id="@+id/action_userProfileFragment_to_editUserProfileFragment"
+            app:destination="@id/editUserProfileFragment" />
     </fragment>
 </navigation>

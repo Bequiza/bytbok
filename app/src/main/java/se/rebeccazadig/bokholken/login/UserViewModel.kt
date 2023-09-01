@@ -1,20 +1,25 @@
 package se.rebeccazadig.bokholken.login
 
+import android.app.Application
 import android.content.Context
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.findNavController
 import kotlinx.coroutines.launch
-import se.rebeccazadig.bokholken.data.UiStateSave
+import se.rebeccazadig.bokholken.data.ContactType
 import se.rebeccazadig.bokholken.data.User
 
+data class UiStateSave(
+    val message: String?,
+)
 
-class UserViewModel : ViewModel() {
+class UserViewModel(app: Application) : AndroidViewModel(app) {
 
     private val loginRepo = LoginRepository.getInstance()
     private val userRepo = UserRepository.getInstance()
@@ -22,20 +27,24 @@ class UserViewModel : ViewModel() {
     private val _uiStateSave = MutableLiveData(UiStateSave(null))
     internal val uiStateSave: LiveData<UiStateSave> get() = _uiStateSave
 
-    val user = MutableLiveData<User>()
+    val preferredContactMethod = MutableLiveData<ContactType?>()
+
+    val user = MutableLiveData<User?>()
     val userName = MutableLiveData("")
     val userContact = MutableLiveData("")
-    val userCity = MutableLiveData("")
 
     val inProgress = MutableLiveData(false)
 
     val isButtonDisabled = MediatorLiveData<Boolean>().apply {
-        addSource(userContact) {
-            value = it.isBlank() || userCity.value.isNullOrBlank()
-        }
-        addSource(userCity) {
-            value = it.isBlank() || userContact.value.isNullOrBlank()
-        }
+        addSource(userContact) { updateButtonState() }
+        addSource(userName) { updateButtonState() }
+        addSource(preferredContactMethod) { updateButtonState() }
+    }
+
+    private fun updateButtonState() {
+        isButtonDisabled.value = userName.value.isNullOrBlank() ||
+                userContact.value.isNullOrBlank() ||
+                preferredContactMethod.value == null
     }
 
     fun logOutInVm() {
@@ -52,7 +61,7 @@ class UserViewModel : ViewModel() {
                 id = userId,
                 name = userName.value ?: "",
                 contact = userContact.value ?: "",
-                city = userCity.value ?: ""
+                preferredContactMethod = preferredContactMethod.value ?: ContactType.PHONE
             )
 
             val result = userRepo.saveUser(user)
@@ -69,55 +78,43 @@ class UserViewModel : ViewModel() {
                 is Result.Success -> {
                     Log.i("Emma", "SUCCESS")
                     _uiStateSave.value = UiStateSave(message = "Informationen Sparad")
+
+                    view.findNavController().popBackStack()
+
                 }
             }
             closeKeyboard(view)
         }
     }
 
-    //fun fetchUserData() {
-    //    val userId = loginRepo.getUserId()
-    //    if (userId.isNotEmpty()) {
-    //        viewModelScope.launch {
-    //            val (result, fetchedUser) = userRepo.fetchUser(userId)
-    //            when (result) {
-    //                is Result.Success -> {
-    //                    if (fetchedUser != null) {
-    //                        user.value = fetchedUser
-    //                    } else {
-//
-    //                    }
-    //                }
-//
-    //                is Result.Failure -> {
-    //                    Result.Failure(message = "Something went wrong")
-    //                }
-    //            }
-    //        }
-    //    }
-    //}
-//
     fun fetchUserData() {
         val userId = loginRepo.getUserId()
-        if (userId.isNotEmpty()) {
-            viewModelScope.launch {
-                val (result, fetchedUser) = userRepo.fetchUser(userId)
-                when (result) {
-                    is Result.Success -> {
-                        if (fetchedUser != null) {
-                        } else {
-
-                        }
+        viewModelScope.launch {
+            if (userId.isNotEmpty()) {
+                when (val result = userRepo.fetchUser(userId)) {
+                    is Result.Success<User> -> {
+                        user.value = result.data
+                        userName.value = result.data.name
+                        userContact.value = result.data.contact
+                        preferredContactMethod.value = result.data.preferredContactMethod
+                        Log.i("UserDataFetch", "User fetched: ${result.data.name}")
                     }
-
                     is Result.Failure -> {
-                        Result.Failure(message = "Something went wrong")
+                        Log.e("UserDataFetch", result.message)
                     }
                 }
             }
         }
     }
 
+    fun initializeUserData() {
+        viewModelScope.launch {
+            fetchUserData()
+            userName.value = user.value?.name
+            userContact.value = user.value?.contact
+            preferredContactMethod.value = user.value?.preferredContactMethod
+        }
+    }
 
     private fun closeKeyboard(view: View) {
         val inputMethodManager =

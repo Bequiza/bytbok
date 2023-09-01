@@ -5,19 +5,28 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import se.rebeccazadig.bokholken.data.ContactType
+import se.rebeccazadig.bokholken.data.User
 
-sealed class Result {
-    data class Failure(val message: String) : Result()
-    object Success : Result()
+sealed class Result<out T> {
+    data class Failure(val message: String) : Result<Nothing>()
+    data class Success<T>(val data: T) : Result<T>()
 }
 
-class LoginRepository private constructor() /*primary constructor*/ {
+class LoginRepository private constructor() {
 
     private val myAuth = Firebase.auth
+    private val databaseReference: DatabaseReference =
+        FirebaseDatabase.getInstance().getReference("users")
 
-    // val isLoggedIn = MutableLiveData(true)
+
     private val _isLoggedIn = MutableLiveData(myAuth.currentUser != null)
     val isLoggedIn: LiveData<Boolean> get() = _isLoggedIn
 
@@ -27,60 +36,72 @@ class LoginRepository private constructor() /*primary constructor*/ {
         }
     }
 
-    suspend fun loginInRepo(email: String, password: String)/*input*/: Result /*output*/ {
-        Log.i("Emma", "LOGIN IN REPOSITORY email=$email password=$password")
+    suspend fun loginInRepo(email: String, password: String): Result<Unit> {
 
-        return try {
-            val result = myAuth.signInWithEmailAndPassword(email, password).await()
-            Log.i("Emma", "loginInRepo SUCCESS=$result")
-            Result.Success
-        } catch (e: Exception) {
-            Log.i("Emma", "loginInRepo FAILURE =$e")
-            Result.Failure("${e.message}")
+        return withContext(Dispatchers.IO) {
+            delay(1000L)
+            try {
+                myAuth.signInWithEmailAndPassword(email, password).await()
+                Result.Success(Unit)
+            } catch (e: Exception) {
+                Log.i("Emma", "loginInRepo FAILURE =$e")
+                Result.Failure("${e.message}")
+            }
         }
     }
 
-    suspend fun registerInRepo(email: String, password: String): Result {
-        Log.i("Emma", "REGISTER USER IN REPOSITORY email=$email password=$password")
+    suspend fun registerInRepo(
+        email: String,
+        password: String,
+        name: String,
+        contact: String,
+        contactMethod: ContactType
+    ): Result<Unit> {
 
         return try {
             val result = myAuth.createUserWithEmailAndPassword(email, password).await()
             Log.i("Emma", "registerInRepo SUCCESS=$result")
-            Result.Success
+
+            val newUser = User(
+                id = result.user!!.uid,
+                name = name,
+                contact = contact,
+                preferredContactMethod = contactMethod
+            )
+
+            databaseReference.child(result.user!!.uid).setValue(newUser).await()
+
+            Result.Success(Unit)
         } catch (e: Exception) {
             Log.i("Emma", "registerInRepo FAILURE =$e")
             Result.Failure("${e.message}")
         }
     }
 
-    fun isLoggedIn(): Boolean {
-        return myAuth.currentUser != null
-    }
-
     fun logOutInRepo() {
         myAuth.signOut()
     }
 
-    suspend fun deleteAccount(): Result { // Delete account finns i my page Viewmodel
+    suspend fun deleteAccount(): Result<Unit> { // Delete account finns i my page Viewmodel
         val user = myAuth.currentUser
             ?: kotlin.run { return Result.Failure("") }
 
         return try {
             user.delete().await()
-            Result.Success
+            Result.Success(Unit)
         } catch (e: Exception) {
             Log.e("DeleteAccount", "Error deleting user account: ${e.message}")
             Result.Failure("${e.message}")
         }
     }
 
-    suspend fun reAuthenticate(email: String, password: String): Result {
+    suspend fun reAuthenticate(email: String, password: String): Result<Unit> {
         val user = myAuth.currentUser
         if (user != null && email.isNotEmpty() && password.isNotEmpty()) {
             val credential = EmailAuthProvider.getCredential(email, password)
             return try {
                 user.reauthenticate(credential).await()
-                Result.Success
+                Result.Success(Unit)
             } catch (e: Exception) {
                 Log.e("ReAuthenticate", "Error re-authenticating: ${e.message}")
                 Result.Failure(e.message ?: "Error during re-authentication.")

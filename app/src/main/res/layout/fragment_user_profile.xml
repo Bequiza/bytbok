@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F5EBE0"
-        tools:context=".login.UserFragment">
+        tools:context=".login.EditUserProfileFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/profileToolbar"
@@ -39,13 +39,12 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/user_details_username"
             android:textColor="@color/bottom_nav_item"
-            android:textSize="23sp"
-            android:textStyle="bold"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/profileToolbar" />
+            app:layout_constraintTop_toBottomOf="@+id/profileToolbar"
+            tools:text="@string/user_details_username" />
 
         <TextView
             android:id="@+id/contactTV"
@@ -54,55 +53,38 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/user_details_contact"
             android:textColor="@color/bottom_nav_item"
-            android:textSize="23sp"
-            android:textStyle="bold"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/userNameTV" />
-
-        <TextView
-            android:id="@+id/locationTV"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@string/user_details_city"
-            android:textColor="@color/bottom_nav_item"
-            android:textSize="23sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/contactTV" />
+            app:layout_constraintTop_toBottomOf="@id/userNameTV"
+            tools:text="@string/user_details_contact" />
 
         <Button
             android:id="@+id/editUserButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
             android:backgroundTint="#774936"
             android:text="@string/edit_user"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/locationTV" />
+            app:layout_constraintTop_toBottomOf="@id/contactTV" />
 
         <Button
             android:id="@+id/myAdvertsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="40dp"
             android:backgroundTint="#774936"
             android:text="@string/my_adds"
             android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editUserButton" />
-
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/contactTV" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
