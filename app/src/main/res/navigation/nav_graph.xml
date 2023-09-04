@@ -22,6 +22,9 @@
         <action
             android:id="@+id/action_myPageFragment_to_createAdvertsFragment"
             app:destination="@id/createAdvertsFragment" />
+        <action
+            android:id="@+id/action_myAdvertsFragment_to_advertsDetailsFragment"
+            app:destination="@id/advertsDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/createAdvertsFragment"

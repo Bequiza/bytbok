@@ -43,6 +43,9 @@
     <string name="sub_header">Hantera ditt konto och annonser</string>
     <string name="edit_info_toolbar">Redigera information</string>
     <string name="profile_toolbar">Min profil</string>
+    <string name="favorites_toolbar">Böcker jag vill läsa</string>
+    <string name="favorites_toolbar_subtitle">Dina favoriter</string>
+
 
     <string name="create_new_ad">Skapa ny annons</string>
     <string name="create_new_ad_text">Skapa ny annons</string>

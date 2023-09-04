@@ -7,7 +7,11 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import se.rebeccazadig.bokholken.adverts.AdvertsAdapter
+import se.rebeccazadig.bokholken.adverts.AdvertsFragmentDirections
 import se.rebeccazadig.bokholken.databinding.FragmentMyAdvertsBinding
+import se.rebeccazadig.bokholken.models.Advert
 
 class MyAdvertsFragment : Fragment() {
 
@@ -15,6 +19,17 @@ class MyAdvertsFragment : Fragment() {
     private var _binding: FragmentMyAdvertsBinding? = null
 
     private val binding get() = _binding!!
+
+    private val advertsAdapter = AdvertsAdapter(
+        onAdvertClick = { advert ->
+            navigateToAdvertDetail(advert)
+        },
+        onDeleteAdvertClick = { advert ->
+            viewModel.deleteAdvert(advert)
+        },
+        onEditAdvertClick = {},
+        showIcons = true
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,7 +51,19 @@ class MyAdvertsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.myAdvertToolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
-
         }
+
+        binding.myAdvertsRV.layoutManager = LinearLayoutManager(context)
+        binding.myAdvertsRV.adapter = advertsAdapter
+
+        viewModel.myAdvertsLiveData.observe(viewLifecycleOwner) { adverts ->
+            advertsAdapter.submitList(adverts)
+        }
+    }
+
+    private fun navigateToAdvertDetail(advert: Advert) {
+        val action =
+            MyAdvertsFragmentDirections.actionMyAdvertsFragmentToAdvertsDetailsFragment(advert.adId!!)
+        findNavController().navigate(action)
     }
 }

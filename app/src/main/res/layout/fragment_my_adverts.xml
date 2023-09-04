@@ -22,7 +22,7 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/my_advert_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="?attr/actionBarSize"
             android:background="#e3d5ca"
             android:elevation="4dp"
             android:paddingTop="@dimen/cardview_default_radius"

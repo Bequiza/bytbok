@@ -21,7 +21,10 @@ class AdvertsFragment : Fragment() {
     private val advertsAdapter = AdvertsAdapter(
         onAdvertClick = { advert ->
             navigateToAdvertDetail(advert)
-        })
+        },
+        onDeleteAdvertClick = {},
+        onEditAdvertClick = {}
+    )
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -71,13 +74,15 @@ class AdvertsFragment : Fragment() {
         })
 
         binding.newAdvertButton.setOnClickListener {
-            val action = AdvertsFragmentDirections.actionAdvertsFragmentToCreateAdvertsFragment("annonsid")
+            val action =
+                AdvertsFragmentDirections.actionAdvertsFragmentToCreateAdvertsFragment("annonsid")
             findNavController().navigate(action)
         }
     }
 
     private fun navigateToAdvertDetail(advert: Advert) {
-        val action = AdvertsFragmentDirections.actionAdvertsFragmentToAdvertsDetailsFragment(advert.adId!!)
+        val action =
+            AdvertsFragmentDirections.actionAdvertsFragmentToAdvertsDetailsFragment(advert.adId!!)
         findNavController().navigate(action)
     }
 }

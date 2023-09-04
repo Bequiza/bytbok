@@ -110,6 +110,22 @@ class AdvertsRepository private constructor() {
         }
     }
 
+    suspend fun deleteAdvert(adId: String): Result {
+        return withContext(Dispatchers.IO) {
+            try {
+                advertRef.child(adId).removeValue().await()
+            } catch (e: Exception) {
+                return@withContext Result.Failure(e.message ?: "Error deleting advert")
+            }
+            try {
+                storageRef.child(adId).delete().await()
+            } catch (e: Exception) {
+                return@withContext Result.Failure(e.message ?: "Error deleting image fron database")
+            }
+            Result.Success
+        }
+    }
+
     private fun getCurrentUserId(): String? {
         return firebaseAuth.currentUser?.uid
     }

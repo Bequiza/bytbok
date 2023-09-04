@@ -1,7 +1,9 @@
 package se.rebeccazadig.bokholken.adverts
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -22,7 +24,10 @@ private object AdvertDiffCallback : DiffUtil.ItemCallback<Advert>() {
 }
 
 class AdvertsAdapter(
-    private val onAdvertClick: (Advert) -> Unit
+    private val onAdvertClick: (Advert) -> Unit,
+    private val onDeleteAdvertClick: (Advert) -> Unit,
+    private val onEditAdvertClick: (Advert) -> Unit,
+    private val showIcons: Boolean = false
 ) : ListAdapter<Advert, AdvertsAdapter.ViewHolder>(AdvertDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -42,6 +47,18 @@ class AdvertsAdapter(
             binding.titleTV.text = advert.title
             binding.authorTV.text = advert.author
             binding.locationTV.text = advert.location
+
+            binding.deleteAdvertButton.isVisible = showIcons
+            binding.editAdvertButton.isVisible = showIcons
+
+            binding.deleteAdvertButton.setOnClickListener {
+                Log.d("--adapter", "bind: deleteclick")
+                onDeleteAdvertClick(advert)
+            }
+
+            binding.editAdvertButton.setOnClickListener {
+                onEditAdvertClick(advert)
+            }
 
             val formattedDate =
                 advert.creationTime?.let { formatDateForDisplay(binding.root.context, it) }
