@@ -22,15 +22,16 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/editUserToolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="?attr/actionBarSize"
             android:background="#e3d5ca"
             android:elevation="4dp"
-            android:paddingVertical="6dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_back_arrow"
-            app:title="@string/edit_info_toolbar" />
+            app:title="@string/edit_info_toolbar"
+            app:titleTextColor="@color/bottom_nav_item" />
+
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/editNameInputLayout"

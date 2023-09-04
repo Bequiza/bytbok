@@ -16,10 +16,13 @@ class FavoriteFragment : Fragment() {
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AdvertViewModel by viewModels()
-    private val favoriteAdapter = AdvertsAdapter(
+
+    private val advertsAdapter = AdvertsAdapter(
         onAdvertClick = { advert ->
             navigateToAdvertDetail(advert)
-        }
+        },
+        onDeleteAdvertClick = {},
+        onEditAdvertClick = {}
     )
 
     override fun onCreateView(
@@ -38,9 +41,12 @@ class FavoriteFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.favoriteToolbar.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
 
         binding.favoritesRV.layoutManager = LinearLayoutManager(context)
-        binding.favoritesRV.adapter = favoriteAdapter
+        binding.favoritesRV.adapter = advertsAdapter
     }
 
     private fun navigateToAdvertDetail(advert: Advert) {

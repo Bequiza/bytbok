@@ -36,7 +36,6 @@
             android:textColor="#6C584C"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="@+id/imageView" />
 
@@ -51,7 +50,6 @@
             android:textColor="#6C584C"
             android:textSize="14sp"
             app:drawableStartCompat="@drawable/ic_author"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/titleTV"
             app:layout_constraintTop_toBottomOf="@+id/titleTV" />
 
@@ -66,7 +64,6 @@
             android:textColor="#6C584C"
             android:textSize="14sp"
             app:drawableStartCompat="@drawable/ic_location"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/authorTV"
             app:layout_constraintTop_toBottomOf="@+id/authorTV" />
 
@@ -80,6 +77,25 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="2023-08-01" />
+
+        <ImageButton
+            android:id="@+id/delete_advert_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@null"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/edit_advert_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="24dp"
+            android:background="@null"
+            android:src="@drawable/ic_edit"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/delete_advert_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
