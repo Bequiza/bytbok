@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.adverts.AdvertsAdapter
-import se.rebeccazadig.bokholken.adverts.AdvertsFragmentDirections
 import se.rebeccazadig.bokholken.databinding.FragmentMyAdvertsBinding
 import se.rebeccazadig.bokholken.models.Advert
+import se.rebeccazadig.bokholken.utils.navigateBack
+import se.rebeccazadig.bokholken.utils.showConfirmationDialog
 
 class MyAdvertsFragment : Fragment() {
 
@@ -25,7 +27,7 @@ class MyAdvertsFragment : Fragment() {
             navigateToAdvertDetail(advert)
         },
         onDeleteAdvertClick = { advert ->
-            viewModel.deleteAdvert(advert)
+           deleteMyAdvert(advert)
         },
         onEditAdvertClick = {},
         showIcons = true
@@ -50,7 +52,7 @@ class MyAdvertsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.myAdvertToolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            navigateBack()
         }
 
         binding.myAdvertsRV.layoutManager = LinearLayoutManager(context)
@@ -59,6 +61,15 @@ class MyAdvertsFragment : Fragment() {
         viewModel.myAdvertsLiveData.observe(viewLifecycleOwner) { adverts ->
             advertsAdapter.submitList(adverts)
         }
+    }
+
+    private fun deleteMyAdvert(advert: Advert) {
+        showConfirmationDialog(
+            context = requireContext(),
+            titleResId = R.string.delete_advert_title,
+            messageResId = R.string.delete_advert_message,
+            positiveAction = { viewModel.deleteAdvert(advert)}
+        )
     }
 
     private fun navigateToAdvertDetail(advert: Advert) {
