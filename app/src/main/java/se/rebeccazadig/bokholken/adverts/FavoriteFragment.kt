@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.databinding.FragmentFavoriteBinding
+import se.rebeccazadig.bokholken.utils.navigateBack
 
 class FavoriteFragment : Fragment() {
 
@@ -42,7 +43,7 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.favoriteToolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            navigateBack()
         }
 
         binding.favoritesRV.layoutManager = LinearLayoutManager(context)

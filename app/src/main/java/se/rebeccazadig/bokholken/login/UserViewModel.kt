@@ -10,10 +10,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.findNavController
 import kotlinx.coroutines.launch
 import se.rebeccazadig.bokholken.data.ContactType
 import se.rebeccazadig.bokholken.data.User
+import se.rebeccazadig.bokholken.utils.navigateBack
 
 data class UiStateSave(
     val message: String?,
@@ -78,9 +78,7 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
                 is Result.Success -> {
                     Log.i("Emma", "SUCCESS")
                     _uiStateSave.value = UiStateSave(message = "Informationen Sparad")
-
-                    view.findNavController().popBackStack()
-
+                    view.navigateBack()
                 }
             }
             closeKeyboard(view)

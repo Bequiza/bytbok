@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import se.rebeccazadig.bokholken.R
@@ -17,6 +16,9 @@ import se.rebeccazadig.bokholken.data.User
 import se.rebeccazadig.bokholken.databinding.FragmentAdvertDetailsBinding
 import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.utils.formatDateForDisplay
+import se.rebeccazadig.bokholken.utils.isEmail
+import se.rebeccazadig.bokholken.utils.isPhoneNumber
+import se.rebeccazadig.bokholken.utils.navigateBack
 import se.rebeccazadig.bokholken.utils.showToast
 
 class AdvertDetailsFragment : Fragment() {
@@ -48,7 +50,7 @@ class AdvertDetailsFragment : Fragment() {
         viewModel.getAdvertDetails(args.advertId)
 
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+           navigateBack()
         }
 
         viewModel.advertDetailsLiveData.observe(viewLifecycleOwner) { pair ->
@@ -99,14 +101,6 @@ class AdvertDetailsFragment : Fragment() {
         val intent = Intent(Intent.ACTION_DIAL)
         intent.data = Uri.parse("tel:$phoneNumber")
         startActivity(intent)
-    }
-
-    private fun isEmail(contact: String): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(contact).matches()
-    }
-
-    private fun isPhoneNumber(contact: String): Boolean {
-        return contact.matches("^\\d{10}$".toRegex())
     }
 
     private fun handleContactAction(contact: String, advertTitle: String?, userName: String) {

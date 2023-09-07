@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.ContactType
 import se.rebeccazadig.bokholken.databinding.FragmentEditUserProfileBinding
+import se.rebeccazadig.bokholken.utils.navigateBack
 
 class EditUserProfileFragment : Fragment() {
 
@@ -36,7 +37,7 @@ class EditUserProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.editUserToolbar.setNavigationOnClickListener { findNavController().popBackStack() }
+        binding.editUserToolbar.setNavigationOnClickListener { navigateBack() }
 
         viewModel.preferredContactMethod.observe(viewLifecycleOwner) {
             handleCheckedChange()

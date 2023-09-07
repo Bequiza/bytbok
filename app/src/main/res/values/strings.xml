@@ -97,5 +97,7 @@
     <string name="publishing">Publicerar…</string>
     <string name="invalid_contact_info">Kontaktinformationen är ogiltig.</string>
     <string name="preferred_contact_text">Välj önskad kontaktsätt</string>
+    <string name="delete_advert_title">Radera advert</string>
+    <string name="delete_advert_message">Är du säkert på att du vill radera annonsen?</string>
 
 </resources>

@@ -1,21 +1,20 @@
 package se.rebeccazadig.bokholken.login
 
-import android.content.DialogInterface
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.databinding.DialogCredentialsBinding
 import se.rebeccazadig.bokholken.databinding.FragmentUserProfileBinding
+import se.rebeccazadig.bokholken.utils.DialogMessages
+import se.rebeccazadig.bokholken.utils.navigateBack
+import se.rebeccazadig.bokholken.utils.showAlertWithEditText
+import se.rebeccazadig.bokholken.utils.showConfirmationDialog
+import se.rebeccazadig.bokholken.utils.showToast
 
 class UserProfileFragment : Fragment() {
 
@@ -43,7 +42,7 @@ class UserProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.profileToolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            navigateBack()
         }
 
         viewModel.fetchUserData()
@@ -55,11 +54,11 @@ class UserProfileFragment : Fragment() {
             }
         }
 
-       binding.editUserButton.setOnClickListener {
-           findNavController().navigate(
-               UserProfileFragmentDirections.actionUserProfileFragmentToEditUserProfileFragment()
-           )
-       }
+        binding.editUserButton.setOnClickListener {
+            findNavController().navigate(
+                UserProfileFragmentDirections.actionUserProfileFragmentToEditUserProfileFragment()
+            )
+        }
 
         binding.myAdvertsButton.setOnClickListener {
             findNavController().navigate(
@@ -72,8 +71,9 @@ class UserProfileFragment : Fragment() {
             when (item.itemId) {
                 R.id.logout -> {
                     showConfirmationDialog(
-                        title = getString(R.string.logout_title),
-                        message = getString(R.string.logout_message),
+                        context = requireContext(),
+                        titleResId = R.string.logout_title,
+                        messageResId = R.string.logout_message,
                         positiveAction = {
                             viewModel.logOutInVm()
                             findNavController().navigate(R.id.action_to_login_nav_graph)
@@ -83,8 +83,9 @@ class UserProfileFragment : Fragment() {
                 }
                 R.id.delete_account -> {
                     showConfirmationDialog(
-                        title = getString(R.string.delete_account_title),
-                        message = getString(R.string.delete_account_message),
+                        context = requireContext(),
+                        titleResId = R.string.delete_account_title,
+                        messageResId = R.string.delete_account_message,
                         positiveAction = {
                             showCredentialsDialog { email, password ->
                                 viewModel.deleteAccountInVM(email, password)
@@ -99,57 +100,35 @@ class UserProfileFragment : Fragment() {
 
         viewModel.uiStateSave.observe(viewLifecycleOwner) { uiStateSave ->
             uiStateSave.message?.let {
-                Toast.makeText(requireContext(), "${uiStateSave.message}", Toast.LENGTH_LONG).show()
+                showToast("${uiStateSave.message}")
                 viewModel.nullUiStateSave()
             }
         }
     }
 
-    private fun showConfirmationDialog(title: String, message: String, positiveAction: () -> Unit) {
-        AlertDialog.Builder(requireContext())
-            .setTitle(title)
-            .setMessage(message)
-            .setPositiveButton(getString(R.string.confirm)) { _, _ ->
-                positiveAction.invoke()
-            }
-            .setNegativeButton(getString(R.string.cancel), null)
-            .create()
-            .show()
-    }
-
     private fun showCredentialsDialog(onCredentialsProvided: (email: String, password: String) -> Unit) {
         val binding = DialogCredentialsBinding.inflate(layoutInflater)
 
-        val dialog = AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.credentials_dialog_title))
-            .setView(binding.root)
-            .setPositiveButton(getString(R.string.submit_button_label), null)
-            .setNegativeButton(getString(R.string.cancel_button_label)) { _, _ -> }
-            .create()
-
-        dialog.show()
-
-        val positiveButton = dialog.getButton(DialogInterface.BUTTON_POSITIVE).apply {
-            isEnabled = false
-            setOnClickListener {
-                onCredentialsProvided(binding.emailEditText.text.toString().trim(), binding.passwordEditText.text.toString().trim())
-                dialog.dismiss()
+        showAlertWithEditText(
+            context = requireContext(),
+            view = binding.root,
+            editTexts = listOf(binding.emailEditText, binding.passwordEditText),
+            dialogMessages = DialogMessages(
+                titleText = R.string.credentials_dialog_title,
+                positiveButtonText = R.string.submit_button_label,
+                negativeButtonText = R.string.cancel
+            ),
+            confirmCallback = {
+                onCredentialsProvided(
+                    binding.emailEditText.text.toString().trim(),
+                    binding.passwordEditText.text.toString().trim()
+                )
+            },
+            textEditCallback = { _, positiveButton ->
+                val email = binding.emailEditText.text.toString().trim()
+                val password = binding.passwordEditText.text.toString().trim()
+                positiveButton.isEnabled = email.isNotEmpty() && password.isNotEmpty()
             }
-        }
-
-        val checkAndUpdateButtonState = {
-            val email = binding.emailEditText.text.toString().trim()
-            val password = binding.passwordEditText.text.toString().trim()
-            positiveButton.isEnabled = email.isNotEmpty() && password.isNotEmpty()
-        }
-
-        val textWatcher = object : TextWatcher {
-            override fun afterTextChanged(s: Editable?) = checkAndUpdateButtonState()
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-        }
-
-        binding.emailEditText.addTextChangedListener(textWatcher)
-        binding.passwordEditText.addTextChangedListener(textWatcher)
+        )
     }
 }

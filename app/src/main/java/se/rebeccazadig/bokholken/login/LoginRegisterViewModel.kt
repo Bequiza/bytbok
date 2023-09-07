@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.ContactType
+import se.rebeccazadig.bokholken.utils.isPhoneNumber
 
 data class LoginUiState(
     val isSuccess: Boolean = false,
@@ -117,15 +118,5 @@ class LoginRegisterViewModel(app: Application) : AndroidViewModel(app) {
 
     fun changeMode() {
         isLoginMode.value = (isLoginMode.value ?: false).not()
-    }
-
-    //should be moved to utility class later
-    fun isPhoneNumber(contact: String): Boolean {
-        return contact.matches(PHONE_NUMBER_REGEX_PATTERN.toRegex())
-    }
-
-    companion object {
-        private const val PHONE_NUMBER_REGEX_PATTERN = "^\\d{10}$"
-
     }
 }
