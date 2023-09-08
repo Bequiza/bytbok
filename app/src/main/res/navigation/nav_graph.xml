@@ -25,6 +25,11 @@
         <action
             android:id="@+id/action_myAdvertsFragment_to_advertsDetailsFragment"
             app:destination="@id/advertsDetailsFragment" />
+        <argument
+            android:name="advertId"
+            app:nullable="true"
+            app:argType="string"
+            android:defaultValue="@null"/>
     </fragment>
     <fragment
         android:id="@+id/createAdvertsFragment"
@@ -32,8 +37,10 @@
         android:label="fragment_create_adverts"
         tools:layout="@layout/fragment_create_advert">
         <argument
-            android:name="annonsid"
-            app:argType="string" />
+            android:name="advertId"
+            app:nullable="true"
+            app:argType="string"
+            android:defaultValue="@null"/>
     </fragment>
     <fragment
         android:id="@+id/advertsFragment"
@@ -53,7 +60,11 @@
         android:label="Published Advert">
         <argument
             android:name="advertId"
-            app:argType="string" />
+            app:argType="string"/>
+        <argument
+            android:name="fromMyAdvertsFragment"
+            app:argType="boolean"
+            android:defaultValue="false" />
     </fragment>
 
     <navigation

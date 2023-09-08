@@ -75,15 +75,18 @@ class AdvertsFragment : Fragment() {
 
         binding.newAdvertButton.setOnClickListener {
             val action =
-                AdvertsFragmentDirections.actionAdvertsFragmentToCreateAdvertsFragment("annonsid")
+                AdvertsFragmentDirections.actionAdvertsFragmentToCreateAdvertsFragment(null)
             findNavController().navigate(action)
         }
     }
 
     private fun navigateToAdvertDetail(advert: Advert) {
-        val action =
-            AdvertsFragmentDirections.actionAdvertsFragmentToAdvertsDetailsFragment(advert.adId!!)
-        findNavController().navigate(action)
+        val action = advert.adId?.let {
+            AdvertsFragmentDirections.actionAdvertsFragmentToAdvertsDetailsFragment(
+                advertId = it,
+            )
+        }
+        action?.let { findNavController().navigate(it) }
     }
 }
 

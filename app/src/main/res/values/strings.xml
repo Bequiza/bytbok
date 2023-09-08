@@ -45,6 +45,7 @@
     <string name="profile_toolbar">Min profil</string>
     <string name="favorites_toolbar">Böcker jag vill läsa</string>
     <string name="favorites_toolbar_subtitle">Dina favoriter</string>
+    <string name="edit_button">Uppdatera</string>
 
 
     <string name="create_new_ad">Skapa ny annons</string>
@@ -92,12 +93,15 @@
     <string name="email_subject">Angående annonsen: %1$s</string>
     <string name="email_body">Hej,\n\nJag är intresserad av din annons: %1$s.\n\nMvh,\n%2$s.</string>
     <string name="choose_email_app">Välj en e-postapp</string>
-    <string name="advert_saved_successfully">Annonsen sparades framgångsrikt!</string>
+    <string name="advert_saved_successfully">Annonsen har sparats!</string>
     <string name="advert_save_failed">Misslyckades med att spara annonsen. Försök igen.</string>
     <string name="publishing">Publicerar…</string>
+    <string name="updating">Uppdaterar…</string>
     <string name="invalid_contact_info">Kontaktinformationen är ogiltig.</string>
     <string name="preferred_contact_text">Välj önskad kontaktsätt</string>
     <string name="delete_advert_title">Radera advert</string>
     <string name="delete_advert_message">Är du säkert på att du vill radera annonsen?</string>
+    <string name="advert_updated_succesfully">Annonsen är uppdaterad!</string>
+    <string name="edit_advert_title">Redigera din annons</string>
 
 </resources>
