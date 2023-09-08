@@ -20,11 +20,16 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
     val isSavingInProgress = MutableLiveData(false)
     val searchQuery = MutableLiveData("")
 
-    val title = MutableLiveData<String>()
-    val author = MutableLiveData<String>()
-    val genre = MutableLiveData<String>()
-    val location = MutableLiveData<String>()
+    val title = MutableLiveData<String?>()
+    val author = MutableLiveData<String?>()
+    val genre = MutableLiveData<String?>()
+    val location = MutableLiveData<String?>()
     val adImage: MutableLiveData<Bitmap?> = MutableLiveData()
+    val isEditMode = MutableLiveData(true)
+    val toolbarTitle = MutableLiveData<String>()
+    val currentAdvertImageUrl = MutableLiveData<String?>()
+    private var currentAdvert: Advert? = null
+
 
     val isButtonDisabled: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
         val update = {
@@ -68,7 +73,7 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun saveAdvert( adImage: Bitmap?) {
+    fun saveAdvert(adImage: Bitmap?) {
         isSavingInProgress.value = true
         val advert = Advert(
             title = title.value ?: "",
@@ -79,6 +84,7 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             val saveResult = advertsRepo.saveAdvert(advert, adImage)
             isSavingInProgress.postValue(false)
+            advertsRepo.updateAdvert(advert, adImage)
             when (saveResult) {
                 is Result.Failure -> {
                     _advertSaveStatus.value =
@@ -90,7 +96,104 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
                         UiStateSave(message = app.getString(R.string.advert_saved_successfully))
                 }
             }
+        }
+    }
 
+    fun saveOrUpdateAdvertImage(adImage: Bitmap?) {
+        if (currentAdvert != null) {
+            updateAdvert(adImage)
+        } else {
+            saveAdvert(adImage)
+        }
+    }
+
+    private fun updateAdvert(adImage: Bitmap?) {
+        val currentAdvertId = currentAdvert?.adId
+        if (currentAdvertId == null) {
+            _advertSaveStatus.value = UiStateSave(message = "Error: Advert id is missing!")
+            return
+        }
+        isSavingInProgress.value = true
+
+        val advert = Advert(
+            adId = currentAdvertId,
+            title = title.value ?: "",
+            author = author.value ?: "",
+            genre = genre.value ?: "",
+            location = location.value ?: "",
+            adCreator = currentAdvert?.adCreator,
+            creationTime = currentAdvert?.creationTime,
+            imageUrl = currentAdvert?.imageUrl
+        )
+
+        viewModelScope.launch {
+            val updateResult = advertsRepo.updateAdvert(advert, adImage)
+            isSavingInProgress.postValue(false)
+            when (updateResult) {
+                is Result.Failure -> {
+                    _advertSaveStatus.value =
+                        UiStateSave(updateResult.message)
+                }
+
+                is Result.Success -> {
+                    _advertSaveStatus.value =
+                        UiStateSave(message = app.getString(R.string.advert_updated_succesfully))
+                }
+            }
+        }
+    }
+
+    fun initializeAdvertData(adId: String?) {
+        if (!adId.isNullOrEmpty()) {
+            isEditMode.value = false
+            fetchCurrentAdvertDetails(adId)
+            toolbarTitle.value = app.getString(R.string.edit_advert_title)
+        } else {
+            title.value = ""
+            author.value = ""
+            genre.value = ""
+            location.value = ""
+            currentAdvert = null
+            toolbarTitle.value = app.getString(R.string.create_ads_text)
+        }
+    }
+
+    private fun fetchCurrentAdvertDetails(advertId: String) {
+        viewModelScope.launch {
+            val advertDetails = advertsRepo.fetchAdvertDetails(advertId)
+            if (advertDetails != null) {
+                title.value = advertDetails.title
+                author.value = advertDetails.author
+                genre.value = advertDetails.genre
+                location.value = advertDetails.location
+                currentAdvert = advertDetails
+                currentAdvertImageUrl.value = advertDetails.imageUrl
+            } else {
+                _advertSaveStatus.value = UiStateSave(message = "Error fetching advert details!")
+            }
+        }
+    }
+
+    fun createOrUpdateAdvert(title: String, author: String, genre: String, location: String): Advert {
+        return if (currentAdvert != null) {
+            // We are in edit mode
+            Advert(
+                adId = currentAdvert?.adId,
+                title = title,
+                author = author,
+                genre = genre,
+                location = location,
+                adCreator = currentAdvert?.adCreator,
+                creationTime = currentAdvert?.creationTime
+            )
+        } else {
+            // We are in create mode
+            Advert(
+                title = title,
+                author = author,
+                genre = genre,
+                location = location
+            )
         }
     }
 

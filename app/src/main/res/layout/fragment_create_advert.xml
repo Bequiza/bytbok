@@ -29,7 +29,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_back_arrow"
-            app:title="@string/create_ads_text" />
+            app:toolbarTitle="@{vm.toolbarTitle}"/>
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -136,7 +136,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/genreInputLayout">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/cityET"
+                        android:id="@+id/location_et"
                         style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -152,12 +152,12 @@
                     android:layout_marginTop="32dp"
                     android:backgroundTint="#774936"
                     android:enabled="@{!vm.isButtonDisabled}"
-                    android:text="@string/publish_button_text"
-                    android:onClick="@{() -> vm.saveAdvert(vm.adImage)}"
+                    android:text="@{vm.isEditMode ? @string/publish_button_text : @string/edit_button}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cityInputLayout"
-                    app:layout_constraintWidth_percent="0.4" />
+                    app:layout_constraintWidth_percent="0.4"
+                    tools:enabled="true" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
 
@@ -193,7 +193,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/publishing"
+                android:text="@{vm.isEditMode ? @string/publishing : @string/updating}"
                 android:textColor="#FFFFFF"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

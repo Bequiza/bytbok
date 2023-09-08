@@ -16,6 +16,7 @@ import se.rebeccazadig.bokholken.data.User
 import se.rebeccazadig.bokholken.databinding.FragmentAdvertDetailsBinding
 import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.utils.formatDateForDisplay
+import se.rebeccazadig.bokholken.utils.gone
 import se.rebeccazadig.bokholken.utils.isEmail
 import se.rebeccazadig.bokholken.utils.isPhoneNumber
 import se.rebeccazadig.bokholken.utils.navigateBack
@@ -50,13 +51,18 @@ class AdvertDetailsFragment : Fragment() {
         viewModel.getAdvertDetails(args.advertId)
 
         binding.toolbar.setNavigationOnClickListener {
-           navigateBack()
+            navigateBack()
         }
 
         viewModel.advertDetailsLiveData.observe(viewLifecycleOwner) { pair ->
             pair?.let { (advert, user) ->
                 displayAdvertDetails(advert, user)
             }
+        }
+
+        if (args.fromMyAdvertsFragment) {
+            binding.favoriteButton.gone()
+            binding.contactUserAdvertButton.gone()
         }
     }
 
@@ -83,7 +89,7 @@ class AdvertDetailsFragment : Fragment() {
             .into(binding.publishedAdvertImage)
 
         binding.contactUserAdvertButton.setOnClickListener {
-            handleContactAction(user?.contact.orEmpty(), advert.title, user?.name ?:"")
+            handleContactAction(user?.contact.orEmpty(), advert.title, user?.name ?: "")
         }
     }
 

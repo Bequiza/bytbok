@@ -10,6 +10,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.bumptech.glide.Glide
+import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.databinding.FragmentCreateAdvertBinding
 import se.rebeccazadig.bokholken.utils.ImageUtils
 import se.rebeccazadig.bokholken.utils.navigateBack
@@ -49,6 +51,8 @@ class CreateAdvertFragment : Fragment() {
         setupToolbar()
         setupImageViewClick()
 
+        viewModel.initializeAdvertData(args.advertId)
+
         viewModel.advertSaveStatus.observe(viewLifecycleOwner) { uiStateSave ->
             uiStateSave?.message?.let { message ->
                 showToast(message)
@@ -56,6 +60,28 @@ class CreateAdvertFragment : Fragment() {
                 navigateBack()
             }
         }
+
+        viewModel.currentAdvertImageUrl.observe(viewLifecycleOwner) { imageUrl ->
+            if (!imageUrl.isNullOrEmpty()) {
+                Glide.with(this)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.placeholder_image)
+                    .into(binding.advertImageView)
+            } else {
+                binding.advertImageView.setImageResource(R.drawable.placeholder_image)
+            }
+        }
+
+        binding.publishButton.setOnClickListener {
+            viewModel.createOrUpdateAdvert(
+                title = binding.titleET.text.toString(),
+                author = binding.authorET.text.toString(),
+                genre = binding.genreET.text.toString(),
+                location = binding.locationEt.text.toString()
+            )
+            viewModel.saveOrUpdateAdvertImage(adImage)
+        }
+
     }
 
     private val getContent =

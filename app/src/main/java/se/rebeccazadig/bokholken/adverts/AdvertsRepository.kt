@@ -15,11 +15,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import se.rebeccazadig.bokholken.data.Result
 import se.rebeccazadig.bokholken.data.User
 import se.rebeccazadig.bokholken.models.Advert
-import se.rebeccazadig.bokholken.data.Result
 import se.rebeccazadig.bokholken.utils.ImageUtils.Companion.toByteArray
 import java.util.UUID
+
+private const val SIMULATE_DELAY = 1000L
 
 class AdvertsRepository private constructor() {
 
@@ -84,8 +86,20 @@ class AdvertsRepository private constructor() {
         }
     }
 
+    suspend fun fetchAdvertDetails(advertId: String): Advert? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val advertSnapShot = advertRef.child(advertId).get().await()
+                advertSnapShot.getValue(Advert::class.java)
+            } catch (e: Exception) {
+                Log.e("advertRepo", "Error fetching advert details", e)
+                null
+            }
+        }
+    }
+
     suspend fun saveAdvert(advert: Advert, adImage: Bitmap?): Result {
-        delay(2000)
+        delay(SIMULATE_DELAY)
         return withContext(Dispatchers.IO) {
             try {
                 val adId = generateRandomAdId()
@@ -101,11 +115,32 @@ class AdvertsRepository private constructor() {
                     val imageUrl = imageRef.downloadUrl.await().toString()
                     advert.imageUrl = imageUrl
                 }
-
                 advertRef.child(adId).setValue(advert).await()
                 Result.Success
             } catch (e: Exception) {
                 Result.Failure(e.message ?: "Error saving advert!")
+            }
+        }
+    }
+
+    suspend fun updateAdvert(advert: Advert, newImage: Bitmap?): Result {
+        delay(SIMULATE_DELAY)
+        return withContext(Dispatchers.IO) {
+            try {
+                newImage?.let {
+                    val adId = advert.adId ?: throw IllegalArgumentException("Advert id cannot be null during update")
+                    val imageRef = storageRef.child(adId)
+                    val data = it.toByteArray()
+                    imageRef.putBytes(data).await()
+
+                    val imageUrl = imageRef.downloadUrl.await().toString()
+                    advert.imageUrl = imageUrl
+                }
+
+                advertRef.child(advert.adId!!).setValue(advert).await()
+                Result.Success
+            } catch (e: Exception) {
+                Result.Failure(e.message ?: "Error updating advert!")
             }
         }
     }
@@ -123,6 +158,25 @@ class AdvertsRepository private constructor() {
                 return@withContext Result.Failure(e.message ?: "Error deleting image fron database")
             }
             Result.Success
+        }
+    }
+
+    suspend fun updateAdvert(advert: Advert, adImage: Bitmap?, adId: String): Result {
+        return withContext(Dispatchers.IO) {
+            try {
+                adImage?.let {
+                    val imageRef = storageRef.child(adId)
+                    val data = it.toByteArray()
+                    imageRef.putBytes(data).await()
+                    val imageUrl = imageRef.downloadUrl.await().toString()
+                    advert.imageUrl = imageUrl
+                }
+
+                advertRef.child(adId).setValue(advert).await()
+                Result.Success
+            } catch (e: Exception) {
+                Result.Failure(e.message ?: "Error updating advert!")
+            }
         }
     }
 

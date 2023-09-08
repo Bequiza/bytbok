@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.adverts.AdvertsAdapter
@@ -19,17 +20,18 @@ class MyAdvertsFragment : Fragment() {
 
     private val viewModel: MyAdvertsViewModel by viewModels()
     private var _binding: FragmentMyAdvertsBinding? = null
-
     private val binding get() = _binding!!
 
     private val advertsAdapter = AdvertsAdapter(
         onAdvertClick = { advert ->
-            navigateToAdvertDetail(advert)
+           navigateToAdvertDetail(advert)
         },
         onDeleteAdvertClick = { advert ->
            deleteMyAdvert(advert)
         },
-        onEditAdvertClick = {},
+        onEditAdvertClick = { advert ->
+            navigateToEditAdvert(advert)
+        },
         showIcons = true
     )
 
@@ -73,8 +75,21 @@ class MyAdvertsFragment : Fragment() {
     }
 
     private fun navigateToAdvertDetail(advert: Advert) {
-        val action =
-            MyAdvertsFragmentDirections.actionMyAdvertsFragmentToAdvertsDetailsFragment(advert.adId!!)
-        findNavController().navigate(action)
+        val action = advert.adId?.let {
+            MyAdvertsFragmentDirections.actionMyAdvertsFragmentToAdvertsDetailsFragment(
+                advertId = it,
+                fromMyAdvertsFragment = true
+            )
+        }
+        action?.let { findNavController().navigate(it) }
+    }
+
+    private fun navigateToEditAdvert(advert: Advert) {
+        val action = advert.adId?.let {
+            MyAdvertsFragmentDirections.actionMyPageFragmentToCreateAdvertsFragment(
+                advertId = it,
+            )
+        }
+        action?.let { findNavController().navigate(it) }
     }
 }
