@@ -15,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import se.rebeccazadig.bokholken.data.FireBaseReferences
 import se.rebeccazadig.bokholken.data.Result
 import se.rebeccazadig.bokholken.data.User
 import se.rebeccazadig.bokholken.models.Advert
@@ -25,10 +26,10 @@ private const val SIMULATE_DELAY = 1000L
 
 class AdvertsRepository private constructor() {
 
-    private val firebaseAuth = FirebaseAuth.getInstance()
-    private val advertRef = FirebaseDatabase.getInstance().getReference("Adverts")
-    private val usersRef = FirebaseDatabase.getInstance().getReference("users")
-    private val storageRef = Firebase.storage.reference.child("advert_images")
+    private val firebaseAuth = FireBaseReferences.authInstance
+    private val advertRef = FireBaseReferences.advertDatabaseRef
+    private val usersRef = FireBaseReferences.userDatabaseRef
+    private val storageRef = FireBaseReferences.advertImagesStorageRef
 
     private val _advertsLiveData = MutableLiveData<List<Advert>>()
     val advertsLiveData: LiveData<List<Advert>> get() = _advertsLiveData
@@ -150,33 +151,14 @@ class AdvertsRepository private constructor() {
             try {
                 advertRef.child(adId).removeValue().await()
             } catch (e: Exception) {
-                return@withContext Result.Failure(e.message ?: "Error deleting advert")
+                return@withContext Result.Failure(e.message ?: "Error deleting image from database")
             }
             try {
                 storageRef.child(adId).delete().await()
             } catch (e: Exception) {
-                return@withContext Result.Failure(e.message ?: "Error deleting image fron database")
+                return@withContext Result.Failure(e.message ?: "Error deleting advert")
             }
             Result.Success
-        }
-    }
-
-    suspend fun updateAdvert(advert: Advert, adImage: Bitmap?, adId: String): Result {
-        return withContext(Dispatchers.IO) {
-            try {
-                adImage?.let {
-                    val imageRef = storageRef.child(adId)
-                    val data = it.toByteArray()
-                    imageRef.putBytes(data).await()
-                    val imageUrl = imageRef.downloadUrl.await().toString()
-                    advert.imageUrl = imageUrl
-                }
-
-                advertRef.child(adId).setValue(advert).await()
-                Result.Success
-            } catch (e: Exception) {
-                Result.Failure(e.message ?: "Error updating advert!")
-            }
         }
     }
 

@@ -6,13 +6,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import se.rebeccazadig.bokholken.data.FireBaseReferences
 import se.rebeccazadig.bokholken.data.User
 
 class UserRepository private constructor() {
 
-    private val databaseReference: DatabaseReference =
-        FirebaseDatabase.getInstance().getReference("users")
-
+    private val databaseReference = FireBaseReferences.userDatabaseRef
     suspend fun saveUser(user: User): Result<Unit> {
         delay(2_000)
         return withContext(Dispatchers.IO) {

@@ -101,6 +101,10 @@ class UserProfileFragment : Fragment() {
         viewModel.uiStateSave.observe(viewLifecycleOwner) { uiStateSave ->
             uiStateSave.message?.let {
                 showToast("${uiStateSave.message}")
+
+                if (it == getString(R.string.account_deleted)) {
+                    findNavController().navigate(R.id.action_to_login_nav_graph)
+                }
                 viewModel.nullUiStateSave()
             }
         }

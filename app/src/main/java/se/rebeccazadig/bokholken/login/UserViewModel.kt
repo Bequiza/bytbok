@@ -11,6 +11,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.ContactType
 import se.rebeccazadig.bokholken.data.User
 import se.rebeccazadig.bokholken.utils.navigateBack
@@ -48,7 +49,20 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun logOutInVm() {
-        loginRepo.logOutInRepo()
+        viewModelScope.launch {
+            try {
+                loginRepo.logOutInRepo()
+                _uiStateSave.postValue(
+                    UiStateSave(
+                        message = getApplication<Application>().getString(
+                            R.string.logout_success
+                        )
+                    )
+                )
+            } catch (e: Exception) {
+                _uiStateSave.postValue(UiStateSave(message = e.localizedMessage))
+            }
+        }
     }
 
     fun saveUser(view: View) {
@@ -131,15 +145,17 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
             val reAuthResult = loginRepo.reAuthenticate(email, password)
 
             if (reAuthResult is Result.Success) {
-                val deleteResult = loginRepo.deleteAccount()
-
-                when (deleteResult) {
+                when (val deleteResult = loginRepo.deleteAccount()) {
                     is Result.Failure -> {
                         _uiStateSave.value = UiStateSave(deleteResult.message)
                     }
 
                     is Result.Success -> {
-                        _uiStateSave.value = UiStateSave(message = "Konto Raderat")
+                        _uiStateSave.value = UiStateSave(
+                            message = getApplication<Application>().getString(
+                                R.string.account_deleted
+                            )
+                        )
                     }
                 }
             } else if (reAuthResult is Result.Failure) {
