@@ -103,5 +103,8 @@
     <string name="delete_advert_message">Är du säkert på att du vill radera annonsen?</string>
     <string name="advert_updated_succesfully">Annonsen är uppdaterad!</string>
     <string name="edit_advert_title">Redigera din annons</string>
+    <string name="logout_success">Du är nu utloggad!</string>
+    <string name="account_deleted">Ditt konto är nu raderat!</string>
+    <string name="deleting_in_progress_message">Raderar ditt konto och alla dina annonser...</string>
 
 </resources>

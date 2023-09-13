@@ -5,15 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import se.rebeccazadig.bokholken.data.ContactType
+import se.rebeccazadig.bokholken.data.FireBaseReferences
 import se.rebeccazadig.bokholken.data.User
+import se.rebeccazadig.bokholken.models.Advert
 
 sealed class Result<out T> {
     data class Failure(val message: String) : Result<Nothing>()
@@ -23,8 +23,9 @@ sealed class Result<out T> {
 class LoginRepository private constructor() {
 
     private val myAuth = Firebase.auth
-    private val databaseReference: DatabaseReference =
-        FirebaseDatabase.getInstance().getReference("users")
+    private val userDatabaseReference = FireBaseReferences.userDatabaseRef
+    private val advertRef = FireBaseReferences.advertDatabaseRef
+    private val storageRef = FireBaseReferences.advertImagesStorageRef
 
 
     private val _isLoggedIn = MutableLiveData(myAuth.currentUser != null)
@@ -68,8 +69,7 @@ class LoginRepository private constructor() {
                 contact = contact,
                 preferredContactMethod = contactMethod
             )
-
-            databaseReference.child(result.user!!.uid).setValue(newUser).await()
+            userDatabaseReference.child(result.user!!.uid).setValue(newUser).await()
 
             Result.Success(Unit)
         } catch (e: Exception) {
@@ -84,9 +84,20 @@ class LoginRepository private constructor() {
 
     suspend fun deleteAccount(): Result<Unit> { // Delete account finns i my page Viewmodel
         val user = myAuth.currentUser
-            ?: kotlin.run { return Result.Failure("") }
+            ?: kotlin.run { return Result.Failure("User not found") }
+        val userId = user.uid
 
         return try {
+            val userAdverts = advertRef.orderByChild("adCreator").equalTo(userId).get().await()
+            userAdverts.children.forEach { advertSnapshot ->
+                val advert = advertSnapshot.getValue(Advert::class.java)
+                advert?.imageUrl?.let {
+                    storageRef.storage.getReferenceFromUrl(it).delete().await()
+                }
+                advertSnapshot.ref.removeValue().await()
+            }
+
+            userDatabaseReference.child(userId).removeValue().await()
             user.delete().await()
             Result.Success(Unit)
         } catch (e: Exception) {
