@@ -4,6 +4,8 @@
     <string name="already_user">Redan registrerat dig?</string>
     <string name="header_login">Login</string>
     <string name="header_register">Registrera</string>
+    <string name="login_mode_text">Logga in</string>
+    <string name="register_mode_text">Skapa konto</string>
     <string name="register_button">Registrera</string>
     <string name="login_button">Login</string>
     <string name="books_to_read">Böcker jag vill läsa!</string>

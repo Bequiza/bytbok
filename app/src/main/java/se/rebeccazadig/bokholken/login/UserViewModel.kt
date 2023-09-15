@@ -14,6 +14,7 @@ import kotlinx.coroutines.launch
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.ContactType
 import se.rebeccazadig.bokholken.data.User
+import se.rebeccazadig.bokholken.utils.isPhoneNumber
 import se.rebeccazadig.bokholken.utils.navigateBack
 
 data class UiStateSave(
@@ -33,6 +34,8 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
     val user = MutableLiveData<User?>()
     val userName = MutableLiveData("")
     val userContact = MutableLiveData("")
+    val contactValidationResult = MutableLiveData<String?>()
+    private val isContactValid = MutableLiveData(true)
 
     val inProgress = MutableLiveData(false)
 
@@ -164,5 +167,17 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
 
             inProgress.postValue(false)
         }
+    }
+
+    fun validatePhoneNumber(phone: String): Boolean {
+        val isValid = isPhoneNumber(phone).also {
+            if (!it) contactValidationResult.value =
+                getApplication<Application>().getString(R.string.invalid_phone_number)
+        }
+
+        isContactValid.value = isValid
+        if (isValid) contactValidationResult.value = null  // Reset error if valid
+
+        return isValid
     }
 }
