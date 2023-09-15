@@ -9,11 +9,12 @@ import com.google.firebase.storage.StorageReference
 object FireBaseReferences {
 
     val authInstance: FirebaseAuth = FirebaseAuth.getInstance()
-    val firebaseDatabaseInstance: FirebaseDatabase = FirebaseDatabase.getInstance()
-    val firebaseStorageInstance: FirebaseStorage = FirebaseStorage.getInstance()
+    private val firebaseDatabaseInstance: FirebaseDatabase = FirebaseDatabase.getInstance()
+    private val firebaseStorageInstance: FirebaseStorage = FirebaseStorage.getInstance()
 
     val userDatabaseRef: DatabaseReference = firebaseDatabaseInstance.getReference("users_profile")
     val advertDatabaseRef: DatabaseReference = firebaseDatabaseInstance.getReference("Adverts")
+    val favoritesDatabaseRef: DatabaseReference = firebaseDatabaseInstance.getReference("favorites")
     val advertImagesStorageRef: StorageReference = firebaseStorageInstance.reference.child("advert_images")
 
 }

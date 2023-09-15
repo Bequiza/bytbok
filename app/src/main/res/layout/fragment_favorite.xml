@@ -7,36 +7,25 @@
     android:background="#e3d5ca"
     tools:context=".adverts.FavoriteFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/favorite_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#e3d5ca"
+        android:elevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_back_arrow"
+        app:title="@string/books_to_read" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/favoritesRV"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="#F5EBE0"
-        tools:context=".adverts.FavoriteFragment">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/favorite_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="#e3d5ca"
-            android:elevation="4dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_back_arrow"
-            app:subtitle="@string/favorites_toolbar_subtitle"
-            app:title="@string/favorites_toolbar"
-            app:titleTextColor="@color/bottom_nav_item" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/favoritesRV"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="#F5EBE0"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/favorite_toolbar" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/favorite_toolbar"
+        tools:listitem="@layout/list_item" />
 </androidx.constraintlayout.widget.ConstraintLayout>

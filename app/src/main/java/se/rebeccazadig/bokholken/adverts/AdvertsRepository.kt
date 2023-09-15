@@ -4,13 +4,9 @@ import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
@@ -29,6 +25,7 @@ class AdvertsRepository private constructor() {
     private val firebaseAuth = FireBaseReferences.authInstance
     private val advertRef = FireBaseReferences.advertDatabaseRef
     private val usersRef = FireBaseReferences.userDatabaseRef
+    private val favoritesRef = FireBaseReferences.favoritesDatabaseRef
     private val storageRef = FireBaseReferences.advertImagesStorageRef
 
     private val _advertsLiveData = MutableLiveData<List<Advert>>()
@@ -37,8 +34,62 @@ class AdvertsRepository private constructor() {
     private val _advertDetailLiveData = MutableLiveData<Pair<Advert, User?>?>()
     val advertDetailLiveData: LiveData<Pair<Advert, User?>?> get() = _advertDetailLiveData
 
+    private val _favoritesLiveData = MutableLiveData<List<Advert>>()
+    val favoritesLiveData: LiveData<List<Advert>> get() = _favoritesLiveData
+
 
     init {
+        fetchUsersAndInitializeAdverts()
+    }
+
+    private fun fetchUsersAndInitializeAdverts() {
+        usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(usersSnapshot: DataSnapshot) {
+                initializeAdvertsListener()
+            }
+            override fun onCancelled(error: DatabaseError) = logError("Error fetching users data", error)
+        })
+    }
+
+    private fun initializeAdvertsListener() {
+        advertRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val advertsList = getAdvertsListFromSnapshot(dataSnapshot)
+                _advertsLiveData.value = sortAdvertsByCreationTime(advertsList)
+            }
+            override fun onCancelled(error: DatabaseError) = logError("Error fetching data", error)
+        })
+    }
+
+    private fun getAdvertsListFromSnapshot(snapshot: DataSnapshot): List<Advert> {
+        return snapshot.children.mapNotNull { it.getValue(Advert::class.java) }
+    }
+
+    private fun sortAdvertsByCreationTime(adverts: List<Advert>): List<Advert> {
+        return adverts.sortedByDescending { it.creationTime }
+    }
+
+    private fun logError(message: String, error: DatabaseError) {
+        Log.e("DatabaseError", "$message: ${error.message}")
+    }
+
+    suspend fun markAdvertAsFavorite(advertId: String) {
+        val userId = getCurrentUserId() ?: return
+        favoritesRef.child(userId).child(advertId).setValue(true).await()
+    }
+
+    suspend fun removeAdvertFromFavorites(advertId: String) {
+        val userId = getCurrentUserId() ?: return
+        favoritesRef.child(userId).child(advertId).removeValue().await()
+    }
+
+    suspend fun isAdvertFavorite(advertId: String): Boolean {
+        val userId = getCurrentUserId() ?: return false
+        val snapshot = favoritesRef.child(userId).child(advertId).get().await()
+        return snapshot.exists()
+    }
+
+    fun fetchAdvertsAndUsers() {
         usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(usersSnapshot: DataSnapshot) {
                 val usersMap = mutableMapOf<String, User>()
@@ -46,18 +97,7 @@ class AdvertsRepository private constructor() {
                     val user = snapshot.getValue(User::class.java)
                     user?.id?.let { usersMap[it] = user }
                 }
-
-                advertRef.addValueEventListener(object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        val advertsList =
-                            dataSnapshot.children.mapNotNull { it.getValue(Advert::class.java) }
-                        _advertsLiveData.value = advertsList.sortedByDescending { it.creationTime }
-                    }
-
-                    override fun onCancelled(error: DatabaseError) {
-                        Log.e("DatabaseError", "Error fetching data: ${error.message}")
-                    }
-                })
+                fetchAdverts()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -66,37 +106,70 @@ class AdvertsRepository private constructor() {
         })
     }
 
-    suspend fun fetchAdvertAndUserDetails(advertId: String) {
-        withContext(Dispatchers.IO) {
-            try {
-                val advertSnapshot = advertRef.child(advertId).get().await()
-                val advertData = advertSnapshot.getValue(Advert::class.java)
-
-                val userId = advertData?.adCreator
-                if (userId != null) {
-                    val userSnapshot = usersRef.child(userId).get().await()
-                    val userData = userSnapshot.getValue(User::class.java)
-                    _advertDetailLiveData.postValue(Pair(advertData, userData))
-                } else {
-                    _advertDetailLiveData.postValue(null)
-                    Log.e("AdvertsRepository", "Advert data was null for advertId: $advertId")
-                }
-            } catch (e: Exception) {
-                Log.e("AdvertsRepository", "Error fetching advert and user details", e)
+    private fun fetchAdverts() {
+        advertRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val advertsList = dataSnapshot.children.mapNotNull { it.getValue(Advert::class.java) }
+                _advertsLiveData.value = advertsList.sortedByDescending { it.creationTime }
             }
-        }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("DatabaseError", "Error fetching data: ${error.message}")
+            }
+        })
     }
 
-    suspend fun fetchAdvertDetails(advertId: String): Advert? {
-        return withContext(Dispatchers.IO) {
-            try {
-                val advertSnapShot = advertRef.child(advertId).get().await()
-                advertSnapShot.getValue(Advert::class.java)
-            } catch (e: Exception) {
-                Log.e("advertRepo", "Error fetching advert details", e)
-                null
+    fun fetchAdvertDetails(advertId: String) {
+        advertRef.child(advertId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val advert = dataSnapshot.getValue(Advert::class.java)
+                if (advert != null) {
+                    val userId = advert.adCreator
+                    usersRef.child(userId ?: "").addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(userSnapshot: DataSnapshot) {
+                            val user = userSnapshot.getValue(User::class.java)
+                            _advertDetailLiveData.postValue(Pair(advert, user))
+                        }
+
+                        override fun onCancelled(userError: DatabaseError) {
+                            Log.e("DatabaseError", "Error fetching user data: ${userError.message}")
+                        }
+                    })
+                } else {
+                    _advertDetailLiveData.postValue(null)
+                }
             }
-        }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("DatabaseError", "Error fetching advert data: ${error.message}")
+                _advertDetailLiveData.postValue(null)
+            }
+        })
+    }
+
+    fun fetchFavoriteAdverts() {
+        val userId = getCurrentUserId() ?: return
+        favoritesRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val favoriteAdIds = dataSnapshot.children.mapNotNull { it.key }
+
+                advertRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(allAdvertsSnapshot: DataSnapshot) {
+                        val allAdverts = allAdvertsSnapshot.children.mapNotNull { it.getValue(Advert::class.java) }
+                        val favoriteAdverts = allAdverts.filter { it.adId in favoriteAdIds }
+                        _favoritesLiveData.value = favoriteAdverts
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e("DatabaseError", "Error fetching all adverts: ${error.message}")
+                    }
+                })
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("DatabaseError", "Error fetching favorite adverts: ${error.message}")
+            }
+        })
     }
 
     suspend fun saveAdvert(advert: Advert, adImage: Bitmap?): Result {
@@ -129,7 +202,7 @@ class AdvertsRepository private constructor() {
         return withContext(Dispatchers.IO) {
             try {
                 newImage?.let {
-                    val adId = advert.adId ?: throw IllegalArgumentException("Advert id cannot be null during update")
+                    val adId = advert.adId ?: throw IllegalArgumentException("Advert ID cannot be null during update")
                     val imageRef = storageRef.child(adId)
                     val data = it.toByteArray()
                     imageRef.putBytes(data).await()
@@ -151,18 +224,18 @@ class AdvertsRepository private constructor() {
             try {
                 advertRef.child(adId).removeValue().await()
             } catch (e: Exception) {
-                return@withContext Result.Failure(e.message ?: "Error deleting image from database")
+                return@withContext Result.Failure(e.message ?: "Error deleting advert")
             }
             try {
                 storageRef.child(adId).delete().await()
             } catch (e: Exception) {
-                return@withContext Result.Failure(e.message ?: "Error deleting advert")
+                return@withContext Result.Failure(e.message ?: "Error deleting image from database")
             }
             Result.Success
         }
     }
 
-    private fun getCurrentUserId(): String? {
+    fun getCurrentUserId(): String? {
         return firebaseAuth.currentUser?.uid
     }
 
@@ -174,6 +247,10 @@ class AdvertsRepository private constructor() {
         _advertDetailLiveData.value = null
     }
 
+    fun clearFavorites() {
+        _favoritesLiveData.value = emptyList()
+    }
+
     companion object {
         private var instance: AdvertsRepository? = null
 
@@ -182,4 +259,3 @@ class AdvertsRepository private constructor() {
         }
     }
 }
-

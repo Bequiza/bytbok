@@ -107,4 +107,13 @@
     <string name="account_deleted">Ditt konto är nu raderat!</string>
     <string name="deleting_in_progress_message">Raderar ditt konto och alla dina annonser...</string>
 
+    <string name="error_user_not_found">Användaren hittades inte.</string>
+    <string name="advert_missing_fields">Fyll i alla fält!</string>
+    <string name="generic_error">Något gick fel!</string>
+    <string name="advert_updated_successfully">Annonsen är uppdaterats!</string>
+    <string name="advert_id_missing_error">Fel: Annons ID saknas!</string>
+
+    <string name="added_to_favorites">Lagt till i favoriter</string>
+    <string name="removed_from_favorites">Borttagen från favoriter</string>
+
 </resources>
