@@ -6,6 +6,7 @@
     <data>
 
         <import type="android.view.View" />
+
         <variable
             name="vm"
             type="se.rebeccazadig.bokholken.adverts.AdvertViewModel" />
@@ -29,7 +30,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_back_arrow"
-            app:toolbarTitle="@{vm.toolbarTitle}"/>
+            app:toolbarTitle="@{vm.toolbarTitle}" />
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -77,8 +78,9 @@
                         style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@={vm.title}"
                         android:hint="@string/hint_title"
+                        android:inputType="textCapSentences"
+                        android:text="@={vm.title}"
                         android:textColor="#6C584C" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -98,8 +100,10 @@
                         style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@={vm.author}"
+                        android:width="0dp"
                         android:hint="@string/hint_author"
+                        android:inputType="textCapSentences"
+                        android:text="@={vm.author}"
                         android:textColor="#6C584C" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -119,8 +123,9 @@
                         style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@={vm.genre}"
                         android:hint="@string/hint_genre"
+                        android:inputType="textCapSentences"
+                        android:text="@={vm.genre}"
                         android:textColor="#6C584C" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -140,8 +145,9 @@
                         style="@style/CustomTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@={vm.location}"
                         android:hint="@string/hint_advert_location"
+                        android:inputType="textCapSentences"
+                        android:text="@={vm.location}"
                         android:textColor="#6C584C" />
                 </com.google.android.material.textfield.TextInputLayout>
 
