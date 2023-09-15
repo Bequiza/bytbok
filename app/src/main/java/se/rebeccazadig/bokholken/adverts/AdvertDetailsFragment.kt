@@ -35,6 +35,9 @@ class AdvertDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAdvertDetailsBinding.inflate(inflater, container, false)
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = viewLifecycleOwner
+        binding.advertId = args.advertId
         return binding.root
     }
 
@@ -45,6 +48,33 @@ class AdvertDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.advertDetailsLiveData.observe(viewLifecycleOwner) { pair ->
+            pair?.let { (advert, user) ->
+                displayAdvertDetails(advert, user)
+                viewModel.checkAdvertFavoriteStatus(args.advertId)
+            }
+        }
+
+        viewModel.isAdvertFavorite.observe(viewLifecycleOwner) { isFavorite ->
+            when (isFavorite) {
+                true -> binding.favoriteButton.setImageResource(R.drawable.ic_favorite_filled)
+                false -> binding.favoriteButton.setImageResource(R.drawable.ic_favorite_border)
+                null -> {}
+            }
+        }
+
+        viewModel.favoriteState.observe(viewLifecycleOwner) { state ->
+            if (state.isSuccess) {
+                val message = if (viewModel.isAdvertFavorite.value == true) {
+                    getString(R.string.added_to_favorites)
+                } else {
+                    getString(R.string.removed_from_favorites)
+                }
+                showToast(message)
+            } else {
+                state.errorMessage?.let { showToast(it) }
+            }
+        }
 
         viewModel.cleanUp()
 
@@ -52,12 +82,6 @@ class AdvertDetailsFragment : Fragment() {
 
         binding.toolbar.setNavigationOnClickListener {
             navigateBack()
-        }
-
-        viewModel.advertDetailsLiveData.observe(viewLifecycleOwner) { pair ->
-            pair?.let { (advert, user) ->
-                displayAdvertDetails(advert, user)
-            }
         }
 
         if (args.fromMyAdvertsFragment) {
@@ -117,9 +141,7 @@ class AdvertDetailsFragment : Fragment() {
                 }
             }
 
-            isPhoneNumber(contact) -> {
-                dialNumber(contact)
-            }
+            isPhoneNumber(contact) -> { dialNumber(contact) }
 
             else -> {
                 showToast(getString(R.string.invalid_contact_info))

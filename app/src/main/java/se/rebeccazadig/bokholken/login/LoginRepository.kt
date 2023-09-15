@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import se.rebeccazadig.bokholken.adverts.AdvertsRepository
 import se.rebeccazadig.bokholken.data.ContactType
 import se.rebeccazadig.bokholken.data.FireBaseReferences
 import se.rebeccazadig.bokholken.data.User
@@ -22,9 +23,12 @@ sealed class Result<out T> {
 
 class LoginRepository private constructor() {
 
+    private val advertsRepo = AdvertsRepository.getInstance()
+
     private val myAuth = Firebase.auth
     private val userDatabaseReference = FireBaseReferences.userDatabaseRef
     private val advertRef = FireBaseReferences.advertDatabaseRef
+    private val favoriteRef = FireBaseReferences.favoritesDatabaseRef
     private val storageRef = FireBaseReferences.advertImagesStorageRef
 
 
@@ -33,6 +37,9 @@ class LoginRepository private constructor() {
 
     init {
         myAuth.addAuthStateListener {
+            if (it.currentUser == null) {
+                advertsRepo.clearFavorites()
+            }
             _isLoggedIn.value = it.currentUser != null
         }
     }
@@ -96,7 +103,7 @@ class LoginRepository private constructor() {
                 }
                 advertSnapshot.ref.removeValue().await()
             }
-
+            favoriteRef.child(userId).removeValue().await()
             userDatabaseReference.child(userId).removeValue().await()
             user.delete().await()
             Result.Success(Unit)
