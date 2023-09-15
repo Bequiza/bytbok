@@ -116,6 +116,10 @@ class LoginRegisterViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+    fun resetPassword(email: String) {
+        loginRepo.resetPassword(email)
+    }
+
     fun changeMode() {
         isLoginMode.value = (isLoginMode.value ?: false).not()
     }

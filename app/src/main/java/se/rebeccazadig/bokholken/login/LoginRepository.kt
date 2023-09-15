@@ -128,6 +128,9 @@ class LoginRepository private constructor() {
         return Result.Failure("Error during re-authentication.")
     }
 
+    fun resetPassword(email: String) {
+        myAuth.sendPasswordResetEmail(email)
+    }
 
     fun getUserId(): String {
         val uid = myAuth.currentUser?.uid

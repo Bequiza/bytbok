@@ -13,7 +13,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.ContactType
+import se.rebeccazadig.bokholken.databinding.DialogResetPasswordBinding
 import se.rebeccazadig.bokholken.databinding.FragmentLoginBinding
+import se.rebeccazadig.bokholken.utils.DialogMessages
+import se.rebeccazadig.bokholken.utils.showAlertWithEditText
 
 class LoginRegisterFragment : Fragment() {
 
@@ -44,6 +47,12 @@ class LoginRegisterFragment : Fragment() {
         setupTextChangeListener()
         observeViewModelChanges()
         handleCheckedChange()
+
+        binding.resetPasswordText.setOnClickListener {
+            showResetPasswordDialog { email ->
+                viewModel.resetPassword(email)
+            }
+        }
     }
 
     private fun handleCheckedChange() {
@@ -94,5 +103,29 @@ class LoginRegisterFragment : Fragment() {
                 Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun showResetPasswordDialog(onEmailProvided: (email: String) -> Unit) {
+        var binding = DialogResetPasswordBinding.inflate(layoutInflater)
+
+        showAlertWithEditText(
+            context = requireContext(),
+            view = binding.root,
+            editTexts = listOf(binding.emailEditText),
+            dialogMessages = DialogMessages(
+                titleText = R.string.password_reset_dialog_title,
+                positiveButtonText = R.string.submit_button_label,
+                negativeButtonText = R.string.cancel
+            ),
+            confirmCallback = {
+                onEmailProvided(
+                    binding.emailEditText.text.toString().trim()
+                )
+            },
+            textEditCallback = { _, positiveButton ->
+                val email = binding.emailEditText.text.toString().trim()
+                positiveButton.isEnabled = email.isNotEmpty()
+            }
+        )
     }
 }

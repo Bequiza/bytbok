@@ -26,6 +26,7 @@
     <string name="cancel">Avbryt</string>>
     <string name="hint_email">E-post</string>
     <string name="hint_password">Lösenord</string>
+    <string name="password_reset_dialog_title">Ange din email adress så skickar vi ett mail för att nollställa ditt lösenord</string>
 
     <string name="user_details_username">Användarnamn: %1$s</string>
     <string name="user_details_contact">Telefonnummer: %1$s</string>
