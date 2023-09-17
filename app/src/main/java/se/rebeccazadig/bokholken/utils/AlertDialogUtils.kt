@@ -1,6 +1,6 @@
 package se.rebeccazadig.bokholken.utils
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,6 +11,7 @@ import se.rebeccazadig.bokholken.R
 
 data class DialogMessages(
     val titleText: Int,
+    val messageResId: Int? = null,
     val positiveButtonText: Int,
     val negativeButtonText: Int
 )
@@ -19,15 +20,32 @@ fun showConfirmationDialog(
     context: Context,
     titleResId: Int,
     messageResId: Int,
+    positiveAction: () -> Unit,
+    positiveButtonTextResId: Int = R.string.confirm
+): AlertDialog? {
+    return AlertDialog.Builder(context)
+        .setTitle(titleResId)
+        .setMessage(messageResId)
+        .setPositiveButton(context.getString(positiveButtonTextResId)) { _, _ ->
+            positiveAction.invoke()
+        }
+        .setNegativeButton(context.getString(R.string.cancel), null)
+        .show()
+}
+
+fun showOneButtonDialog(
+    context: Context,
+    titleResId: Int,
+    messageResId: Int,
+    positiveButtonTextResId: Int,
     positiveAction: () -> Unit
 ) {
     AlertDialog.Builder(context)
         .setTitle(titleResId)
         .setMessage(messageResId)
-        .setPositiveButton(context.getString(R.string.confirm)) { _, _ ->
+        .setPositiveButton(context.getString(positiveButtonTextResId)) { _, _ ->
             positiveAction.invoke()
         }
-        .setNegativeButton(context.getString(R.string.cancel), null)
         .show()
 }
 
@@ -42,6 +60,11 @@ fun showAlertWithEditText(
 ) :AlertDialog {
     val alertDialog = AlertDialog.Builder(context)
         .setTitle(dialogMessages.titleText)
+        .apply {
+            dialogMessages.messageResId?.let {
+                setMessage(it)
+            }
+        }
         .setView(view)
         .setPositiveButton(dialogMessages.positiveButtonText, null)
         .setNegativeButton(dialogMessages.negativeButtonText) { _, _ ->

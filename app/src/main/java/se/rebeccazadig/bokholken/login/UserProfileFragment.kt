@@ -116,7 +116,7 @@ class UserProfileFragment : Fragment() {
         showAlertWithEditText(
             context = requireContext(),
             view = binding.root,
-            editTexts = listOf(binding.emailEditText, binding.passwordEditText),
+            editTexts = listOf(binding.emailTextInput, binding.passwordTextInput),
             dialogMessages = DialogMessages(
                 titleText = R.string.credentials_dialog_title,
                 positiveButtonText = R.string.submit_button_label,
@@ -124,15 +124,14 @@ class UserProfileFragment : Fragment() {
             ),
             confirmCallback = {
                 onCredentialsProvided(
-                    binding.emailEditText.text.toString().trim(),
-                    binding.passwordEditText.text.toString().trim()
+                    binding.emailTextInput.text.toString().trim(),
+                    binding.passwordTextInput.text.toString().trim()
                 )
-            },
-            textEditCallback = { _, positiveButton ->
-                val email = binding.emailEditText.text.toString().trim()
-                val password = binding.passwordEditText.text.toString().trim()
-                positiveButton.isEnabled = email.isNotEmpty() && password.isNotEmpty()
             }
-        )
+        ) { _, positiveButton ->
+            val email = binding.emailTextInput.text.toString().trim()
+            val password = binding.passwordTextInput.text.toString().trim()
+            positiveButton.isEnabled = email.isNotEmpty() && password.isNotEmpty()
+        }
     }
 }

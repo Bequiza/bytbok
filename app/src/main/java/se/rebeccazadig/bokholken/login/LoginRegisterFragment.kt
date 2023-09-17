@@ -1,22 +1,22 @@
 package se.rebeccazadig.bokholken.login
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.ContactType
+import se.rebeccazadig.bokholken.data.ErrorCode
 import se.rebeccazadig.bokholken.databinding.DialogResetPasswordBinding
 import se.rebeccazadig.bokholken.databinding.FragmentLoginBinding
 import se.rebeccazadig.bokholken.utils.DialogMessages
 import se.rebeccazadig.bokholken.utils.showAlertWithEditText
+import se.rebeccazadig.bokholken.utils.showConfirmationDialog
+import se.rebeccazadig.bokholken.utils.showOneButtonDialog
 
 class LoginRegisterFragment : Fragment() {
 
@@ -44,54 +44,40 @@ class LoginRegisterFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupTextChangeListener()
+        setupListeners()
         observeViewModelChanges()
-        handleCheckedChange()
-
-        binding.resetPasswordText.setOnClickListener {
-            showResetPasswordDialog { email ->
-                viewModel.resetPassword(email)
-            }
-        }
     }
 
-    private fun handleCheckedChange() {
-        when (binding.contactMethodRadioGroup.checkedRadioButtonId) {
-            R.id.radioBtnEmail -> viewModel.preferredContactMethod.value = ContactType.EMAIL
-            R.id.radioBtnPhone -> viewModel.preferredContactMethod.value = ContactType.PHONE
-        }
-
-        binding.contactMethodRadioGroup.setOnCheckedChangeListener { _, checkedId ->
-            when (checkedId) {
-                R.id.radioBtnEmail -> viewModel.preferredContactMethod.value = ContactType.EMAIL
-                R.id.radioBtnPhone -> viewModel.preferredContactMethod.value = ContactType.PHONE
+    private fun setupListeners() {
+        binding.apply {
+            resetPasswordText.setOnClickListener {
+                showResetPasswordDialog { email ->
+                    viewModel.resetPassword(email)
+                }
             }
-        }
-
-        viewModel.validatePhoneNumber(binding.phoneNumber.text.toString().trim())
-    }
-
-    private fun setupTextChangeListener() {
-        binding.phoneNumber.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable) {
-                viewModel.phoneNumber.value = s.toString().trim()
-                viewModel.validatePhoneNumber(s.toString().trim())
+            contactMethodRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+                val contactType = when (checkedId) {
+                    R.id.radioBtnEmail -> ContactType.EMAIL
+                    R.id.radioBtnPhone -> ContactType.PHONE
+                    else -> return@setOnCheckedChangeListener
+                }
+                viewModel.preferredContactMethod.value = contactType
             }
-        })
+            phoneNumber.addTextChangedListener(afterTextChanged = { s ->
+                val trimmedText = s.toString().trim()
+                viewModel.phoneNumber.value = trimmedText
+                viewModel.validatePhoneNumber(trimmedText)
+            })
+        }
     }
 
     private fun observeViewModelChanges() {
-        viewModel.contactValidationResult.observe(viewLifecycleOwner) { validationResult ->
-            binding.phoneNumber.error = validationResult
-        }
-
-        viewModel.loginUiState.observe(viewLifecycleOwner) { loginUiState ->
-            Log.d("Emma", "loginUiState: $loginUiState")
-            handleLoginUiState(loginUiState)
+        viewModel.run {
+            passwordResetResult.observe(viewLifecycleOwner, ::handlePasswordResetResult)
+            contactValidationResult.observe(viewLifecycleOwner) {
+                binding.phoneNumber.error = it
+            }
+            loginUiState.observe(viewLifecycleOwner, ::handleLoginUiState)
         }
     }
 
@@ -99,33 +85,81 @@ class LoginRegisterFragment : Fragment() {
         if (loginUiState.isSuccess) {
             findNavController().navigate(R.id.advertsFragment)
         } else {
-            loginUiState.errorMessage?.let {
-                Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+            loginUiState.errorMessage?.let { errorCode ->
+                val errorMessageResId = ErrorCode.fromFirebaseCode(errorCode).errorMessageResId
+                showErrorDialog(errorMessageResId) {
+                    viewModel.email.value = ""
+                    viewModel.password.value = ""
+                }
             }
         }
     }
 
+    private fun handlePasswordResetResult(result: Result<Unit>) {
+        when (result) {
+            is Result.Success -> showSuccessDialog()
+            is Result.Failure -> {
+                val errorCode = ErrorCode.fromFirebaseCode(result.message)
+                val errorMessageResId = errorCode.errorMessageResId
+
+                showErrorDialog(errorMessageResId) {
+                    showResetPasswordDialog { email ->
+                        viewModel.resetPassword(email)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showSuccessDialog() {
+        viewModel.inProgress.value = false
+        showOneButtonDialog(
+            context = requireContext(),
+            titleResId = R.string.success_title,
+            messageResId = R.string.password_reset_success_message,
+            positiveButtonTextResId = R.string.ok_dialog_button
+        ) {}
+    }
+
+    private fun showErrorDialog(
+         errorMessageResId: Int,
+        retryAction: () -> Unit
+    ) {
+        viewModel.inProgress.value = false
+        showConfirmationDialog(
+            context = requireContext(),
+            titleResId = R.string.error_title,
+            messageResId = errorMessageResId,
+            positiveAction = retryAction,
+            positiveButtonTextResId = R.string.retry_button
+        )
+    }
+
     private fun showResetPasswordDialog(onEmailProvided: (email: String) -> Unit) {
-        var binding = DialogResetPasswordBinding.inflate(layoutInflater)
+        val binding = DialogResetPasswordBinding.inflate(layoutInflater)
 
         showAlertWithEditText(
             context = requireContext(),
             view = binding.root,
-            editTexts = listOf(binding.emailEditText),
+            editTexts = listOf(binding.emailTextInput),
             dialogMessages = DialogMessages(
                 titleText = R.string.password_reset_dialog_title,
+                messageResId = R.string.password_reset_dialog_description,
                 positiveButtonText = R.string.submit_button_label,
                 negativeButtonText = R.string.cancel
             ),
             confirmCallback = {
                 onEmailProvided(
-                    binding.emailEditText.text.toString().trim()
+                    binding.emailTextInput.text.toString().trim()
                 )
             },
-            textEditCallback = { _, positiveButton ->
-                val email = binding.emailEditText.text.toString().trim()
-                positiveButton.isEnabled = email.isNotEmpty()
+            cancelCallback = {
+                viewModel.inProgress.value = false
             }
-        )
+        ) { _, positiveButton ->
+            viewModel.inProgress.value = true
+            val email = binding.emailTextInput.text.toString().trim()
+            positiveButton.isEnabled = email.isNotEmpty()
+        }
     }
 }
