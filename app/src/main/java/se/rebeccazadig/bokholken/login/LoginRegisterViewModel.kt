@@ -1,6 +1,7 @@
 package se.rebeccazadig.bokholken.login
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -28,12 +29,14 @@ class LoginRegisterViewModel(app: Application) : AndroidViewModel(app) {
     val isLoginMode = MutableLiveData(true)
     val preferredContactMethod = MutableLiveData(ContactType.PHONE)
 
-
     val contactValidationResult = MutableLiveData<String?>()
     private val isContactValid = MutableLiveData(true)
     val inProgress = MutableLiveData(false)
     private val _loginUiState = MutableLiveData(LoginUiState())
     val loginUiState: LiveData<LoginUiState> get() = _loginUiState
+
+    private val _passwordResetResult = MutableLiveData<Result<Unit>>()
+    val passwordResetResult: LiveData<Result<Unit>> = _passwordResetResult
 
     val isButtonDisabled = MediatorLiveData<Boolean>().apply {
         addSource(email) { updateButtonState() }
@@ -112,6 +115,18 @@ class LoginRegisterViewModel(app: Application) : AndroidViewModel(app) {
                 is Result.Success -> {
                     _loginUiState.value = LoginUiState(true)
                 }
+            }
+        }
+    }
+
+    fun resetPassword(email: String) {
+        viewModelScope.launch {
+            try {
+                val result = loginRepo.resetPassword(email)
+                _passwordResetResult.postValue(result)
+            } catch (e: Exception) {
+                Log.e("ResetPassword", "Error resetting password: ", e)
+                _passwordResetResult.postValue(Result.Failure(e.message ?: "Unknown error"))
             }
         }
     }

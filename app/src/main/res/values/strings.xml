@@ -101,7 +101,7 @@
     <string name="updating">Uppdaterar…</string>
     <string name="invalid_contact_info">Kontaktinformationen är ogiltig.</string>
     <string name="preferred_contact_text">Välj önskad kontaktsätt</string>
-    <string name="delete_advert_title">Radera advert</string>
+    <string name="delete_advert_title">Radera annons</string>
     <string name="delete_advert_message">Är du säkert på att du vill radera annonsen?</string>
     <string name="advert_updated_succesfully">Annonsen är uppdaterad!</string>
     <string name="edit_advert_title">Redigera din annons</string>
@@ -109,7 +109,6 @@
     <string name="account_deleted">Ditt konto är nu raderat!</string>
     <string name="deleting_in_progress_message">Raderar ditt konto och alla dina annonser...</string>
 
-    <string name="error_user_not_found">Användaren hittades inte.</string>
     <string name="advert_missing_fields">Fyll i alla fält!</string>
     <string name="generic_error">Något gick fel!</string>
     <string name="advert_updated_successfully">Annonsen är uppdaterats!</string>
@@ -117,5 +116,34 @@
 
     <string name="added_to_favorites">Lagt till i favoriter</string>
     <string name="removed_from_favorites">Borttagen från favoriter</string>
+
+    <string name="forgot_password_text">Glömt ditt lösenord?</string>
+    <string name="success_title">Klart!</string>
+    <string name="password_reset_success_message">Vi har nu skickat en lösenord nollställnings mail till din mail adress. Kollla din mail nu!</string>
+    <string name="retry_button">Testa igen</string>
+    <string name="error_title">Fel!</string>
+    <string name="password_reset_dialog_title">Återställ lösenord</string>
+    <string name="ok_dialog_button">OK</string>
+    <string name="password_reset_dialog_description">Ange din e-postadress, så skickar vi ett meddelande med instruktioner för att återställa ditt lösenord.</string>
+
+    <string name="error_user_not_found">Inget konto hittades med denna e-postadress.</string>
+    <string name="error_invalid_email">E-postadressen är felaktigt formaterad.</string>
+    <string name="error_too_many_requests">För många förfrågningar. Försök igen senare.</string>
+    <string name="error_unknown">Ett okänt fel inträffade. Försök igen senare.</string>
+    <string name="error_wrong_password">Fel lösenord.</string>
+    <string name="error_email_already_in_use">E-postadressen används redan.</string>
+    <string name="error_weak_password">Lösenordet är för svagt.</string>
+    <string name="error_invalid_custom_token">Ogiltigt format för anpassat token. Kontrollera dokumentationen.</string>
+    <string name="error_custom_token_mismatch">Anpassat token motsvarar en annan publik.</string>
+    <string name="error_invalid_credential">Autentiseringsuppgiften är felaktig eller har gått ut.</string>
+    <string name="error_user_mismatch">De tillhandahållna uppgifterna motsvarar inte den tidigare inloggade användaren.</string>
+    <string name="error_requires_recent_login">Denna operation är känslig och kräver nylig autentisering. Logga in igen innan du försöker med begäran igen.</string>
+    <string name="error_account_exists_with_different_credential">Ett konto finns redan med samma e-postadress men olika inloggningsuppgifter. Logga in med en leverantör kopplad till denna e-postadress.</string>
+    <string name="error_credential_already_in_use">Denna uppgift är redan kopplad till ett annat användarkonto.</string>
+    <string name="error_user_disabled">Användarkontot har inaktiverats av en administratör.</string>
+    <string name="error_user_token_expired">Användarens uppgift är inte längre giltig. Användaren måste logga in igen.</string>
+    <string name="error_invalid_user_token">Användarens uppgift är inte längre giltig. Användaren måste logga in igen.</string>
+    <string name="error_operation_not_allowed">Denna operation är inte tillåten. Du måste aktivera denna tjänst i konsolen.</string>
+    <string name="error_missing_email">En e-postadress måste anges.</string>
 
 </resources>

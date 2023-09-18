@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
@@ -12,6 +13,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import se.rebeccazadig.bokholken.adverts.AdvertsRepository
 import se.rebeccazadig.bokholken.data.ContactType
+import se.rebeccazadig.bokholken.data.ErrorCode
 import se.rebeccazadig.bokholken.data.FireBaseReferences
 import se.rebeccazadig.bokholken.data.User
 import se.rebeccazadig.bokholken.models.Advert
@@ -45,27 +47,23 @@ class LoginRepository private constructor() {
     }
 
     suspend fun loginInRepo(email: String, password: String): Result<Unit> {
-
         return withContext(Dispatchers.IO) {
             delay(1000L)
             try {
                 myAuth.signInWithEmailAndPassword(email, password).await()
                 Result.Success(Unit)
-            } catch (e: Exception) {
+            } catch (e: FirebaseAuthException) {
+                val errorCode = ErrorCode.fromFirebaseCode(e.errorCode)
                 Log.i("Emma", "loginInRepo FAILURE =$e")
-                Result.Failure("${e.message}")
+                Result.Failure(errorCode.firebaseCode)
             }
         }
     }
 
     suspend fun registerInRepo(
-        email: String,
-        password: String,
-        name: String,
-        contact: String,
-        contactMethod: ContactType
+        email: String, password: String, name: String,
+        contact: String, contactMethod: ContactType
     ): Result<Unit> {
-
         return try {
             val result = myAuth.createUserWithEmailAndPassword(email, password).await()
             Log.i("Emma", "registerInRepo SUCCESS=$result")
@@ -79,11 +77,13 @@ class LoginRepository private constructor() {
             userDatabaseReference.child(result.user!!.uid).setValue(newUser).await()
 
             Result.Success(Unit)
-        } catch (e: Exception) {
+        } catch (e: FirebaseAuthException) {
+            val errorCode = ErrorCode.fromFirebaseCode(e.errorCode)
             Log.i("Emma", "registerInRepo FAILURE =$e")
-            Result.Failure("${e.message}")
+            Result.Failure(errorCode.firebaseCode)
         }
     }
+
 
     fun logOutInRepo() {
         myAuth.signOut()
@@ -128,6 +128,15 @@ class LoginRepository private constructor() {
         return Result.Failure("Error during re-authentication.")
     }
 
+    suspend fun resetPassword(email: String): Result<Unit> {
+        return try {
+            myAuth.sendPasswordResetEmail(email).await()
+            Result.Success(Unit)
+        } catch (e: FirebaseAuthException) {
+            Log.e("ResetPassword", "Error sending password reset email: ${e.errorCode}")
+            Result.Failure(e.errorCode)
+        }
+    }
 
     fun getUserId(): String {
         val uid = myAuth.currentUser?.uid
