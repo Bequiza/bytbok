@@ -8,7 +8,7 @@
     <string name="register_mode_text">Skapa konto</string>
     <string name="register_button">Registrera</string>
     <string name="login_button">Login</string>
-    <string name="books_to_read">Böcker jag vill läsa!</string>
+    <string name="books_to_read">Mina favoriter</string>
     <string name="header_myPage">Min Sida</string>
     <string name="user_edit_title">Redigera användare</string>
     <string name="hint_username">Ange nytt användarnamn</string>
@@ -37,7 +37,7 @@
     <string name="credentials_toast_message">Ange både e-post och lösenord.</string>
     <string name="edit_user">Redigera</string>
     <string name="my_adds">Mina Annonser</string>
-    <string name="user_profile_bottomNav">Min info</string>
+    <string name="user_profile_bottomNav">Min profil</string>
     <string name="favorites_bottomNav">Favoriter</string>
     <string name="adverts_bottomNav">Alla annonser</string>
     <string name="my_adverts_">Mina Annonser</string>
@@ -55,7 +55,7 @@
     <string name="read_more_button_text">Läs mer</string>
     <string name="ads_details_text">Annons Detaljer</string>
     <string name="create_ads_text">Skapa annons</string>
-    <string name="hint_search">Sök böcker...</string>
+    <string name="hint_search">Böcker, stad, författare...</string>
 
     <string name="hint_title">Titel</string>
     <string name="hint_author">Författare</string>
@@ -145,5 +145,6 @@
     <string name="error_invalid_user_token">Användarens uppgift är inte längre giltig. Användaren måste logga in igen.</string>
     <string name="error_operation_not_allowed">Denna operation är inte tillåten. Du måste aktivera denna tjänst i konsolen.</string>
     <string name="error_missing_email">En e-postadress måste anges.</string>
+    <string name="advert_deleted_succesfully">Din annons är nu raderad!</string>
 
 </resources>

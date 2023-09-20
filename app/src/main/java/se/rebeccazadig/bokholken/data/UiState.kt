@@ -1,5 +1,5 @@
 package se.rebeccazadig.bokholken.data
 
-data class UiStateSave(
+data class UiState(
     val message: String?,
 )

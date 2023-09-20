@@ -10,6 +10,8 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.databinding.ActivityMainBinding
+import se.rebeccazadig.bokholken.utils.gone
+import se.rebeccazadig.bokholken.utils.visible
 
 class MainActivity : AppCompatActivity() {
 
@@ -48,14 +50,17 @@ class MainActivity : AppCompatActivity() {
             } else false
         }
 
-        viewModel.isLoggedIn.observe(this) { isLoggedIn ->
-            if (isLoggedIn == true) {
-                navController.navigate(R.id.action_to_advertsFragment)
-                binding.bottomNavigationView.visibility = View.VISIBLE
-            } else {
-                navController.navigate(R.id.action_to_login_nav_graph)
-                binding.bottomNavigationView.visibility = View.GONE
-            }
+        if(viewModel.isLoggedIn.value != true){
+            navController.navigate(R.id.action_to_login_nav_graph)
+            binding.bottomNavigationView.visibility = View.GONE
         }
+    }
+
+    fun hideBottomNavBar() {
+        binding.bottomNavigationView.gone()
+    }
+
+    fun showBottomNavBar() {
+        binding.bottomNavigationView.visible()
     }
 }

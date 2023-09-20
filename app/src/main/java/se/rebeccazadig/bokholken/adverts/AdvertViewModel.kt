@@ -10,7 +10,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.Result
-import se.rebeccazadig.bokholken.data.UiStateSave
+import se.rebeccazadig.bokholken.data.UiState
 import se.rebeccazadig.bokholken.models.Advert
 
 data class FavoriteUiState(
@@ -23,8 +23,8 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
     private val advertsRepo = AdvertsRepository.getInstance()
 
     val isSavingInProgress = MutableLiveData(false)
-    private val _advertSaveStatus = MutableLiveData<UiStateSave>(null)
-    val advertSaveStatus: LiveData<UiStateSave> get() = _advertSaveStatus
+    private val _advertSaveStatus = MutableLiveData<UiState>(null)
+    val advertSaveStatus: LiveData<UiState> get() = _advertSaveStatus
     private val advertsLiveData: LiveData<List<Advert>> get() = advertsRepo.advertsLiveData
     val advertDetailsLiveData = advertsRepo.advertDetailLiveData
 
@@ -48,10 +48,6 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
         }
         listOf(title, author, genre, location, isSavingInProgress)
             .forEach { addSource(it) { update() } }
-    }
-
-    init {
-        fetchMyAdverts()
     }
 
     val searchQuery = MutableLiveData("")
@@ -101,7 +97,7 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
         val advert = if (update) {
             val currentAdvertId = currentAdvert?.adId
             if (currentAdvertId == null) {
-                _advertSaveStatus.value = UiStateSave(message = app.getString(R.string.advert_id_missing_error))
+                _advertSaveStatus.value = UiState(message = app.getString(R.string.advert_id_missing_error))
                 return
             }
 
@@ -136,7 +132,7 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
 
                 when (result) {
                     is Result.Failure -> {
-                        _advertSaveStatus.value = UiStateSave(result.message)
+                        _advertSaveStatus.value = UiState(result.message)
                     }
                     is Result.Success -> {
                         val successMessage = if (update) {
@@ -144,11 +140,11 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
                         } else {
                             app.getString(R.string.advert_saved_successfully)
                         }
-                        _advertSaveStatus.value = UiStateSave(message = successMessage)
+                        _advertSaveStatus.value = UiState(message = successMessage)
                     }
                 }
             } catch (e: Exception) {
-                _advertSaveStatus.value = UiStateSave(
+                _advertSaveStatus.value = UiState(
                     message = e.localizedMessage ?: app.getString(R.string.generic_error)
                 )
             }
@@ -184,7 +180,7 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
                 )
             }
         } else {
-            _advertSaveStatus.value = UiStateSave(message = app.getString(R.string.advert_missing_fields))
+            _advertSaveStatus.value = UiState(message = app.getString(R.string.advert_missing_fields))
         }
     }
 
@@ -218,7 +214,7 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
                 currentAdvert = advertDetail.first
                 currentAdvertImageUrl.value = advertDetail.first.imageUrl
             } else {
-                _advertSaveStatus.value = UiStateSave(message = "Error fetching advert details!")
+                _advertSaveStatus.value = UiState(message = "Error fetching advert details!")
             }
         }
     }
@@ -250,7 +246,7 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     fun resetUiStateSave() {
-        _advertSaveStatus.value = UiStateSave(message = null)
+        _advertSaveStatus.value = UiState(message = null)
     }
 
     fun getAdvertDetails(advertId: String) {
