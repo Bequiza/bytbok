@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,7 @@ import se.rebeccazadig.bokholken.databinding.FragmentMyAdvertsBinding
 import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.utils.navigateBack
 import se.rebeccazadig.bokholken.utils.showConfirmationDialog
+import se.rebeccazadig.bokholken.utils.showToast
 
 class MyAdvertsFragment : Fragment() {
 
@@ -24,10 +26,10 @@ class MyAdvertsFragment : Fragment() {
 
     private val advertsAdapter = AdvertsAdapter(
         onAdvertClick = { advert ->
-           navigateToAdvertDetail(advert)
+            navigateToAdvertDetail(advert)
         },
         onDeleteAdvertClick = { advert ->
-           deleteMyAdvert(advert)
+            deleteMyAdvert(advert)
         },
         onEditAdvertClick = { advert ->
             navigateToEditAdvert(advert)
@@ -63,6 +65,12 @@ class MyAdvertsFragment : Fragment() {
         viewModel.myAdvertsLiveData.observe(viewLifecycleOwner) { adverts ->
             advertsAdapter.submitList(adverts)
         }
+
+        viewModel.deleteAdvertStatus.observe(viewLifecycleOwner) { deleteAdvert ->
+            deleteAdvert?.message?.let { message ->
+                showToast(message)
+            }
+        }
     }
 
     private fun deleteMyAdvert(advert: Advert) {
@@ -70,7 +78,7 @@ class MyAdvertsFragment : Fragment() {
             context = requireContext(),
             titleResId = R.string.delete_advert_title,
             messageResId = R.string.delete_advert_message,
-            positiveAction = { viewModel.deleteAdvert(advert)}
+            positiveAction = { viewModel.deleteAdvert(advert) }
         )
     }
 

@@ -18,18 +18,29 @@
         android:background="#F5EBE0"
         tools:context=".login.LoginRegisterFragment">
 
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:src="@drawable/bokholken"
+            android:layout_marginTop="24dp"
+            app:layout_constraintBottom_toTopOf="@+id/LoginTV"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/LoginTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="80dp"
             android:text="@{vm.isLoginMode ? @string/header_login : @string/header_register}"
             android:textColor="#6C584C"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/app_icon"
             tools:text="@string/header_login" />
 
         <ScrollView

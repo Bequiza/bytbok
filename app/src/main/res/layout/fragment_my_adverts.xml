@@ -31,8 +31,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_back_arrow"
-            app:subtitle="@string/sub_header"
-            app:title="@string/my_adds" />
+            app:title="@string/my_adds"
+            app:titleTextColor="@color/bottom_nav_item" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/myAdvertsRV"
