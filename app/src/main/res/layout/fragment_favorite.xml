@@ -18,7 +18,6 @@
         app:title="@string/books_to_read"
         app:titleTextColor="@color/bottom_nav_item_color" />
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesRV"
         android:layout_width="0dp"

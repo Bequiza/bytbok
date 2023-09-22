@@ -67,7 +67,7 @@ class AdvertsAdapter(
             Glide.with(binding.imageView.context)
                 .load(advert.imageUrl)
                 .placeholder(R.drawable.loading_image)
-                .error(R.drawable.error_image)
+                .error(R.drawable.placeholder_image)
                 .into(binding.imageView)
         }
     }

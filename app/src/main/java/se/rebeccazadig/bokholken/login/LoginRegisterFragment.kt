@@ -13,6 +13,7 @@ import se.rebeccazadig.bokholken.data.ContactType
 import se.rebeccazadig.bokholken.data.ErrorCode
 import se.rebeccazadig.bokholken.databinding.DialogResetPasswordBinding
 import se.rebeccazadig.bokholken.databinding.FragmentLoginBinding
+import se.rebeccazadig.bokholken.main.MainActivity
 import se.rebeccazadig.bokholken.utils.DialogMessages
 import se.rebeccazadig.bokholken.utils.showAlertWithEditText
 import se.rebeccazadig.bokholken.utils.showConfirmationDialog
@@ -43,6 +44,7 @@ class LoginRegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as? MainActivity)?.hideBottomNavBar()
 
         setupListeners()
         observeViewModelChanges()
@@ -122,7 +124,7 @@ class LoginRegisterFragment : Fragment() {
     }
 
     private fun showErrorDialog(
-         errorMessageResId: Int,
+        errorMessageResId: Int,
         retryAction: () -> Unit
     ) {
         viewModel.inProgress.value = false

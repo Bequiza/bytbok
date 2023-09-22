@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import se.rebeccazadig.bokholken.databinding.FragmentAdvertsBinding
+import se.rebeccazadig.bokholken.main.MainActivity
 import se.rebeccazadig.bokholken.models.Advert
 
 class AdvertsFragment : Fragment() {
@@ -42,14 +43,15 @@ class AdvertsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (activity as? MainActivity)?.showBottomNavBar()
 
         binding.allAdvertsRV.layoutManager = LinearLayoutManager(context)
         binding.allAdvertsRV.adapter = advertsAdapter
 
         viewModel.filteredAdverts.observe(viewLifecycleOwner) { adverts ->
-            val wasEmpty = advertsAdapter.currentList.isEmpty()
+            val wasShorter = advertsAdapter.currentList.size < adverts.size
             advertsAdapter.submitList(adverts) {
-                if (!wasEmpty) {
+                if (wasShorter) {
                     binding.allAdvertsRV.scrollToPosition(0)
                 }
             }
