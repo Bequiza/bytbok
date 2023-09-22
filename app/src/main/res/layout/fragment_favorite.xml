@@ -4,25 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e3d5ca"
+    android:background="@color/medium_beige"
     tools:context=".adverts.FavoriteFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/favorite_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#e3d5ca"
+        android:background="@color/medium_beige"
         android:elevation="4dp"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_back_arrow"
-        app:title="@string/books_to_read" />
+        app:title="@string/books_to_read"
+        app:titleTextColor="@color/bottom_nav_item_color" />
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/favoritesRV"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#F5EBE0"
+        android:background="@color/fragment_background_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

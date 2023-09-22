@@ -16,21 +16,21 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F5EBE0"
+        android:background="@color/fragment_background_color"
         tools:context=".login.EditUserProfileFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/profileToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#e3d5ca"
+            android:background="@color/medium_beige"
             android:elevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_back_arrow"
             app:title="@string/profile_toolbar"
-            app:titleTextColor="@color/bottom_nav_item"/>
+            app:titleTextColor="@color/bottom_nav_item_color"/>
 
         <TextView
             android:id="@+id/userNameTV"
@@ -39,7 +39,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:textColor="@color/bottom_nav_item"
+            android:textColor="@color/bottom_nav_item_color"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +53,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:textColor="@color/bottom_nav_item"
+            android:textColor="@color/bottom_nav_item_color"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +67,7 @@
             android:layout_marginStart="40dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="16dp"
-            android:backgroundTint="#774936"
+            android:backgroundTint="@color/red_brown"
             android:text="@string/edit_user"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +80,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="40dp"
-            android:backgroundTint="#774936"
+            android:backgroundTint="@color/red_brown"
             android:text="@string/my_adds"
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
