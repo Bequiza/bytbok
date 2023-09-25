@@ -2,15 +2,15 @@
     <!-- Base application theme. -->
     <style name="Theme.BytBok" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/bottom_nav_selected</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/bottom_nav_selected_color</item>
+        <item name="colorPrimaryVariant">@color/bottom_nav_background_color</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorSecondary">@color/dark_brown</item>
+        <item name="colorSecondaryVariant">@color/bottom_nav_selected_color</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/bottom_nav_selected</item>
+        <item name="android:statusBarColor">@color/bottom_nav_selected_color</item>
         <!-- Customize your theme here. -->
         <item name="floatingActionButtonStyle">@style/FloatingActionButtonStyle</item>
     </style>
@@ -22,15 +22,15 @@
     <style name="FabShapeStyle" parent="ShapeAppearance.MaterialComponents.SmallComponent">
         <item name="cornerFamily">cut</item>
         <item name="cornerSize">4dp</item>
-        <item name="backgroundColor">#774936</item>
+        <item name="backgroundColor">@color/red_brown</item>
     </style>
 
 <!--Outlined TextInputLayout Style-->
     <style name="CustomOutlinedTextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <!-- Border color -->
-        <item name="boxStrokeColor">@color/custom_border_color</item>
+        <item name="boxStrokeColor">@color/red_brown</item>
         <!-- Hint text color -->
-        <item name="hintTextColor">@color/custom_border_color</item>
+        <item name="hintTextColor">@color/red_brown</item>
         <!-- ... add other styling attributes if needed ... -->
     </style>
 

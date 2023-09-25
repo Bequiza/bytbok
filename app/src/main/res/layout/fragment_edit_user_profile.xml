@@ -16,21 +16,21 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F5EBE0"
+        android:background="@color/fragment_background_color"
         tools:context=".login.EditUserProfileFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/editUserToolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="#e3d5ca"
+            android:background="@color/medium_beige"
             android:elevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@drawable/ic_back_arrow"
             app:title="@string/edit_info_toolbar"
-            app:titleTextColor="@color/bottom_nav_item" />
+            app:titleTextColor="@color/bottom_nav_item_color" />
 
 
         <com.google.android.material.textfield.TextInputLayout
@@ -53,7 +53,7 @@
                 android:hint="@string/hint_username"
                 android:inputType="textPersonName"
                 android:text="@={vm.userName}"
-                android:textColor="#6C584C" />
+                android:textColor="@color/dark_brown" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -76,7 +76,7 @@
                 android:hint="@string/hint_phone"
                 android:inputType="phone"
                 android:text="@={vm.userContact}"
-                android:textColor="#6C584C" />
+                android:textColor="@color/dark_brown" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:backgroundTint="#774936"
+            android:backgroundTint="@color/red_brown"
             android:enabled="@{!vm.isButtonDisabled}"
             android:onClick="@{(view) -> vm.saveUser(view)}"
             android:text="@string/save_button_text"

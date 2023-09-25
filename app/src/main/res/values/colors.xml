@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="tabbar_backgroundcolor">#d5bdaf</color>
-    <color name="bottom_nav_item">#6C584C</color>
-    <color name="fragment_backgroundcolor">#F5EBE0</color>
-    <color name="bottom_nav_selected">#774936</color>
+    <color name="dark_beige">#D5BDAF</color>
+    <color name="dark_brown">#6C584C</color>
+    <color name="light_beige">#F5EBE0</color>
+    <color name="red_brown">#774936</color>
+    <color name="medium_beige">#E3D5CA</color>
+    <color name="grey">#5555</color>
 
-    <color name="custom_border_color">@color/bottom_nav_selected</color>
-    <color name="custom_hint_color">#5555</color>
-    <color name="custom_text_color">#6C584C</color>
+    <color name="background_color">@color/medium_beige</color>
+    <color name="bottom_nav_background_color">@color/dark_beige</color>
+    <color name="bottom_nav_item_color">@color/dark_brown</color>
+    <color name="fragment_background_color">@color/light_beige</color>
+    <color name="bottom_nav_selected_color">@color/red_brown</color>
+    <color name="custom_hint_color">@color/grey</color>
+    <color name="custom_text_color">@color/red_brown</color>
 
     // #F9DCC4
 
