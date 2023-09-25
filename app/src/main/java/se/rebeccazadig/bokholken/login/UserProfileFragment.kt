@@ -11,7 +11,6 @@ import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.databinding.DialogCredentialsBinding
 import se.rebeccazadig.bokholken.databinding.FragmentUserProfileBinding
 import se.rebeccazadig.bokholken.utils.DialogMessages
-import se.rebeccazadig.bokholken.utils.navigateBack
 import se.rebeccazadig.bokholken.utils.showAlertWithEditText
 import se.rebeccazadig.bokholken.utils.showConfirmationDialog
 import se.rebeccazadig.bokholken.utils.showToast
@@ -41,16 +40,14 @@ class UserProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.profileToolbar.setNavigationOnClickListener {
-            navigateBack()
-        }
 
         viewModel.fetchUserData()
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
             user?.let {
                 binding.userNameTV.text = getString(R.string.user_details_username, user.name)
-                binding.contactTV.text = getString(R.string.user_details_contact, user.contact)
+                binding.userEmailTv.text = getString(R.string.user_details_useremail, user.email)
+                binding.contactTV.text = getString(R.string.user_details_contact, user.phoneNumber)
             }
         }
 

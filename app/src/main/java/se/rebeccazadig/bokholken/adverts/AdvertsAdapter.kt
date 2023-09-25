@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.databinding.ListItemBinding
@@ -23,12 +24,12 @@ private object AdvertDiffCallback : DiffUtil.ItemCallback<Advert>() {
     }
 }
 
-class AdvertsAdapter(
-    private val onAdvertClick: (Advert) -> Unit,
-    private val onDeleteAdvertClick: (Advert) -> Unit,
-    private val onEditAdvertClick: (Advert) -> Unit,
-    private val showIcons: Boolean = false
-) : ListAdapter<Advert, AdvertsAdapter.ViewHolder>(AdvertDiffCallback) {
+class AdvertsAdapter : ListAdapter<Advert, AdvertsAdapter.ViewHolder>(AdvertDiffCallback) {
+
+    var onAdvertClick: ((Advert) -> Unit)? = null
+    var onDeleteAdvertClick: ((Advert) -> Unit)? = null
+    var onEditAdvertClick: ((Advert) -> Unit)? = null
+    var showIcons: Boolean = false
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -39,7 +40,7 @@ class AdvertsAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val advert = getItem(position)
         holder.bind(advert)
-        holder.itemView.setOnClickListener { onAdvertClick(advert) }
+        holder.itemView.setOnClickListener { onAdvertClick?.invoke(advert) }
     }
 
     inner class ViewHolder(val binding: ListItemBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -53,11 +54,11 @@ class AdvertsAdapter(
 
             binding.deleteAdvertButton.setOnClickListener {
                 Log.d("--adapter", "bind: deleteclick")
-                onDeleteAdvertClick(advert)
+                onDeleteAdvertClick?.invoke(advert)
             }
 
             binding.editAdvertButton.setOnClickListener {
-                onEditAdvertClick(advert)
+                onEditAdvertClick?.invoke(advert)
             }
 
             val formattedDate =
@@ -68,6 +69,7 @@ class AdvertsAdapter(
                 .load(advert.imageUrl)
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.placeholder_image)
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.imageView)
         }
     }

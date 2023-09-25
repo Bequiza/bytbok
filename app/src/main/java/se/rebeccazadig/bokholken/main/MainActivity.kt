@@ -18,18 +18,13 @@ class MainActivity : AppCompatActivity() {
     private val navController: NavController by lazy {
         (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_activity_main) as NavHostFragment).navController
     }
-
     private val viewModel: MainViewModel by viewModels()
-
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
 
         binding.bottomNavigationView.setupWithNavController(navController)
 
@@ -40,6 +35,7 @@ class MainActivity : AppCompatActivity() {
                     .setLaunchSingleTop(true)
                     .setPopUpTo(R.id.advertsFragment, false)
                 val options = builder.build()
+                navController.navigate(R.id.advertsFragment, null, options)
                 try {
                     // Try to make the navigation to the selected item's destination
                     navController.navigate(item.itemId, null, options)

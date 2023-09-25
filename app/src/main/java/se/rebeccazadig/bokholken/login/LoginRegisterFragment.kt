@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.ContactType
@@ -76,7 +77,7 @@ class LoginRegisterFragment : Fragment() {
     private fun observeViewModelChanges() {
         viewModel.run {
             passwordResetResult.observe(viewLifecycleOwner, ::handlePasswordResetResult)
-            contactValidationResult.observe(viewLifecycleOwner) {
+            phoneNumberValidationResult.observe(viewLifecycleOwner) {
                 binding.phoneNumber.error = it
             }
             loginUiState.observe(viewLifecycleOwner, ::handleLoginUiState)
@@ -85,14 +86,15 @@ class LoginRegisterFragment : Fragment() {
 
     private fun handleLoginUiState(loginUiState: LoginUiState) {
         if (loginUiState.isSuccess) {
-            findNavController().navigate(R.id.advertsFragment)
+            val action = LoginRegisterFragmentDirections.actionToAdvertsFragment()
+            val navOptions = NavOptions.Builder()
+                .setPopUpTo(R.id.loginRegisterFragment, true)
+                .build()
+            findNavController().navigate(action, navOptions)
         } else {
             loginUiState.errorMessage?.let { errorCode ->
                 val errorMessageResId = ErrorCode.fromFirebaseCode(errorCode).errorMessageResId
-                showErrorDialog(errorMessageResId) {
-                    viewModel.email.value = ""
-                    viewModel.password.value = ""
-                }
+                showErrorDialog(errorMessageResId) {}
             }
         }
     }

@@ -8,9 +8,8 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.ContactType
-import se.rebeccazadig.bokholken.utils.isPhoneNumber
+import se.rebeccazadig.bokholken.utils.PhoneNumberValidator
 
 data class LoginUiState(
     val isSuccess: Boolean = false,
@@ -20,17 +19,17 @@ data class LoginUiState(
 class LoginRegisterViewModel(app: Application) : AndroidViewModel(app) {
 
     private val loginRepo = LoginRepository.getInstance()
+    private val phoneNumberValidator = PhoneNumberValidator(app)
 
     val name = MutableLiveData("")
-    val contact = MutableLiveData("")
     val email = MutableLiveData("")
     val password = MutableLiveData("")
     val phoneNumber = MutableLiveData("")
     val isLoginMode = MutableLiveData(true)
     val preferredContactMethod = MutableLiveData(ContactType.PHONE)
 
-    val contactValidationResult = MutableLiveData<String?>()
-    private val isContactValid = MutableLiveData(true)
+    val phoneNumberValidationResult = MutableLiveData<String?>()
+    private val isPhoneNumberValid = MutableLiveData(true)
     val inProgress = MutableLiveData(false)
     private val _loginUiState = MutableLiveData(LoginUiState())
     val loginUiState: LiveData<LoginUiState> get() = _loginUiState
@@ -43,39 +42,22 @@ class LoginRegisterViewModel(app: Application) : AndroidViewModel(app) {
         addSource(password) { updateButtonState() }
         addSource(name) { updateButtonState() }
         addSource(phoneNumber) { updateButtonState() }
-        addSource(isContactValid) { updateButtonState() }
+        addSource(isPhoneNumberValid) { updateButtonState() }
         addSource(isLoginMode) { updateButtonState() }
     }
 
     private fun updateButtonState() {
         val commonFieldsFilled =
             email.value?.isNotBlank() == true && password.value?.isNotBlank() == true
-        val contactIsValid = isContactValid.value == true
+        val contactIsValid = isPhoneNumberValid.value == true
+        val phoneFieldFilled = phoneNumber.value?.isNotBlank() == true
 
         if (isLoginMode.value == true) {
             isButtonDisabled.value = !commonFieldsFilled
         } else {
             val nameFieldFilled = name.value?.isNotBlank() == true
-            isButtonDisabled.value = !(commonFieldsFilled && nameFieldFilled && contactIsValid)
+            isButtonDisabled.value = !(commonFieldsFilled && nameFieldFilled && phoneFieldFilled && contactIsValid)
         }
-    }
-
-    fun validatePhoneNumber(phone: String): Boolean {
-        if (phone.isEmpty()) {
-            contactValidationResult.value = null
-            isContactValid.value = false
-            return false
-        }
-
-        val isValid = isPhoneNumber(phone).also {
-            if (!it) contactValidationResult.value =
-                getApplication<Application>().getString(R.string.invalid_phone_number)
-        }
-
-        isContactValid.value = isValid
-        if (isValid) contactValidationResult.value = null  // Reset error if valid
-
-        return isValid
     }
 
     fun loginOrRegisterInVM() {
@@ -88,21 +70,14 @@ class LoginRegisterViewModel(app: Application) : AndroidViewModel(app) {
                 loginRepo.loginInRepo(email = emailValue, password = passwordValue)
             } else {
                 val nameValue = name.value.orEmpty()
-
-                // Determine contact value based on preferred method
-                val preferredMethod = preferredContactMethod.value ?: ContactType.UNKNOWN
-                val contactValue = when (preferredMethod) {
-                    ContactType.EMAIL -> emailValue
-                    ContactType.PHONE -> phoneNumber.value
-                    else -> contact.value.orEmpty() // Fallback to what user has entered or keep it empty
-                }
+                val phoneValue = phoneNumber.value.orEmpty()
 
                 loginRepo.registerInRepo(
                     email = emailValue,
                     password = passwordValue,
                     name = nameValue,
-                    contact = contactValue ?: "",
-                    contactMethod = ContactType.valueOf(preferredMethod.name)
+                    phone = phoneValue,
+                    contactMethod = ContactType.valueOf(preferredContactMethod.value?.name ?: ContactType.UNKNOWN.name)
                 )
             }
 
@@ -129,6 +104,15 @@ class LoginRegisterViewModel(app: Application) : AndroidViewModel(app) {
                 _passwordResetResult.postValue(Result.Failure(e.message ?: "Unknown error"))
             }
         }
+    }
+
+    fun validatePhoneNumber(phone: String): Boolean {
+        val validationResult = phoneNumberValidator.validate(phone)
+
+        phoneNumberValidationResult.value = validationResult.errorMessage
+        isPhoneNumberValid.value = validationResult.isValid
+
+        return validationResult.isValid
     }
 
     fun changeMode() {

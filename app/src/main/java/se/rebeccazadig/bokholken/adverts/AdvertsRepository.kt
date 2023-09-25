@@ -13,7 +13,7 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import se.rebeccazadig.bokholken.data.FireBaseReferences
 import se.rebeccazadig.bokholken.data.Result
-import se.rebeccazadig.bokholken.data.User
+import se.rebeccazadig.bokholken.models.User
 import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.utils.ImageUtils.Companion.toByteArray
 import java.util.UUID
@@ -36,7 +36,6 @@ class AdvertsRepository private constructor() {
 
     private val _favoritesLiveData = MutableLiveData<List<Advert>>()
     val favoritesLiveData: LiveData<List<Advert>> get() = _favoritesLiveData
-
 
     init {
         fetchUsersAndInitializeAdverts()
