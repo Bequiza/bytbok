@@ -3,6 +3,7 @@ package se.rebeccazadig.bokholken.utils
 import android.content.Context
 import android.util.Patterns
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
@@ -34,10 +35,23 @@ fun View.gone() {
 }
 
 
-fun isEmail(contact: String): Boolean {
-    return Patterns.EMAIL_ADDRESS.matcher(contact).matches()
+fun String.isEmail(): Boolean {
+    return Patterns.EMAIL_ADDRESS.matcher(this).matches()
 }
 
-fun isPhoneNumber(contact: String): Boolean {
-    return contact.matches("^\\d{10}$".toRegex())
+fun String.isPhoneNumber(): Boolean {
+    return this.matches("^\\d{10}$".toRegex())
+}
+
+fun Context.hideKeyboard(view: View) {
+    val inputManager = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+    inputManager.hideSoftInputFromWindow(view.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
+}
+
+fun Fragment.hideKeyboard() {
+    view?.let { activity?.hideKeyboard(it) }
+}
+
+fun View.hideKeyboard() {
+    context.hideKeyboard(this)
 }

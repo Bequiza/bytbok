@@ -4,11 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.adverts.AdvertsAdapter
@@ -24,18 +22,7 @@ class MyAdvertsFragment : Fragment() {
     private var _binding: FragmentMyAdvertsBinding? = null
     private val binding get() = _binding!!
 
-    private val advertsAdapter = AdvertsAdapter(
-        onAdvertClick = { advert ->
-            navigateToAdvertDetail(advert)
-        },
-        onDeleteAdvertClick = { advert ->
-            deleteMyAdvert(advert)
-        },
-        onEditAdvertClick = { advert ->
-            navigateToEditAdvert(advert)
-        },
-        showIcons = true
-    )
+    private val advertsAdapter = AdvertsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,6 +46,8 @@ class MyAdvertsFragment : Fragment() {
             navigateBack()
         }
 
+        setupAdvertsAdapter()
+
         binding.myAdvertsRV.layoutManager = LinearLayoutManager(context)
         binding.myAdvertsRV.adapter = advertsAdapter
 
@@ -71,6 +60,19 @@ class MyAdvertsFragment : Fragment() {
                 showToast(message)
             }
         }
+    }
+
+    private fun setupAdvertsAdapter() {
+        advertsAdapter.onAdvertClick = { advert ->
+            navigateToAdvertDetail(advert)
+        }
+        advertsAdapter.onDeleteAdvertClick = { advert ->
+            deleteMyAdvert(advert)
+        }
+        advertsAdapter.onEditAdvertClick = { advert ->
+            navigateToEditAdvert(advert)
+        }
+        advertsAdapter.showIcons = true
     }
 
     private fun deleteMyAdvert(advert: Advert) {

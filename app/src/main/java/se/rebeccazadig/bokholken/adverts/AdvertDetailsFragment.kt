@@ -3,7 +3,6 @@ package se.rebeccazadig.bokholken.adverts
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import se.rebeccazadig.bokholken.R
-import se.rebeccazadig.bokholken.data.User
+import se.rebeccazadig.bokholken.data.ContactType
+import se.rebeccazadig.bokholken.models.User
 import se.rebeccazadig.bokholken.databinding.FragmentAdvertDetailsBinding
 import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.utils.formatDateForDisplay
@@ -104,27 +105,32 @@ class AdvertDetailsFragment : Fragment() {
         }
 
         val imageUrl = advert.imageUrl
-        Log.d("Fragment", "Setting Image URL to ImageView: $imageUrl ")
 
         Glide.with(binding.publishedAdvertImage.context)
             .load(imageUrl)
             .placeholder(R.drawable.loading_image)
             .error(R.drawable.error_image)
+            .transition(DrawableTransitionOptions.withCrossFade())
             .into(binding.publishedAdvertImage)
 
         binding.contactUserAdvertButton.setOnClickListener {
-            handleContactAction(user?.contact.orEmpty(), advert.title, user?.name ?: "")
+            val contactMethod = user?.preferredContactMethod ?: ContactType.UNKNOWN
+            val userEmail = user?.email
+            val userPhone = user?.phoneNumber
+            handleContactAction(contactMethod, userEmail, userPhone, advert.title, user?.name ?: "")
         }
+
     }
 
     private fun sendEmail(email: String, advertTitle: String, userName: String) {
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.type = "text/plain"
-        intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
-        intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject, advertTitle))
-        intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.email_body, advertTitle, userName))
-
-        startActivity(Intent.createChooser(intent, getString(R.string.choose_email_app)))
+        val sendIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(email))
+            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.email_subject, advertTitle))
+            putExtra(Intent.EXTRA_TEXT, getString(R.string.email_body, advertTitle, userName))
+            type = "text/plain"
+        }
+        startActivity(Intent.createChooser(sendIntent, getString(R.string.choose_email_app)))
     }
 
     private fun dialNumber(phoneNumber: String) {
@@ -133,19 +139,23 @@ class AdvertDetailsFragment : Fragment() {
         startActivity(intent)
     }
 
-    private fun handleContactAction(contact: String, advertTitle: String?, userName: String) {
-        when {
-            isEmail(contact) -> {
-                advertTitle?.let {
-                    sendEmail(contact, it, userName)
+    private fun handleContactAction(contactMethod: ContactType, email: String?, phoneNumber: String?, advertTitle: String?, userName: String) {
+        when (contactMethod) {
+            ContactType.EMAIL -> {
+                if (email?.isEmail() == true && !advertTitle.isNullOrEmpty()) {
+                    sendEmail(email, advertTitle, userName)
+                } else {
+                    showToast(getString(R.string.invalid_email))
                 }
             }
-
-            isPhoneNumber(contact) -> { dialNumber(contact) }
-
-            else -> {
-                showToast(getString(R.string.invalid_contact_info))
+            ContactType.PHONE -> {
+                if (phoneNumber?.isPhoneNumber() == true) {
+                    dialNumber(phoneNumber)
+                } else {
+                    showToast(getString(R.string.invalid_phone_number))
+                }
             }
+            else -> showToast(getString(R.string.invalid_contact_info))
         }
     }
 }

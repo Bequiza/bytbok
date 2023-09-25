@@ -21,6 +21,7 @@ enum class ErrorCode(val firebaseCode: String, val errorMessageResId: Int) {
     MISSING_EMAIL("ERROR_MISSING_EMAIL", R.string.error_missing_email),
     USER_NOT_FOUND("ERROR_USER_NOT_FOUND", R.string.error_user_not_found),
     TOO_MANY_REQUESTS("ERROR_TOO_MANY_REQUESTS", R.string.error_too_many_requests),
+    NETWORK_ERROR("NETWORK_ERROR", R.string.error_no_internet_connection),
     UNKNOWN("", R.string.error_unknown);  // Fallback for any unexpected error
 
     companion object {

@@ -1,10 +1,8 @@
 package se.rebeccazadig.bokholken.login
 
 import android.app.Application
-import android.content.Context
 import android.util.Log
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -13,8 +11,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.ContactType
-import se.rebeccazadig.bokholken.data.User
-import se.rebeccazadig.bokholken.utils.isPhoneNumber
+import se.rebeccazadig.bokholken.models.User
+import se.rebeccazadig.bokholken.utils.PhoneNumberValidator
+import se.rebeccazadig.bokholken.utils.hideKeyboard
 import se.rebeccazadig.bokholken.utils.navigateBack
 
 data class UiStateSave(
@@ -25,29 +24,32 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
 
     private val loginRepo = LoginRepository.getInstance()
     private val userRepo = UserRepository.getInstance()
+    private val phoneNumberValidator = PhoneNumberValidator(app)
 
     private val _uiStateSave = MutableLiveData(UiStateSave(null))
-    internal val uiStateSave: LiveData<UiStateSave> get() = _uiStateSave
+    val uiStateSave: LiveData<UiStateSave> get() = _uiStateSave
 
     val preferredContactMethod = MutableLiveData<ContactType?>()
 
     val user = MutableLiveData<User?>()
     val userName = MutableLiveData("")
-    val userContact = MutableLiveData("")
-    val contactValidationResult = MutableLiveData<String?>()
-    private val isContactValid = MutableLiveData(true)
+    val userPhoneNumber = MutableLiveData("")
+    private val userEmail = MutableLiveData("")
+    val phoneNumberValidationResult = MutableLiveData<String?>()
+    private val isPhoneNumberValid = MutableLiveData(true)
 
     val inProgress = MutableLiveData(false)
 
     val isButtonDisabled = MediatorLiveData<Boolean>().apply {
-        addSource(userContact) { updateButtonState() }
+        addSource(userPhoneNumber) { updateButtonState() }
         addSource(userName) { updateButtonState() }
         addSource(preferredContactMethod) { updateButtonState() }
     }
 
     private fun updateButtonState() {
         isButtonDisabled.value = userName.value.isNullOrBlank() ||
-                userContact.value.isNullOrBlank() ||
+                userPhoneNumber.value.isNullOrBlank() ||
+                isPhoneNumberValid.value == false ||
                 preferredContactMethod.value == null
     }
 
@@ -68,16 +70,16 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
-    fun saveUser(view: View) {
+    fun saveUserProfile(view: View) {
         inProgress.value = true
 
         viewModelScope.launch {
             val userId = loginRepo.getUserId()
-
             val user = User(
                 id = userId,
                 name = userName.value ?: "",
-                contact = userContact.value ?: "",
+                phoneNumber = userPhoneNumber.value ?: "",
+                email = userEmail.value ?: "",
                 preferredContactMethod = preferredContactMethod.value ?: ContactType.PHONE
             )
 
@@ -87,18 +89,15 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
 
             when (result) {
                 is Result.Failure -> {
-                    Log.i("Emma", "FAIL")
-                    _uiStateSave.value =
-                        UiStateSave(result.message)
+                    _uiStateSave.value = UiStateSave(result.message)
                 }
-
                 is Result.Success -> {
-                    Log.i("Emma", "SUCCESS")
-                    _uiStateSave.value = UiStateSave(message = "Informationen Sparad")
+                    _uiStateSave.value =
+                        UiStateSave(message = getApplication<Application>().getString(R.string.user_profile_save_success_message))
                     view.navigateBack()
+                    view.hideKeyboard()
                 }
             }
-            closeKeyboard(view)
         }
     }
 
@@ -110,10 +109,11 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
                     is Result.Success<User> -> {
                         user.value = result.data
                         userName.value = result.data.name
-                        userContact.value = result.data.contact
+                        userPhoneNumber.value = result.data.phoneNumber
+                        userEmail.value = result.data.email
                         preferredContactMethod.value = result.data.preferredContactMethod
-                        Log.i("UserDataFetch", "User fetched: ${result.data.name}")
                     }
+
                     is Result.Failure -> {
                         Log.e("UserDataFetch", result.message)
                     }
@@ -126,15 +126,9 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             fetchUserData()
             userName.value = user.value?.name
-            userContact.value = user.value?.contact
+            userPhoneNumber.value = user.value?.phoneNumber
             preferredContactMethod.value = user.value?.preferredContactMethod
         }
-    }
-
-    private fun closeKeyboard(view: View) {
-        val inputMethodManager =
-            view.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     fun nullUiStateSave() {
@@ -170,14 +164,11 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     fun validatePhoneNumber(phone: String): Boolean {
-        val isValid = isPhoneNumber(phone).also {
-            if (!it) contactValidationResult.value =
-                getApplication<Application>().getString(R.string.invalid_phone_number)
-        }
+        val validationResult = phoneNumberValidator.validate(phone)
 
-        isContactValid.value = isValid
-        if (isValid) contactValidationResult.value = null  // Reset error if valid
+        phoneNumberValidationResult.value = validationResult.errorMessage
+        isPhoneNumberValid.value = validationResult.isValid
 
-        return isValid
+        return validationResult.isValid
     }
 }

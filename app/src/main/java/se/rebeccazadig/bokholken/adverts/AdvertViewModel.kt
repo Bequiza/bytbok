@@ -6,12 +6,14 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.Result
 import se.rebeccazadig.bokholken.data.UiState
 import se.rebeccazadig.bokholken.models.Advert
+import se.rebeccazadig.bokholken.models.User
 
 data class FavoriteUiState(
     val isSuccess: Boolean = false,
@@ -58,8 +60,10 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
 
     val filteredAdverts: LiveData<List<Advert>> get() = _filteredAdverts
 
-    val isAdvertFavorite = MutableLiveData<Boolean?>().apply { value = null }
+    private val _isAdvertFavorite = MutableLiveData<Boolean?>()
     val favoritesLiveData: LiveData<List<Advert>> get() = advertsRepo.favoritesLiveData
+    val isAdvertFavorite: LiveData<Boolean?> get() = _isAdvertFavorite
+
     private val _favoriteState = MutableLiveData<FavoriteUiState>()
     val favoriteState: LiveData<FavoriteUiState> get() = _favoriteState
 
@@ -131,10 +135,10 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
                 isSavingInProgress.postValue(false)
 
                 when (result) {
-                    is Result.Failure -> {
+                    is Result.Failure-> {
                         _advertSaveStatus.value = UiState(result.message)
                     }
-                    is Result.Success -> {
+                    is Result.Success-> {
                         val successMessage = if (update) {
                             app.getString(R.string.advert_updated_successfully)
                         } else {
@@ -204,19 +208,22 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
     }
 
     private fun fetchCurrentAdvertDetails(advertId: String) {
-        advertsRepo.fetchAdvertDetails(advertId)
-        advertsRepo.advertDetailLiveData.observeForever { advertDetail ->
-            if (advertDetail != null) {
-                title.value = advertDetail.first.title
-                author.value = advertDetail.first.author
-                genre.value = advertDetail.first.genre
-                location.value = advertDetail.first.location
-                currentAdvert = advertDetail.first
-                currentAdvertImageUrl.value = advertDetail.first.imageUrl
-            } else {
-                _advertSaveStatus.value = UiState(message = "Error fetching advert details!")
+        advertsRepo.advertDetailLiveData.observeForever(object : Observer<Pair<Advert, User?>?> {
+            override fun onChanged(value: Pair<Advert, User?>?) {
+                if (value != null) {
+                    title.value = value.first.title
+                    author.value = value.first.author
+                    genre.value = value.first.genre
+                    location.value = value.first.location
+                    currentAdvert = value.first
+                    currentAdvertImageUrl.value = value.first.imageUrl
+                    advertsRepo.advertDetailLiveData.removeObserver(this)
+                } else {
+                    _advertSaveStatus.value = UiState(message = "Error fetching advert details!")
+                }
             }
-        }
+        })
+        advertsRepo.fetchAdvertDetails(advertId)
     }
 
     fun fetchFavoriteAdverts() {
@@ -227,11 +234,11 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             val state: FavoriteUiState = if (isAdvertFavorite.value == true) {
                 advertsRepo.removeAdvertFromFavorites(advertId)
-                isAdvertFavorite.postValue(false)
+                _isAdvertFavorite.postValue(false)
                 FavoriteUiState(isSuccess = true)
             } else {
                 advertsRepo.markAdvertAsFavorite(advertId)
-                isAdvertFavorite.postValue(true)
+                _isAdvertFavorite.postValue(true)
                 FavoriteUiState(isSuccess = true)
             }
             _favoriteState.postValue(state)
@@ -241,7 +248,7 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
     fun checkAdvertFavoriteStatus(advertId: String) {
         viewModelScope.launch {
             val isFavorite = advertsRepo.isAdvertFavorite(advertId)
-            isAdvertFavorite.postValue(isFavorite)
+            _isAdvertFavorite.postValue(isFavorite)
         }
     }
 

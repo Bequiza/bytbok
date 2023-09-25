@@ -28,6 +28,7 @@
     <string name="hint_password">Lösenord</string>
 
     <string name="user_details_username">Användarnamn: %1$s</string>
+    <string name="user_details_useremail">E-post: %1$s</string>
     <string name="user_details_contact">Telefonnummer: %1$s</string>
     <string name="user_details_city">Stad: %1$s</string>
 
@@ -90,7 +91,9 @@
     <string name="e_post">E-Post</string>
     <string name="mobile_number">Mobilnummer</string>
     <string name="invalid_phone_number">Ogiltigt telefonnummer</string>
+    <string name="invalid_email">Ogiltigt e-post address</string>
     <string name="hint_phone_number">Telefonnummer</string>
+    <string name="profil_saved_">Telefonnummer</string>
 
     <string name="email_subject">Angående annonsen: %1$s</string>
     <string name="email_body">Hej,\n\nJag är intresserad av din annons: %1$s.\n\nMvh,\n%2$s.</string>
@@ -125,6 +128,7 @@
     <string name="password_reset_dialog_title">Återställ lösenord</string>
     <string name="ok_dialog_button">OK</string>
     <string name="password_reset_dialog_description">Ange din e-postadress, så skickar vi ett meddelande med instruktioner för att återställa ditt lösenord.</string>
+    <string name="user_profile_save_success_message">Informationen sparad</string>
 
     <string name="error_user_not_found">Inget konto hittades med denna e-postadress.</string>
     <string name="error_invalid_email">E-postadressen är felaktigt formaterad.</string>
@@ -146,5 +150,7 @@
     <string name="error_operation_not_allowed">Denna operation är inte tillåten. Du måste aktivera denna tjänst i konsolen.</string>
     <string name="error_missing_email">En e-postadress måste anges.</string>
     <string name="advert_deleted_succesfully">Din annons är nu raderad!</string>
+    <string name="error_no_internet_connection">Ingen internet connection\n</string>
+    <string name="press_back_again">Tryck igen för att avsluta</string>
 
 </resources>

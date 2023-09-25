@@ -3,6 +3,7 @@ package se.rebeccazadig.bokholken.login
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.ktx.auth
@@ -15,8 +16,8 @@ import se.rebeccazadig.bokholken.adverts.AdvertsRepository
 import se.rebeccazadig.bokholken.data.ContactType
 import se.rebeccazadig.bokholken.data.ErrorCode
 import se.rebeccazadig.bokholken.data.FireBaseReferences
-import se.rebeccazadig.bokholken.data.User
 import se.rebeccazadig.bokholken.models.Advert
+import se.rebeccazadig.bokholken.models.User
 
 sealed class Result<out T> {
     data class Failure(val message: String) : Result<Nothing>()
@@ -46,44 +47,48 @@ class LoginRepository private constructor() {
         }
     }
 
+    private suspend fun handleFirebaseExceptions(
+        block: suspend () -> Unit
+    ): Result<Unit> {
+        return try {
+            block()
+            Result.Success(Unit)
+        } catch (e: FirebaseNetworkException) {
+            val errorCode = ErrorCode.NETWORK_ERROR.firebaseCode
+            Log.i("Emma", "NETWORK FAILURE =$e")
+            Result.Failure(errorCode)
+        } catch (e: FirebaseAuthException) {
+            val errorCode = ErrorCode.fromFirebaseCode(e.errorCode)
+            Log.i("Emma", "AUTH FAILURE =$e")
+            Result.Failure(errorCode.firebaseCode)
+        }
+    }
+
     suspend fun loginInRepo(email: String, password: String): Result<Unit> {
         return withContext(Dispatchers.IO) {
             delay(1000L)
-            try {
+            handleFirebaseExceptions {
                 myAuth.signInWithEmailAndPassword(email, password).await()
-                Result.Success(Unit)
-            } catch (e: FirebaseAuthException) {
-                val errorCode = ErrorCode.fromFirebaseCode(e.errorCode)
-                Log.i("Emma", "loginInRepo FAILURE =$e")
-                Result.Failure(errorCode.firebaseCode)
             }
         }
     }
 
     suspend fun registerInRepo(
         email: String, password: String, name: String,
-        contact: String, contactMethod: ContactType
+        phone: String, contactMethod: ContactType
     ): Result<Unit> {
-        return try {
+        return handleFirebaseExceptions {
             val result = myAuth.createUserWithEmailAndPassword(email, password).await()
-            Log.i("Emma", "registerInRepo SUCCESS=$result")
-
             val newUser = User(
                 id = result.user!!.uid,
                 name = name,
-                contact = contact,
+                phoneNumber = phone,
+                email = email,
                 preferredContactMethod = contactMethod
             )
             userDatabaseReference.child(result.user!!.uid).setValue(newUser).await()
-
-            Result.Success(Unit)
-        } catch (e: FirebaseAuthException) {
-            val errorCode = ErrorCode.fromFirebaseCode(e.errorCode)
-            Log.i("Emma", "registerInRepo FAILURE =$e")
-            Result.Failure(errorCode.firebaseCode)
         }
     }
-
 
     fun logOutInRepo() {
         myAuth.signOut()

@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_phone"
                 android:inputType="phone"
-                android:text="@={vm.userContact}"
+                android:text="@={vm.userPhoneNumber}"
                 android:textColor="@color/dark_brown" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -120,7 +120,7 @@
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/red_brown"
             android:enabled="@{!vm.isButtonDisabled}"
-            android:onClick="@{(view) -> vm.saveUser(view)}"
+            android:onClick="@{(view) -> vm.saveUserProfile(view)}"
             android:text="@string/save_button_text"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"

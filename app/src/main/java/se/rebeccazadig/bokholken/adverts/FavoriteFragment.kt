@@ -10,21 +10,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import se.rebeccazadig.bokholken.databinding.FragmentFavoriteBinding
 import se.rebeccazadig.bokholken.models.Advert
-import se.rebeccazadig.bokholken.utils.navigateBack
 
 class FavoriteFragment : Fragment() {
 
     private var _binding: FragmentFavoriteBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AdvertViewModel by viewModels()
-
-    private val advertsAdapter = AdvertsAdapter(
-        onAdvertClick = { advert ->
-            navigateToAdvertDetail(advert)
-        },
-        onDeleteAdvertClick = {},
-        onEditAdvertClick = {}
-    )
+    private val advertsAdapter = AdvertsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,9 +35,7 @@ class FavoriteFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.favoriteToolbar.setNavigationOnClickListener {
-            navigateBack()
-        }
+        setupAdvertsAdapter()
 
         binding.favoritesRV.layoutManager = LinearLayoutManager(context)
         binding.favoritesRV.adapter = advertsAdapter
@@ -54,6 +44,12 @@ class FavoriteFragment : Fragment() {
 
         viewModel.favoritesLiveData.observe(viewLifecycleOwner) { favoriteAdverts ->
             advertsAdapter.submitList(favoriteAdverts)
+        }
+    }
+
+    private fun setupAdvertsAdapter() {
+        advertsAdapter.onAdvertClick = { advert ->
+            navigateToAdvertDetail(advert)
         }
     }
 
