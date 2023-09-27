@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import se.rebeccazadig.bokholken.databinding.FragmentFavoriteBinding
+import se.rebeccazadig.bokholken.main.MainActivity
 import se.rebeccazadig.bokholken.models.Advert
 
 class FavoriteFragment : Fragment() {
@@ -45,6 +46,11 @@ class FavoriteFragment : Fragment() {
         viewModel.favoritesLiveData.observe(viewLifecycleOwner) { favoriteAdverts ->
             advertsAdapter.submitList(favoriteAdverts)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.showBottomNavBar()
     }
 
     private fun setupAdvertsAdapter() {

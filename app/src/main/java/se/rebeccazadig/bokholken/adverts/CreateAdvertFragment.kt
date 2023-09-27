@@ -13,6 +13,7 @@ import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.databinding.FragmentCreateAdvertBinding
+import se.rebeccazadig.bokholken.main.MainActivity
 import se.rebeccazadig.bokholken.utils.ImageUtils
 import se.rebeccazadig.bokholken.utils.navigateBack
 import se.rebeccazadig.bokholken.utils.showToast
@@ -45,6 +46,8 @@ class CreateAdvertFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as? MainActivity)?.hideBottomNavBar()
 
         setupToolbar()
         setupImageViewClick()

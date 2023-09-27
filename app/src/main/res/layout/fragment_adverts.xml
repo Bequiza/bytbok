@@ -48,6 +48,8 @@
             android:layout_margin="8dp"
             android:background="@drawable/rounded_searchview_bg"
             app:iconifiedByDefault="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

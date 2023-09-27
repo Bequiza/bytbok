@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.databinding.DialogCredentialsBinding
 import se.rebeccazadig.bokholken.databinding.FragmentUserProfileBinding
+import se.rebeccazadig.bokholken.main.MainActivity
 import se.rebeccazadig.bokholken.utils.DialogMessages
 import se.rebeccazadig.bokholken.utils.showAlertWithEditText
 import se.rebeccazadig.bokholken.utils.showConfirmationDialog
@@ -44,10 +45,11 @@ class UserProfileFragment : Fragment() {
         viewModel.fetchUserData()
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
+            binding.userNameTV.text = getString(R.string.user_details_username, user?.name)
+            binding.userEmailTv.text = getString(R.string.user_details_useremail, user?.email)
+            binding.contactTV.text = getString(R.string.user_details_contact, user?.phoneNumber)
             user?.let {
-                binding.userNameTV.text = getString(R.string.user_details_username, user.name)
-                binding.userEmailTv.text = getString(R.string.user_details_useremail, user.email)
-                binding.contactTV.text = getString(R.string.user_details_contact, user.phoneNumber)
+
             }
         }
 
@@ -105,6 +107,11 @@ class UserProfileFragment : Fragment() {
                 viewModel.nullUiStateSave()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.showBottomNavBar()
     }
 
     private fun showCredentialsDialog(onCredentialsProvided: (email: String, password: String) -> Unit) {

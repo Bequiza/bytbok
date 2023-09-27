@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.adverts.AdvertsAdapter
 import se.rebeccazadig.bokholken.databinding.FragmentMyAdvertsBinding
+import se.rebeccazadig.bokholken.main.MainActivity
 import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.utils.navigateBack
 import se.rebeccazadig.bokholken.utils.showConfirmationDialog
@@ -42,6 +43,9 @@ class MyAdvertsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as? MainActivity)?.hideBottomNavBar()
+
         binding.myAdvertToolbar.setNavigationOnClickListener {
             navigateBack()
         }
