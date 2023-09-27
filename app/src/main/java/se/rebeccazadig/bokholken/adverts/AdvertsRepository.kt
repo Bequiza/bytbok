@@ -37,6 +37,9 @@ class AdvertsRepository private constructor() {
     private val _favoritesLiveData = MutableLiveData<List<Advert>>()
     val favoritesLiveData: LiveData<List<Advert>> get() = _favoritesLiveData
 
+    private val _currentUserNameLiveData = MutableLiveData<String?>()
+    val currentUserNameLiveData: LiveData<String?> get() = _currentUserNameLiveData
+
     init {
         fetchUsersAndInitializeAdverts()
     }
@@ -231,6 +234,26 @@ class AdvertsRepository private constructor() {
                 return@withContext Result.Failure(e.message ?: "Error deleting image from database")
             }
             Result.Success
+        }
+    }
+
+    fun fetchCurrentUserName() {
+        val currentUserId = getCurrentUserId()
+
+        currentUserId?.let { userId ->
+            usersRef.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val user = snapshot.getValue(User::class.java)
+                    _currentUserNameLiveData.postValue(user?.name)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e("DatabaseError", "Error fetching current user's name: ${error.message}")
+                    _currentUserNameLiveData.postValue(null)
+                }
+            })
+        } ?: run {
+            _currentUserNameLiveData.postValue(null)
         }
     }
 
