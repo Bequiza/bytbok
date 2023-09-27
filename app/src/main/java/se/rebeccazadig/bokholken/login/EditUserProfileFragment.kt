@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.ContactType
 import se.rebeccazadig.bokholken.databinding.FragmentEditUserProfileBinding
+import se.rebeccazadig.bokholken.main.MainActivity
 import se.rebeccazadig.bokholken.utils.navigateBack
 import se.rebeccazadig.bokholken.utils.showToast
 
@@ -37,6 +38,8 @@ class EditUserProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as? MainActivity)?.hideBottomNavBar()
 
         binding.editUserToolbar.setNavigationOnClickListener { navigateBack() }
 

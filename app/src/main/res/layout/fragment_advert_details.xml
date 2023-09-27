@@ -27,7 +27,7 @@
             android:background="@color/medium_beige"
             android:elevation="4dp"
             app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@drawable/ic_back_arrow"
+            app:navigationIcon="@drawable/ic_close"
             app:title="@string/ads_details_text" />
 
         <ImageView

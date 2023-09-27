@@ -10,12 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import se.rebeccazadig.bokholken.R
 import se.rebeccazadig.bokholken.data.ContactType
-import se.rebeccazadig.bokholken.models.User
 import se.rebeccazadig.bokholken.databinding.FragmentAdvertDetailsBinding
+import se.rebeccazadig.bokholken.main.MainActivity
 import se.rebeccazadig.bokholken.models.Advert
+import se.rebeccazadig.bokholken.models.User
 import se.rebeccazadig.bokholken.utils.formatDateForDisplay
 import se.rebeccazadig.bokholken.utils.gone
 import se.rebeccazadig.bokholken.utils.isEmail
@@ -49,6 +49,9 @@ class AdvertDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as? MainActivity)?.hideBottomNavBar()
+
         viewModel.advertDetailsLiveData.observe(viewLifecycleOwner) { pair ->
             pair?.let { (advert, user) ->
                 displayAdvertDetails(advert, user)
@@ -110,7 +113,6 @@ class AdvertDetailsFragment : Fragment() {
             .load(imageUrl)
             .placeholder(R.drawable.loading_image)
             .error(R.drawable.error_image)
-            .transition(DrawableTransitionOptions.withCrossFade())
             .into(binding.publishedAdvertImage)
 
         binding.contactUserAdvertButton.setOnClickListener {

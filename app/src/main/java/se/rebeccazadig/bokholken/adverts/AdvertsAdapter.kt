@@ -8,10 +8,9 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import se.rebeccazadig.bokholken.R
-import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.databinding.ListItemBinding
+import se.rebeccazadig.bokholken.models.Advert
 import se.rebeccazadig.bokholken.utils.formatDateForDisplay
 
 private object AdvertDiffCallback : DiffUtil.ItemCallback<Advert>() {
@@ -69,7 +68,6 @@ class AdvertsAdapter : ListAdapter<Advert, AdvertsAdapter.ViewHolder>(AdvertDiff
                 .load(advert.imageUrl)
                 .placeholder(R.drawable.loading_image)
                 .error(R.drawable.placeholder_image)
-                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(binding.imageView)
         }
     }
