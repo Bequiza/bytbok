@@ -29,6 +29,7 @@ class AdvertDetailsFragment : Fragment() {
     private var _binding: FragmentAdvertDetailsBinding? = null
     private val binding get() = _binding!!
     private val viewModel: AdvertViewModel by viewModels()
+    private var currentUserName: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -115,13 +116,18 @@ class AdvertDetailsFragment : Fragment() {
             .error(R.drawable.error_image)
             .into(binding.publishedAdvertImage)
 
+        viewModel.fetchUserName()
+
+        viewModel.currentUserName.observe(viewLifecycleOwner) { name ->
+            currentUserName = name
+        }
+
         binding.contactUserAdvertButton.setOnClickListener {
             val contactMethod = user?.preferredContactMethod ?: ContactType.UNKNOWN
             val userEmail = user?.email
             val userPhone = user?.phoneNumber
-            handleContactAction(contactMethod, userEmail, userPhone, advert.title, user?.name ?: "")
+            handleContactAction(contactMethod, userEmail, userPhone, advert.title, currentUserName ?:"")
         }
-
     }
 
     private fun sendEmail(email: String, advertTitle: String, userName: String) {

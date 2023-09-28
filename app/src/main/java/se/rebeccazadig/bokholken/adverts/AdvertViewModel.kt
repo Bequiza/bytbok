@@ -30,6 +30,8 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
     private val advertsLiveData: LiveData<List<Advert>> get() = advertsRepo.advertsLiveData
     val advertDetailsLiveData = advertsRepo.advertDetailLiveData
 
+    val currentUserName: LiveData<String?> = advertsRepo.currentUserNameLiveData
+
     private val _myAdvertsLiveData = MutableLiveData<List<Advert>>()
     val myAdvertsLiveData: LiveData<List<Advert>> get() = _myAdvertsLiveData
 
@@ -260,6 +262,10 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             advertsRepo.fetchAdvertDetails(advertId)
         }
+    }
+
+    fun fetchUserName() {
+        advertsRepo.fetchCurrentUserName()
     }
 
     fun cleanUp() {
