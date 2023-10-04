@@ -43,7 +43,11 @@ class EditUserProfileFragment : Fragment() {
 
         binding.editUserToolbar.setNavigationOnClickListener { navigateBack() }
 
-        viewModel.initializeUserData()
+
+        if (savedInstanceState == null) {
+            viewModel.initializeUserData()
+        }
+
         viewModel.preferredContactMethod.observe(viewLifecycleOwner) { handleCheckedChange() }
         setupTextChangeListener()
         observeViewModelChanges()
