@@ -22,6 +22,10 @@ data class UiStateSave(
 
 class UserViewModel(app: Application) : AndroidViewModel(app) {
 
+    private var initialUserName: String? = null
+    private var initialUserPhoneNumber: String? = null
+    private var initialPreferredContactMethod: ContactType? = null
+
     private val loginRepo = LoginRepository.getInstance()
     private val userRepo = UserRepository.getInstance()
     private val phoneNumberValidator = PhoneNumberValidator(app)
@@ -47,7 +51,10 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     private fun updateButtonState() {
-        isButtonDisabled.value = userName.value.isNullOrBlank() ||
+        val isDataChanged = hasDataChanged()
+
+        isButtonDisabled.value = !isDataChanged ||
+                userName.value.isNullOrBlank() ||
                 userPhoneNumber.value.isNullOrBlank() ||
                 isPhoneNumberValid.value == false ||
                 preferredContactMethod.value == null
@@ -112,6 +119,9 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
                         userPhoneNumber.value = result.data.phoneNumber
                         userEmail.value = result.data.email
                         preferredContactMethod.value = result.data.preferredContactMethod
+                        initialUserName = result.data.name
+                        initialUserPhoneNumber = result.data.phoneNumber
+                        initialPreferredContactMethod = result.data.preferredContactMethod
                     }
 
                     is Result.Failure -> {
@@ -170,5 +180,11 @@ class UserViewModel(app: Application) : AndroidViewModel(app) {
         isPhoneNumberValid.value = validationResult.isValid
 
         return validationResult.isValid
+    }
+
+    private fun hasDataChanged(): Boolean {
+        return userName.value != initialUserName ||
+                userPhoneNumber.value != initialUserPhoneNumber ||
+                preferredContactMethod.value != initialPreferredContactMethod
     }
 }

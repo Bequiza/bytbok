@@ -35,6 +35,11 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
     private val _myAdvertsLiveData = MutableLiveData<List<Advert>>()
     val myAdvertsLiveData: LiveData<List<Advert>> get() = _myAdvertsLiveData
 
+    private var initialTitle: String? = null
+    private var initialAuthor: String? = null
+    private var initialGenre: String? = null
+    private var initialLocation: String? = null
+
     val title = MutableLiveData<String?>()
     val author = MutableLiveData<String?>()
     val genre = MutableLiveData<String?>()
@@ -45,13 +50,11 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
     val currentAdvertImageUrl = MutableLiveData<String?>()
     private var currentAdvert: Advert? = null
 
-    val isButtonDisabled: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
-        val update = {
-            value = listOf(title, author, genre, location)
-                .any { it.value.isNullOrEmpty() } || isSavingInProgress.value == true
-        }
-        listOf(title, author, genre, location, isSavingInProgress)
-            .forEach { addSource(it) { update() } }
+    val isButtonDisabled = MediatorLiveData<Boolean>().apply {
+        addSource(title) { updateButtonState() }
+        addSource(author) { updateButtonState() }
+        addSource(genre) { updateButtonState() }
+        addSource(location) { updateButtonState() }
     }
 
     val searchQuery = MutableLiveData("")
@@ -72,6 +75,17 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
     init {
         fetchMyAdverts()
     }
+
+    private fun updateButtonState() {
+        val isDataChanged = hasDataChanged()
+
+        isButtonDisabled.value = !isDataChanged ||
+                title.value.isNullOrBlank() ||
+                author.value.isNullOrBlank() ||
+                genre.value.isNullOrBlank() ||
+                location.value.isNullOrBlank()
+    }
+
 
     private fun fetchMyAdverts() {
         val currentUserUid = advertsRepo.getCurrentUserId()
@@ -217,6 +231,10 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
                     author.value = value.first.author
                     genre.value = value.first.genre
                     location.value = value.first.location
+                    initialTitle = value.first.title
+                    initialAuthor = value.first.author
+                    initialGenre = value.first.genre
+                    initialLocation = value.first.location
                     currentAdvert = value.first
                     currentAdvertImageUrl.value = value.first.imageUrl
                     advertsRepo.advertDetailLiveData.removeObserver(this)
@@ -252,6 +270,13 @@ class AdvertViewModel(private val app: Application) : AndroidViewModel(app) {
             val isFavorite = advertsRepo.isAdvertFavorite(advertId)
             _isAdvertFavorite.postValue(isFavorite)
         }
+    }
+
+    private fun hasDataChanged(): Boolean {
+        return title.value != initialTitle ||
+                author.value != initialAuthor ||
+                genre.value != initialGenre ||
+                location.value != initialLocation
     }
 
     fun resetUiStateSave() {

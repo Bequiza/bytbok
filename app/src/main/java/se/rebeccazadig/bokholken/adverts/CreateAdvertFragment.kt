@@ -51,8 +51,10 @@ class CreateAdvertFragment : Fragment() {
 
         setupToolbar()
         setupImageViewClick()
-
-        viewModel.initializeAdvertData(args.advertId)
+        
+        if (savedInstanceState == null) {
+            viewModel.initializeAdvertData(args.advertId)
+        }
 
         viewModel.advertSaveStatus.observe(viewLifecycleOwner) { uiStateSave ->
             uiStateSave?.message?.let { message ->
